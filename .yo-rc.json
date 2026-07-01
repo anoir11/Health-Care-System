@@ -1,0 +1,33 @@
+{
+  "generator-jhipster": {
+    "applicationType": "monolith",
+    "authenticationType": "jwt",
+    "baseName": "healthCareSystem",
+    "buildTool": "maven",
+    "cacheProvider": "ehcache",
+    "clientFramework": "angular",
+    "clientTestFrameworks": [],
+    "clientTheme": "none",
+    "creationTimestamp": 1782912237335,
+    "databaseType": "sql",
+    "devDatabaseType": "postgresql",
+    "enableHibernateCache": true,
+    "enableTranslation": true,
+    "entities": [],
+    "feignClient": null,
+    "jhipsterVersion": "8.11.0",
+    "jwtSecretKey": "MWM4NzE5ZjdjMWFhMGExNGYzZTE2Y2I1MGYxMTljODk5OTgwMWNmYzNkOGI5OWE1MzI4NzI0OTFlYmI3MDI3MDBjN2Q2NWNlNTEzMmViNDY4Y2QyNjdjNWVhYThjMGQ0Mjc0NTM0OGNhMjY5ZTkyNGFkNTMxZmFhZGMyYzJiODg=",
+    "languages": ["en", "ar-ly", "fr"],
+    "microfrontend": null,
+    "microfrontends": [],
+    "nativeLanguage": "en",
+    "packageName": "com.medilink.healthcaresystem",
+    "prodDatabaseType": "postgresql",
+    "reactive": false,
+    "serverPort": null,
+    "serviceDiscoveryType": null,
+    "syncUserWithIdp": null,
+    "testFrameworks": [],
+    "withAdminUi": true
+  }
+}
