@@ -105,3 +105,8 @@ jhipster:
 # ===================================================================
 
 # application:
+
+cloudinary:
+  cloud-name: dyictsnev
+  api-key: 999497218464696
+  api-secret: 84SfGaKl9czHgGW8YGDv2VQUJGQ

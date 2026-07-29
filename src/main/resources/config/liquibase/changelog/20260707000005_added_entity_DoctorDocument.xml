@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="20260707000005-1" author="jhipster">
+        <createTable tableName="doctor_documents">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="doctor_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_url" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="public_id" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="file_name" type="varchar(255)"/>
+            <column name="file_type" type="varchar(255)"/>
+            <column name="file_size" type="bigint"/>
+            <column name="uploaded_at" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20260707000005-2" author="jhipster">
+        <addForeignKeyConstraint baseColumnNames="doctor_id"
+                                  baseTableName="doctor_documents"
+                                  constraintName="fk_doctor_documents_doctor_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="doctor"/>
+    </changeSet>
+
+</databaseChangeLog>
