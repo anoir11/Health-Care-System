@@ -9,7 +9,34 @@
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="phone" type="varchar(255)">
+            <column name="gender" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_of_birth" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="nationality" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="city" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="blood_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="height" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="weight" type="integer">
+                <constraints nullable="true"/>
+            </column>
+            <column name="smoking" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="alcohol" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -21,6 +48,54 @@
                                   constraintName="fk_patient_user_id"
                                   referencedColumnNames="id"
                                   referencedTableName="jhi_user"/>
+    </changeSet>
+
+    <changeSet id="20260707000003-3" author="jhipster">
+        <createTable tableName="patient_allergies">
+            <column name="patient_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="allergy" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="patient_id"
+                                  baseTableName="patient_allergies"
+                                  constraintName="fk_patient_allergies_patient_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="patient"/>
+    </changeSet>
+
+    <changeSet id="20260707000003-4" author="jhipster">
+        <createTable tableName="patient_conditions">
+            <column name="patient_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="condition_name" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="patient_id"
+                                  baseTableName="patient_conditions"
+                                  constraintName="fk_patient_conditions_patient_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="patient"/>
+    </changeSet>
+
+    <changeSet id="20260707000003-5" author="jhipster">
+        <createTable tableName="patient_medications">
+            <column name="patient_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="medication" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="patient_id"
+                                  baseTableName="patient_medications"
+                                  constraintName="fk_patient_medications_patient_id"
+                                  referencedColumnNames="id"
+                                  referencedTableName="patient"/>
     </changeSet>
 
 </databaseChangeLog>

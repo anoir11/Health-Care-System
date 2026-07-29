@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="20260729150000-1" author="you">
+        <addColumn tableName="jhi_user">
+            <column name="role" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+
+        <!-- backfill existing rows so role can be made NOT NULL afterward -->
+        <update tableName="jhi_user">
+            <column name="role" value="PATIENT"/>
+            <where>role IS NULL</where>
+        </update>
+
+        <addNotNullConstraint
+            tableName="jhi_user"
+            columnName="role"
+            columnDataType="varchar(255)"/>
+    </changeSet>
+
+</databaseChangeLog>

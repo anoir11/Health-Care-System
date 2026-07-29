@@ -18,9 +18,6 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class Patient extends User {
 
-    @Column(nullable = false)
-    private String phone;
-
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
