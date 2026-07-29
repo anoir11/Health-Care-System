@@ -2,12 +2,10 @@ package com.medilink.healthcaresystem.service;
 
 import com.medilink.healthcaresystem.domain.Authority;
 import com.medilink.healthcaresystem.domain.Patient;
-import com.medilink.healthcaresystem.domain.User;
 import com.medilink.healthcaresystem.domain.enums.Role;
 import com.medilink.healthcaresystem.repository.AuthorityRepository;
 import com.medilink.healthcaresystem.repository.PatientRepository;
 import com.medilink.healthcaresystem.repository.UserRepository;
-import com.medilink.healthcaresystem.service.VerificationService;
 import com.medilink.healthcaresystem.service.dto.PatientRegisterRequest;
 import com.medilink.healthcaresystem.service.dto.UserResponse;
 import java.util.HashSet;
@@ -33,38 +31,36 @@ public class PatientService {
             throw new IllegalArgumentException("Email already in use");
         }
 
-        // 1. Create the JHipster User (handles login/password/JWT auth)
-        User user = new User();
-        user.setLogin(request.getEmail());
-        user.setEmail(request.getEmail());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setActivated(true);
-
         Authority patientAuthority = authorityRepository
             .findById("ROLE_PATIENT")
             .orElseThrow(() -> new IllegalStateException("ROLE_PATIENT authority not found"));
 
         Set<Authority> authorities = new HashSet<>();
         authorities.add(patientAuthority);
-        user.setAuthorities(authorities);
 
-        User savedUser = userRepository.save(user);
-
-        // 2. Create the linked Patient profile
-        Patient patient = Patient.builder().user(savedUser).phone(request.getPhone()).build();
+        // Patient IS-A User now — build one object, one save, JOINED inheritance
+        // writes both jhi_user and patient rows in a single persist.
+        Patient patient = Patient.builder()
+            .login(request.getEmail())
+            .email(request.getEmail())
+            .firstName(request.getFirstName())
+            .lastName(request.getLastName())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .activated(true)
+            .authorities(authorities)
+            .phone(request.getPhone())
+            .role(Role.PATIENT)
+            .build();
 
         Patient saved = patientRepository.save(patient);
 
         verificationService.generateAndSendCode(saved.getEmail());
 
-        // 3. Map to response
         return UserResponse.builder()
-            .id(savedUser.getId())
-            .firstName(savedUser.getFirstName())
-            .lastName(savedUser.getLastName())
-            .email(savedUser.getEmail())
+            .id(saved.getId())
+            .firstName(saved.getFirstName())
+            .lastName(saved.getLastName())
+            .email(saved.getEmail())
             .phone(saved.getPhone())
             .role(Role.PATIENT)
             .build();
