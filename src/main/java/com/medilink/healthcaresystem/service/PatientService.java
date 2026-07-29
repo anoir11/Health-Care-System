@@ -7,6 +7,7 @@ import com.medilink.healthcaresystem.domain.enums.Role;
 import com.medilink.healthcaresystem.repository.AuthorityRepository;
 import com.medilink.healthcaresystem.repository.PatientRepository;
 import com.medilink.healthcaresystem.repository.UserRepository;
+import com.medilink.healthcaresystem.service.VerificationService;
 import com.medilink.healthcaresystem.service.dto.PatientRegisterRequest;
 import com.medilink.healthcaresystem.service.dto.UserResponse;
 import java.util.HashSet;
@@ -24,6 +25,7 @@ public class PatientService {
     private final UserRepository userRepository;
     private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
+    private final VerificationService verificationService;
 
     @Transactional
     public UserResponse patientRegister(PatientRegisterRequest request) {
@@ -54,6 +56,8 @@ public class PatientService {
         Patient patient = Patient.builder().user(savedUser).phone(request.getPhone()).build();
 
         Patient saved = patientRepository.save(patient);
+
+        verificationService.generateAndSendCode(saved.getEmail());
 
         // 3. Map to response
         return UserResponse.builder()
