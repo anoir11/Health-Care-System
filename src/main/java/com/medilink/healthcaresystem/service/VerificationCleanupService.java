@@ -3,7 +3,6 @@ package com.medilink.healthcaresystem.service;
 import com.medilink.healthcaresystem.domain.enums.Role;
 import com.medilink.healthcaresystem.repository.UserRepository;
 import com.medilink.healthcaresystem.repository.VerificationCodeRepository;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -27,14 +26,14 @@ public class VerificationCleanupService {
         // Patients: 24h grace period — low-effort signup, safe to clean fast
         var abandonedPatients = userRepository.findAllByActivatedFalseAndRoleAndCreatedDateBefore(
             Role.PATIENT,
-            Instant.now().minus(24, java.time.temporal.ChronoUnit.HOURS)
+            LocalDateTime.now().minusHours(24)
         );
         userRepository.deleteAll(abandonedPatients);
 
         // Doctors: 7-day grace period — they invested effort uploading documents
         var abandonedDoctors = userRepository.findAllByActivatedFalseAndRoleAndCreatedDateBefore(
             Role.DOCTOR,
-            Instant.now().minus(7, java.time.temporal.ChronoUnit.DAYS)
+            LocalDateTime.now().minusDays(7)
         );
         userRepository.deleteAll(abandonedDoctors);
     }
