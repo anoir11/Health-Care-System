@@ -39,7 +39,7 @@ public class PatientService {
         authorities.add(patientAuthority);
 
         // Patient IS-A User now — build one object, one save, JOINED inheritance
-        // writes both jhi_user and patient rows in a single persist.
+        // writes both users and patients rows in a single persist.
         Patient patient = Patient.builder()
             .login(request.getEmail())
             .email(request.getEmail())

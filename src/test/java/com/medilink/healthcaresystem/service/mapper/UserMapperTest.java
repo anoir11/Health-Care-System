@@ -8,6 +8,7 @@ import com.medilink.healthcaresystem.security.AuthoritiesConstants;
 import com.medilink.healthcaresystem.service.dto.AdminUserDTO;
 import com.medilink.healthcaresystem.service.dto.UserDTO;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,7 +41,7 @@ class UserMapperTest {
         user.setLastName("doe");
         user.setImageUrl("image_url");
         user.setCreatedBy(DEFAULT_LOGIN);
-        user.setCreatedDate(Instant.now());
+        user.setCreatedAt(LocalDateTime.now());
         user.setLastModifiedBy(DEFAULT_LOGIN);
         user.setLastModifiedDate(Instant.now());
         user.setLangKey("en");
@@ -66,7 +67,7 @@ class UserMapperTest {
         assertThat(convertedUserDto.isActivated()).isEqualTo(user.isActivated());
         assertThat(convertedUserDto.getImageUrl()).isEqualTo(user.getImageUrl());
         assertThat(convertedUserDto.getCreatedBy()).isEqualTo(user.getCreatedBy());
-        assertThat(convertedUserDto.getCreatedDate()).isEqualTo(user.getCreatedDate());
+        assertThat(convertedUserDto.getCreatedAt()).isEqualTo(user.getCreatedAt());
         assertThat(convertedUserDto.getLastModifiedBy()).isEqualTo(user.getLastModifiedBy());
         assertThat(convertedUserDto.getLastModifiedDate()).isEqualTo(user.getLastModifiedDate());
         assertThat(convertedUserDto.getLangKey()).isEqualTo(user.getLangKey());
@@ -86,7 +87,7 @@ class UserMapperTest {
         assertThat(convertedUser.getImageUrl()).isEqualTo(userDto.getImageUrl());
         assertThat(convertedUser.getLangKey()).isEqualTo(userDto.getLangKey());
         assertThat(convertedUser.getCreatedBy()).isEqualTo(userDto.getCreatedBy());
-        assertThat(convertedUser.getCreatedDate()).isEqualTo(userDto.getCreatedDate());
+        assertThat(convertedUser.getCreatedAt()).isEqualTo(userDto.getCreatedAt());
         assertThat(convertedUser.getLastModifiedBy()).isEqualTo(userDto.getLastModifiedBy());
         assertThat(convertedUser.getLastModifiedDate()).isEqualTo(userDto.getLastModifiedDate());
         assertThat(convertedUser.getAuthorities()).extracting("name").containsExactly(AuthoritiesConstants.USER);

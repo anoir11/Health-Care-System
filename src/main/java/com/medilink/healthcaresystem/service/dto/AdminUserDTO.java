@@ -5,7 +5,7 @@ import com.medilink.healthcaresystem.domain.Authority;
 import com.medilink.healthcaresystem.domain.User;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -43,11 +43,11 @@ public class AdminUserDTO implements Serializable {
 
     private String createdBy;
 
-    private Instant createdDate;
+    private LocalDateTime createdAt;
 
     private String lastModifiedBy;
 
-    private Instant lastModifiedDate;
+    private java.time.Instant lastModifiedDate;
 
     private Set<String> authorities;
 
@@ -65,7 +65,7 @@ public class AdminUserDTO implements Serializable {
         this.imageUrl = user.getImageUrl();
         this.langKey = user.getLangKey();
         this.createdBy = user.getCreatedBy();
-        this.createdDate = user.getCreatedDate();
+        this.createdAt = user.getCreatedAt();
         this.lastModifiedBy = user.getLastModifiedBy();
         this.lastModifiedDate = user.getLastModifiedDate();
         this.authorities = user.getAuthorities().stream().map(Authority::getName).collect(Collectors.toSet());
@@ -143,12 +143,12 @@ public class AdminUserDTO implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Instant getCreatedDate() {
-        return createdDate;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public void setCreatedDate(Instant createdDate) {
-        this.createdDate = createdDate;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public String getLastModifiedBy() {
@@ -159,11 +159,11 @@ public class AdminUserDTO implements Serializable {
         this.lastModifiedBy = lastModifiedBy;
     }
 
-    public Instant getLastModifiedDate() {
+    public java.time.Instant getLastModifiedDate() {
         return lastModifiedDate;
     }
 
-    public void setLastModifiedDate(Instant lastModifiedDate) {
+    public void setLastModifiedDate(java.time.Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
     }
 
@@ -187,7 +187,7 @@ public class AdminUserDTO implements Serializable {
             ", activated=" + activated +
             ", langKey='" + langKey + '\'' +
             ", createdBy=" + createdBy +
-            ", createdDate=" + createdDate +
+            ", createdAt=" + createdAt +
             ", lastModifiedBy='" + lastModifiedBy + '\'' +
             ", lastModifiedDate=" + lastModifiedDate +
             ", authorities=" + authorities +

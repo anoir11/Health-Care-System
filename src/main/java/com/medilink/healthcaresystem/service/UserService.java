@@ -10,6 +10,7 @@ import com.medilink.healthcaresystem.security.SecurityUtils;
 import com.medilink.healthcaresystem.service.dto.AdminUserDTO;
 import com.medilink.healthcaresystem.service.dto.UserDTO;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -298,7 +299,7 @@ public class UserService {
     @Scheduled(cron = "0 0 1 * * ?")
     public void removeNotActivatedUsers() {
         userRepository
-            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant.now().minus(3, ChronoUnit.DAYS))
+            .findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedAtBefore(LocalDateTime.now().minus(3, ChronoUnit.DAYS))
             .forEach(user -> {
                 LOG.debug("Deleting not activated user {}", user.getLogin());
                 userRepository.delete(user);

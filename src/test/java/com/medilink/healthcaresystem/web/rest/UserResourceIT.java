@@ -316,7 +316,7 @@ class UserResourceIT {
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
         userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -357,7 +357,7 @@ class UserResourceIT {
         userDTO.setImageUrl(UPDATED_IMAGEURL);
         userDTO.setLangKey(UPDATED_LANGKEY);
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
         userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -409,7 +409,7 @@ class UserResourceIT {
         userDTO.setImageUrl(updatedUser.getImageUrl());
         userDTO.setLangKey(updatedUser.getLangKey());
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
         userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));
@@ -449,7 +449,7 @@ class UserResourceIT {
         userDTO.setImageUrl(updatedUser.getImageUrl());
         userDTO.setLangKey(updatedUser.getLangKey());
         userDTO.setCreatedBy(updatedUser.getCreatedBy());
-        userDTO.setCreatedDate(updatedUser.getCreatedDate());
+        userDTO.setCreatedAt(updatedUser.getCreatedAt());
         userDTO.setLastModifiedBy(updatedUser.getLastModifiedBy());
         userDTO.setLastModifiedDate(updatedUser.getLastModifiedDate());
         userDTO.setAuthorities(Collections.singleton(AuthoritiesConstants.USER));

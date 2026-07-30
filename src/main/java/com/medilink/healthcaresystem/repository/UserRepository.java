@@ -2,7 +2,6 @@ package com.medilink.healthcaresystem.repository;
 
 import com.medilink.healthcaresystem.domain.User;
 import com.medilink.healthcaresystem.domain.enums.Role;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -21,13 +20,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     String USERS_BY_EMAIL_CACHE = "usersByEmail";
     Optional<User> findOneByActivationKey(String activationKey);
-    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedDateBefore(Instant dateTime);
+    List<User> findAllByActivatedIsFalseAndActivationKeyIsNotNullAndCreatedAtBefore(LocalDateTime dateTime);
     Optional<User> findOneByResetKey(String resetKey);
     Optional<User> findOneByEmailIgnoreCase(String email);
     Optional<User> findOneByLogin(String login);
     boolean existsByEmail(String email);
     Optional<User> findByEmail(String email);
-    List<User> findAllByActivatedFalseAndRoleAndCreatedDateBefore(Role role, LocalDateTime cutoff);
+    List<User> findAllByActivatedFalseAndRoleAndCreatedAtBefore(Role role, LocalDateTime cutoff);
 
     @EntityGraph(attributePaths = "authorities")
     @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE, unless = "#result == null")

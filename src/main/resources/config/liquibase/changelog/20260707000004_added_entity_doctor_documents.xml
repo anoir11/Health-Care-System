@@ -35,7 +35,7 @@
                                   baseTableName="doctor_documents"
                                   constraintName="fk_doctor_documents_doctor_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="doctor"/>
+                                  referencedTableName="doctors"/>
     </changeSet>
 
 </databaseChangeLog>
