@@ -24,14 +24,14 @@ public class VerificationCleanupService {
     @Scheduled(cron = "0 5 3 * * *")
     public void cleanupAbandonedAccounts() {
         // Patients: 24h grace period — low-effort signup, safe to clean fast
-        var abandonedPatients = userRepository.findAllByActivatedFalseAndRoleAndCreatedDateBefore(
+        var abandonedPatients = userRepository.findAllByActivatedFalseAndRoleAndCreatedAtBefore(
             Role.PATIENT,
             LocalDateTime.now().minusHours(24)
         );
         userRepository.deleteAll(abandonedPatients);
 
         // Doctors: 7-day grace period — they invested effort uploading documents
-        var abandonedDoctors = userRepository.findAllByActivatedFalseAndRoleAndCreatedDateBefore(
+        var abandonedDoctors = userRepository.findAllByActivatedFalseAndRoleAndCreatedAtBefore(
             Role.DOCTOR,
             LocalDateTime.now().minusDays(7)
         );

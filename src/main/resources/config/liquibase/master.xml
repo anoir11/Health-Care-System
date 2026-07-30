@@ -12,15 +12,13 @@
     <property name="timeType" value="time(6)" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260707000001_added_authorities.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260707000002_added_entity_Doctor.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260707000003_added_entity_Patient.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260707000005_added_entity_DoctorDocument.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/202607291200_added_created_at_to_jhi_user.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/202607291201_added_enabled_to_jhi_user.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/202607291202_added_phone_to_jhi_user.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260729150000_added_role_to_user.xml" relativeToChangelogFile="false"/>
-
+    <include file="config/liquibase/changelog/20260707000001_added_entity_authorities.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260707000002_added_entity_doctors.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260707000003_added_entity_patients.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260707000004_added_entity_doctor_documents.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260707000005_added_entity_emergency_contacts.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260707000006_added_entity_Insurances.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260707000007_added_entity_verification_codes.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->

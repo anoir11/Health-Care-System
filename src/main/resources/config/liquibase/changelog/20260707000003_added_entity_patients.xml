@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
 
     <changeSet id="20260707000003-1" author="jhipster">
-        <createTable tableName="patient">
+        <createTable tableName="patients">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -44,10 +44,10 @@
 
     <changeSet id="20260707000003-2" author="jhipster">
         <addForeignKeyConstraint baseColumnNames="id"
-                                  baseTableName="patient"
+                                  baseTableName="patients"
                                   constraintName="fk_patient_user_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="jhi_user"/>
+                                  referencedTableName="users"/>
     </changeSet>
 
     <changeSet id="20260707000003-3" author="jhipster">
@@ -63,7 +63,7 @@
                                   baseTableName="patient_allergies"
                                   constraintName="fk_patient_allergies_patient_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="patient"/>
+                                  referencedTableName="patients"/>
     </changeSet>
 
     <changeSet id="20260707000003-4" author="jhipster">
@@ -79,7 +79,7 @@
                                   baseTableName="patient_conditions"
                                   constraintName="fk_patient_conditions_patient_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="patient"/>
+                                  referencedTableName="patients"/>
     </changeSet>
 
     <changeSet id="20260707000003-5" author="jhipster">
@@ -95,7 +95,7 @@
                                   baseTableName="patient_medications"
                                   constraintName="fk_patient_medications_patient_id"
                                   referencedColumnNames="id"
-                                  referencedTableName="patient"/>
+                                  referencedTableName="patients"/>
     </changeSet>
 
 </databaseChangeLog>
