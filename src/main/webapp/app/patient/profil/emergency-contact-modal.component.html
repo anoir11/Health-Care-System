@@ -1,0 +1,109 @@
+@if (open) {
+  <div class="ecm-backdrop" (click)="onBackdropClick()">
+    <div class="ecm-modal" (click)="$event.stopPropagation()">
+      <div class="ecm-head">
+        <h2 class="ecm-title">{{ title }}</h2>
+        <button class="ecm-close" type="button" (click)="close.emit()" [disabled]="saving" aria-label="Close">✕</button>
+      </div>
+
+      @if (!confirmingDelete()) {
+        <form class="ecm-body" (ngSubmit)="onSubmit()">
+          @if (error) {
+            <div class="ecm-alert">{{ error }}</div>
+          }
+
+          <div class="ecm-field">
+            <label class="ecm-lbl" for="ecm-name">Full name</label>
+            <input
+              id="ecm-name"
+              class="ecm-input"
+              type="text"
+              placeholder="e.g. Amira Ben Salah"
+              [ngModel]="form().name"
+              (ngModelChange)="updateField('name', $event)"
+              name="name"
+              [class.ecm-input--error]="touched() && form().name.trim().length <= 1"
+            />
+            @if (touched() && form().name.trim().length <= 1) {
+              <span class="ecm-err">Enter the contact's full name.</span>
+            }
+          </div>
+
+          <div class="ecm-field-row">
+            <div class="ecm-field">
+              <label class="ecm-lbl" for="ecm-relationship">Relationship</label>
+              <input
+                id="ecm-relationship"
+                class="ecm-input"
+                type="text"
+                placeholder="e.g. Spouse, Parent"
+                [ngModel]="form().relationship"
+                (ngModelChange)="updateField('relationship', $event)"
+                name="relationship"
+                [class.ecm-input--error]="touched() && !form().relationship.trim()"
+              />
+              @if (touched() && !form().relationship.trim()) {
+                <span class="ecm-err">Required.</span>
+              }
+            </div>
+
+            <div class="ecm-field">
+              <label class="ecm-lbl" for="ecm-role">Contact type</label>
+              <select id="ecm-role" class="ecm-input" [ngModel]="form().role" (ngModelChange)="updateField('role', $event)" name="role">
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="ecm-field">
+            <label class="ecm-lbl" for="ecm-phone">Phone number</label>
+            <input
+              id="ecm-phone"
+              class="ecm-input"
+              type="tel"
+              placeholder="e.g. +216 20 123 456"
+              [ngModel]="form().phone"
+              (ngModelChange)="updateField('phone', $event)"
+              name="phone"
+              [class.ecm-input--error]="touched() && form().phone.trim().length <= 3"
+            />
+            @if (touched() && form().phone.trim().length <= 3) {
+              <span class="ecm-err">Enter a valid phone number.</span>
+            }
+          </div>
+
+          <div class="ecm-actions">
+            @if (isEditMode) {
+              <button type="button" class="ecm-btn ecm-btn--danger-text" [disabled]="saving" (click)="askDelete()">Delete contact</button>
+            }
+            <div class="ecm-actions__right">
+              <button type="button" class="ecm-btn ecm-btn--ghost" [disabled]="saving" (click)="close.emit()">Cancel</button>
+              <button type="submit" class="ecm-btn ecm-btn--primary" [disabled]="saving">
+                {{ saving ? 'Saving…' : isEditMode ? 'Save changes' : 'Add contact' }}
+              </button>
+            </div>
+          </div>
+        </form>
+      } @else {
+        <!-- Delete confirmation -->
+        <div class="ecm-body">
+          @if (error) {
+            <div class="ecm-alert">{{ error }}</div>
+          }
+          <p class="ecm-confirm-text">
+            Remove <strong>{{ contact?.name }}</strong> from your emergency contacts? This can't be undone.
+          </p>
+          <div class="ecm-actions">
+            <div class="ecm-actions__right" style="width: 100%; justify-content: flex-end">
+              <button type="button" class="ecm-btn ecm-btn--ghost" [disabled]="saving" (click)="cancelDelete()">Cancel</button>
+              <button type="button" class="ecm-btn ecm-btn--danger" [disabled]="saving" (click)="confirmDelete()">
+                {{ saving ? 'Removing…' : 'Remove contact' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

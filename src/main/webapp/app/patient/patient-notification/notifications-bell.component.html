@@ -1,0 +1,47 @@
+<!-- ─── Notifications Bell ───────────────────────────────────────────── -->
+<div class="nb">
+  <button class="nb__trigger" (click)="toggle()" aria-label="Notifications">
+    <!-- <span class="nb__icon">🔔</span> -->
+    <span class="nb__icon"><i style="font-size: 19px" class="fa-regular fa-bell"></i></span>
+    @if (unreadCount() > 0) {
+      <span class="nb__badge">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="nb__panel">
+      <div class="nb__panel-head">
+        <span class="nb__panel-title">Notifications</span>
+        @if (unreadCount() > 0) {
+          <button class="nb__mark-all" (click)="markAllRead()">Mark all as read</button>
+        }
+      </div>
+
+      <div class="nb__list">
+        @if (notifications().length === 0) {
+          <div class="nb__empty">
+            <span class="nb__empty-icon">🔕</span>
+            <p>No notifications</p>
+          </div>
+        }
+        @for (n of notifications(); track n.id) {
+          <div class="nb__item" [class.nb__item--unread]="!n.read" (click)="markRead(n.id)">
+            <div class="nb__item-icon" [attr.data-type]="n.type">{{ icon(n.type) }}</div>
+            <div class="nb__item-body">
+              <p class="nb__item-title">{{ n.title }}</p>
+              <p class="nb__item-msg">{{ n.message }}</p>
+              <p class="nb__item-time">{{ n.time }}</p>
+            </div>
+            @if (!n.read) {
+              <span class="nb__dot"></span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="nb__footer">
+        <button class="nb__view-all">View all notifications</button>
+      </div>
+    </div>
+  }
+</div>

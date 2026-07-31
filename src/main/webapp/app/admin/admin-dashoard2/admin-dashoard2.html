@@ -1,0 +1,189 @@
+<!-- ── MAIN CONTENT ── -->
+<main class="main">
+  <!-- Page header -->
+  <div class="page-hd">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub">{{ today | date:'EEEE, MMMM d, y' }} · Tunisia Standard Time</p>
+    </div>
+    <div class="hd-actions">
+      <button class="btn-outline">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+        Export report
+      </button>
+      <button class="btn-primary" routerLink="/admin/verifications">
+        Review pending
+        <span class="btn-badge">{{ pendingCount }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── STAT CARDS ── -->
+  <div class="stat-grid">
+    <div class="stat-card" *ngFor="let s of stats; let i = index" [style.animation-delay]="(i * 60) + 'ms'">
+      <div class="stat-top">
+        <span class="stat-label">{{ s.label }}</span>
+        <div class="stat-icon" [class]="'icon-' + s.color">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            [innerHTML]="s.icon"
+          ></svg>
+        </div>
+      </div>
+      <div class="stat-num">{{ s.value }}</div>
+      <div class="stat-trend" [class.up]="s.trendUp" [class.down]="!s.trendUp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline [attr.points]="s.trendUp ? '18 15 12 9 6 15' : '6 9 12 15 18 9'" />
+        </svg>
+        {{ s.trend }} vs last week
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MIDDLE ROW ── -->
+  <div class="mid-grid">
+    <!-- Pending verifications -->
+    <div class="panel panel-urgent">
+      <div class="panel-hd">
+        <div class="panel-title-wrap">
+          <span class="urgent-dot"></span>
+          <h2 class="panel-title">Pending Verifications</h2>
+        </div>
+        <a class="panel-link" routerLink="/admin/verifications">View all →</a>
+      </div>
+
+      <div class="verif-list">
+        <div class="verif-item" *ngFor="let d of pendingDoctors">
+          <div class="verif-avt" [style.background]="d.avatarBg">{{ d.initials }}</div>
+          <div class="verif-info">
+            <span class="verif-name">Dr. {{ d.name }}</span>
+            <span class="verif-meta">{{ d.specialty }} · {{ d.clinic }}</span>
+          </div>
+          <div class="verif-right">
+            <span class="verif-age">{{ d.submittedAgo }}</span>
+            <div class="verif-actions">
+              <button class="va-approve" (click)="approveDoctor(d.id)" title="Approve">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              </button>
+              <button class="va-reject" (click)="rejectDoctor(d.id)" title="Reject">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+              <button class="va-view" routerLink="/admin/verifications/{{ d.id }}" title="Review details">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Activity feed -->
+    <div class="panel">
+      <div class="panel-hd">
+        <h2 class="panel-title">Recent Activity</h2>
+        <span class="live-badge">
+          <span class="live-dot"></span>
+          Live
+        </span>
+      </div>
+      <div class="activity-feed">
+        <div class="act-item" *ngFor="let a of activities">
+          <div class="act-icon" [class]="'act-' + a.type">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              [innerHTML]="a.icon"
+            ></svg>
+          </div>
+          <div class="act-body">
+            <span class="act-text" [innerHTML]="a.text"></span>
+            <span class="act-time">{{ a.time }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM ROW ── -->
+  <div class="bottom-grid">
+    <!-- Specialty breakdown -->
+    <div class="panel">
+      <div class="panel-hd">
+        <h2 class="panel-title">Doctors by Specialty</h2>
+      </div>
+      <div class="spec-list">
+        <div class="spec-row" *ngFor="let s of specialtyBreakdown">
+          <span class="spec-name">{{ s.name }}</span>
+          <div class="spec-bar-wrap">
+            <div class="spec-bar" [style.width]="s.pct + '%'" [class]="'bar-' + s.color"></div>
+          </div>
+          <span class="spec-count">{{ s.count }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent registrations -->
+    <div class="panel">
+      <div class="panel-hd">
+        <h2 class="panel-title">New Registrations</h2>
+        <a class="panel-link" routerLink="/admin/users">See all →</a>
+      </div>
+      <div class="reg-list">
+        <div class="reg-item" *ngFor="let u of recentUsers">
+          <div class="reg-avt" [style.background]="u.avatarBg">{{ u.initials }}</div>
+          <div class="reg-info">
+            <span class="reg-name">{{ u.name }}</span>
+            <span class="reg-meta">{{ u.time }}</span>
+          </div>
+          <span class="reg-role" [class]="'role-' + u.role">{{ u.role }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Open reports -->
+    <div class="panel">
+      <div class="panel-hd">
+        <h2 class="panel-title">Open Reports</h2>
+        <a class="panel-link" routerLink="/admin/reports">View all →</a>
+      </div>
+      <div class="report-list">
+        <div class="report-item" *ngFor="let r of openReportsList">
+          <div class="rep-severity" [class]="'sev-' + r.severity"></div>
+          <div class="rep-body">
+            <span class="rep-title">{{ r.title }}</span>
+            <span class="rep-meta">{{ r.patient }} → Dr. {{ r.doctor }}</span>
+          </div>
+          <span class="rep-time">{{ r.time }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

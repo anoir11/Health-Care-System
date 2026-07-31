@@ -1,0 +1,63 @@
+<aside class="sb" [class.sb--collapsed]="collapsed()">
+  <div class="sb__logo">
+    <div class="sb__logo-mark">
+      <svg lucideStethoscope [size]="18" color="#fff"></svg>
+    </div>
+    <span class="sb__logo-text">MediLink</span>
+  </div>
+
+  <button class="sb__collapse-btn" (click)="toggleCollapse()" [title]="collapsed() ? 'Expand sidebar' : 'Collapse sidebar'">
+    <svg lucideChevronLeft [size]="14"></svg>
+  </button>
+
+  <nav class="sb__nav">
+    <p class="sb__nav-group">Main</p>
+    @for (item of mainNav(); track item.route) {
+      <a class="sb__nav-item" [routerLink]="item.route" routerLinkActive="sb__nav-item--active" [title]="collapsed() ? item.label : ''">
+        <span class="sb__nav-icon">
+          @switch (item.icon) {
+            @case ('calendarDays') {
+              <svg lucideCalendarDays [size]="18"></svg>
+            }
+            @case ('folderOpen') {
+              <svg lucideFolderOpen [size]="18"></svg>
+            }
+            @case ('mail') {
+              <svg lucideMail [size]="18"></svg>
+            }
+          }
+        </span>
+        <span class="sb__nav-label">{{ item.label }}</span>
+      </a>
+    }
+
+    <p class="sb__nav-group">Account</p>
+    @for (item of accountNav(); track item.route) {
+      <a class="sb__nav-item" [routerLink]="item.route" routerLinkActive="sb__nav-item--active" [title]="collapsed() ? item.label : ''">
+        <span class="sb__nav-icon">
+          @switch (item.icon) {
+            @case ('user') {
+              <svg lucideUser [size]="18"></svg>
+            }
+            @case ('settings') {
+              <svg lucideSettings [size]="18"></svg>
+            }
+            @case ('fileText') {
+              <svg lucideFileText [size]="18"></svg>
+            }
+          }
+        </span>
+        <span class="sb__nav-label">{{ item.label }}</span>
+      </a>
+    }
+  </nav>
+
+  <div class="sb__user">
+    <button class="sb__logout-btn" (click)="logout()" [title]="collapsed() ? 'Log out' : ''">
+      <span class="sb__nav-icon">
+        <svg lucideLogOut [size]="18"></svg>
+      </span>
+      <span class="sb__nav-label">Log out</span>
+    </button>
+  </div>
+</aside>

@@ -1,0 +1,803 @@
+<!-- ─── Profile Page ──────────────────────────────────────────────────── -->
+<div class="pf-page">
+  <!-- ─── Hero Card ────────────────────────────────────────────────── -->
+  <div class="pf-hero">
+    <div class="pf-hero__banner"></div>
+    <div class="pf-hero__body">
+      <div class="pf-hero__left">
+        <div class="pf-avatar">
+          {{ profile().firstName.charAt(0) }}
+          <button class="pf-avatar__edit" title="Change photo">✏</button>
+        </div>
+        <div class="pf-hero__info">
+          <h1 class="pf-hero__name">{{ fullName() }}</h1>
+          <p class="pf-hero__sub">
+            <span>{{ age() }} years old</span>
+            <span class="pf-hero__dot"></span>
+            <span>{{ profile().gender }}</span>
+            <span class="pf-hero__dot"></span>
+            <span>📍 {{ profile().city }}, Tunisia</span>
+          </p>
+        </div>
+      </div>
+      <div class="pf-hero__actions">
+        <button class="pf-btn pf-btn--outline" (click)="exportPdf()">📤 Export PDF</button>
+        <button class="pf-btn pf-btn--primary" (click)="activeTab.set('personal'); startEditPersonal()">✏️ Edit profile</button>
+      </div>
+    </div>
+
+    <!-- Quick stats -->
+    <div class="pf-stats">
+      <div class="pf-stat pf-stat--red">
+        <span class="pf-stat__val">{{ profile().bloodType }}</span>
+        <span class="pf-stat__lbl">Blood Type</span>
+      </div>
+      <div class="pf-stat">
+        <span class="pf-stat__val">{{ profile().height }} cm</span>
+        <span class="pf-stat__lbl">Height</span>
+      </div>
+      <div class="pf-stat">
+        <span class="pf-stat__val">{{ profile().weight }} kg</span>
+        <span class="pf-stat__lbl">Weight</span>
+      </div>
+      <div class="pf-stat">
+        <span class="pf-stat__val">{{ bmi() }}</span>
+        <span class="pf-stat__lbl">BMI · {{ bmiLabel() }}</span>
+      </div>
+      <div class="pf-stat pf-stat--blue">
+        <span class="pf-stat__val">{{ profile().activeDoctors }}</span>
+        <span class="pf-stat__lbl">Active Doctors</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Tabs ─────────────────────────────────────────────────────── -->
+  <div class="pf-tabs">
+    <button class="pf-tab" [class.pf-tab--active]="activeTab() === 'personal'" (click)="activeTab.set('personal')">👤 Personal</button>
+    <button class="pf-tab" [class.pf-tab--active]="activeTab() === 'medical'" (click)="activeTab.set('medical')">🩺 Medical</button>
+    <button class="pf-tab" [class.pf-tab--active]="activeTab() === 'insurance'" (click)="activeTab.set('insurance')">🛡 Insurance</button>
+    <button class="pf-tab" [class.pf-tab--active]="activeTab() === 'security'" (click)="activeTab.set('security')">🔐 Security</button>
+  </div>
+
+  <!-- ─── Tab: Personal ────────────────────────────────────────────── -->
+  @if (activeTab() === 'personal') {
+    <div class="pf-grid">
+      <!-- Personal Information -->
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--blue">👤</div>
+            Personal Information
+          </div>
+          @if (!editingPersonal()) {
+            <button class="pf-card__edit" (click)="startEditPersonal()">Edit</button>
+          }
+        </div>
+
+        @if (!editingPersonal()) {
+          <!-- Read view -->
+          <div class="pf-card__body">
+            <div class="pf-field-grid">
+              <div class="pf-field">
+                <span class="pf-field__lbl">First name</span>
+                <span class="pf-field__val">{{ profile().firstName }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Last name</span>
+                <span class="pf-field__val">{{ profile().lastName }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Gender</span>
+                <span class="pf-field__val">{{ profile().gender }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Nationality</span>
+                <span class="pf-field__val">{{ profile().nationality }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Date of birth</span>
+                <span class="pf-field__val">{{ formatDate(profile().dateOfBirth) }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Age</span>
+                <span class="pf-field__val">{{ age() }} years old</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Phone</span>
+                <span class="pf-field__val">{{ profile().phone }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Email</span>
+                <span class="pf-field__val pf-field__val--muted">{{ profile().email }}</span>
+              </div>
+            </div>
+            <div class="pf-field pf-field--full">
+              <span class="pf-field__lbl">Address</span>
+              <span class="pf-field__val">{{ profile().address }}, {{ profile().city }}</span>
+            </div>
+          </div>
+        } @else {
+          <!-- Edit form -->
+          <form class="pf-card__body" (ngSubmit)="savePersonal()">
+            @if (personalError()) {
+              <div class="pf-alert">{{ personalError() }}</div>
+            }
+
+            <div class="pf-field-grid">
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-first">First name</label>
+                <input
+                  id="p-first"
+                  class="pf-input"
+                  type="text"
+                  name="firstName"
+                  [ngModel]="personalDraft().firstName"
+                  (ngModelChange)="updatePersonalField('firstName', $event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-last">Last name</label>
+                <input
+                  id="p-last"
+                  class="pf-input"
+                  type="text"
+                  name="lastName"
+                  [ngModel]="personalDraft().lastName"
+                  (ngModelChange)="updatePersonalField('lastName', $event)"
+                />
+              </div>
+
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-gender">Gender</label>
+                <select
+                  id="p-gender"
+                  class="pf-input"
+                  name="gender"
+                  [ngModel]="personalDraft().gender"
+                  (ngModelChange)="updatePersonalField('gender', $event)"
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-dob">Date of birth</label>
+                <input
+                  id="p-dob"
+                  class="pf-input"
+                  type="date"
+                  name="dateOfBirth"
+                  [ngModel]="personalDraft().dateOfBirth"
+                  (ngModelChange)="updatePersonalField('dateOfBirth', $event)"
+                />
+              </div>
+
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-nat">Nationality</label>
+                <input
+                  id="p-nat"
+                  class="pf-input"
+                  type="text"
+                  name="nationality"
+                  [ngModel]="personalDraft().nationality"
+                  (ngModelChange)="updatePersonalField('nationality', $event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-phone">Phone</label>
+                <input
+                  id="p-phone"
+                  class="pf-input"
+                  type="tel"
+                  name="phone"
+                  [ngModel]="personalDraft().phone"
+                  (ngModelChange)="updatePersonalField('phone', $event)"
+                />
+              </div>
+            </div>
+
+            <div class="pf-edit-field pf-field--full">
+              <label class="pf-field__lbl" for="p-email">Email</label>
+              <input id="p-email" class="pf-input pf-input--locked" type="email" name="email" disabled [ngModel]="personalDraft().email" />
+              <span class="pf-field__hint">🔒 Email can't be changed here</span>
+            </div>
+
+            <div class="pf-field-grid">
+              <div class="pf-edit-field pf-field--full">
+                <label class="pf-field__lbl" for="p-address">Address</label>
+                <input
+                  id="p-address"
+                  class="pf-input"
+                  type="text"
+                  name="address"
+                  [ngModel]="personalDraft().address"
+                  (ngModelChange)="updatePersonalField('address', $event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="p-city">City</label>
+                <input
+                  id="p-city"
+                  class="pf-input"
+                  type="text"
+                  name="city"
+                  [ngModel]="personalDraft().city"
+                  (ngModelChange)="updatePersonalField('city', $event)"
+                />
+              </div>
+            </div>
+
+            <div class="pf-edit-actions">
+              <button type="button" class="pf-btn pf-btn--outline" [disabled]="savingPersonal()" (click)="cancelEditPersonal()">
+                Cancel
+              </button>
+              <button type="submit" class="pf-btn pf-btn--primary" [disabled]="savingPersonal()">
+                {{ savingPersonal() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+
+      <!-- Emergency Contacts -->
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--rose">🚨</div>
+            Emergency Contacts
+          </div>
+        </div>
+        <div class="pf-card__body">
+          @for (ec of emergencyContacts(); track ec.id) {
+            <div class="pf-emergency" [attr.data-color]="ec.color">
+              <div class="pf-em-avatar" [attr.data-color]="ec.color">{{ ec.initials }}</div>
+              <div class="pf-em-info">
+                <p class="pf-em-name">{{ ec.name }}</p>
+                <p class="pf-em-rel">{{ ec.relationship }} · {{ ec.role === 'primary' ? 'Primary contact' : 'Secondary contact' }}</p>
+              </div>
+              <span class="pf-em-phone">{{ ec.phone }}</span>
+              <button class="pf-em-edit" title="Edit contact" (click)="openEditContact(ec)">✏</button>
+            </div>
+          }
+          <button class="pf-add-contact" (click)="openAddContact()">+ Add emergency contact</button>
+        </div>
+      </div>
+
+      <!-- Medical Summary preview -->
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--teal">🩺</div>
+            Medical Summary
+          </div>
+          <button class="pf-card__edit" (click)="activeTab.set('medical')">View all</button>
+        </div>
+        <div class="pf-card__body">
+          <div class="pf-field">
+            <span class="pf-field__lbl">Allergies</span>
+            <div class="pf-tags">
+              @for (a of profile().allergies; track a) {
+                <span class="pf-tag" [attr.data-type]="allergyType(a)"> {{ allergyIcon(a) }} {{ a }} </span>
+              }
+            </div>
+          </div>
+          <div class="pf-field">
+            <span class="pf-field__lbl">Chronic conditions</span>
+            <div class="pf-tags">
+              @for (c of profile().conditions; track c) {
+                <span class="pf-tag pf-tag--blue">{{ c }}</span>
+              }
+            </div>
+          </div>
+          <div class="pf-field-grid pf-field-grid--2">
+            <div class="pf-field">
+              <span class="pf-field__lbl">Smoking</span>
+              <span class="pf-field__val">{{ profile().smoking ? '🚬 Yes' : '✅ No' }}</span>
+            </div>
+            <div class="pf-field">
+              <span class="pf-field__lbl">Alcohol</span>
+              <span class="pf-field__val">{{ profile().alcohol ? '🍷 Yes' : '✅ No' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insurance preview -->
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--amber">🛡</div>
+            Insurance
+          </div>
+          <button class="pf-card__edit" (click)="activeTab.set('insurance')">View all</button>
+        </div>
+        <div class="pf-card__body">
+          <div class="pf-ins-card">
+            <p class="pf-ins__provider">Health Insurance</p>
+            <p class="pf-ins__name">{{ insurance().provider }}</p>
+            <div class="pf-ins__row">
+              <div class="pf-ins__field">
+                <span class="pf-ins__lbl">Policy No.</span>
+                <span class="pf-ins__val">{{ insurance().policyNumber }}</span>
+              </div>
+              <div class="pf-ins__field">
+                <span class="pf-ins__lbl">Expires</span>
+                <span class="pf-ins__val">{{ formatDate(insurance().expiryDate) }}</span>
+              </div>
+              <div class="pf-ins__field">
+                <span class="pf-ins__lbl">Coverage</span>
+                <span class="pf-ins__val">{{ insurance().coverage }}</span>
+              </div>
+            </div>
+            <div class="pf-ins__status">
+              <span class="pf-ins__status-dot"></span>
+              Active
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- ─── Tab: Medical ─────────────────────────────────────────────── -->
+  @if (activeTab() === 'medical') {
+    <div class="pf-grid">
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--red">🩸</div>
+            Vitals
+          </div>
+          @if (!editingMedical()) {
+            <button class="pf-card__edit" (click)="startEditMedical()">Edit</button>
+          }
+        </div>
+
+        @if (!editingMedical()) {
+          <div class="pf-card__body">
+            <div class="pf-field-grid">
+              <div class="pf-field">
+                <span class="pf-field__lbl">Blood Type</span><span class="pf-field__val pf-field__val--red">{{ profile().bloodType }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Height</span><span class="pf-field__val">{{ profile().height }} cm</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Weight</span><span class="pf-field__val">{{ profile().weight }} kg</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">BMI</span><span class="pf-field__val">{{ bmi() }} — {{ bmiLabel() }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Smoking</span><span class="pf-field__val">{{ profile().smoking ? '🚬 Yes' : '✅ No' }}</span>
+              </div>
+              <div class="pf-field">
+                <span class="pf-field__lbl">Alcohol</span><span class="pf-field__val">{{ profile().alcohol ? '🍷 Yes' : '✅ No' }}</span>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <form class="pf-card__body" (ngSubmit)="saveMedical()">
+            @if (medicalError()) {
+              <div class="pf-alert">{{ medicalError() }}</div>
+            }
+            <div class="pf-field-grid">
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="v-blood">Blood Type</label>
+                <select
+                  id="v-blood"
+                  class="pf-input"
+                  name="bloodType"
+                  [ngModel]="vitalsDraft().bloodType"
+                  (ngModelChange)="updateVitalsField('bloodType', $event)"
+                >
+                  <option value="" disabled>Select</option>
+                  @for (bt of bloodTypeOptions(); track bt) {
+                    <option [value]="bt">{{ bt }}</option>
+                  }
+                </select>
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="v-height">Height (cm)</label>
+                <input
+                  id="v-height"
+                  class="pf-input"
+                  type="number"
+                  name="height"
+                  min="0"
+                  [ngModel]="vitalsDraft().height"
+                  (ngModelChange)="updateVitalsField('height', +$event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="v-weight">Weight (kg)</label>
+                <input
+                  id="v-weight"
+                  class="pf-input"
+                  type="number"
+                  name="weight"
+                  min="0"
+                  [ngModel]="vitalsDraft().weight"
+                  (ngModelChange)="updateVitalsField('weight', +$event)"
+                />
+              </div>
+            </div>
+            <div class="pf-field-grid pf-field-grid--2">
+              <label class="pf-checkbox">
+                <input
+                  type="checkbox"
+                  name="smoking"
+                  [ngModel]="vitalsDraft().smoking"
+                  (ngModelChange)="updateVitalsField('smoking', $event)"
+                />
+                Smokes
+              </label>
+              <label class="pf-checkbox">
+                <input
+                  type="checkbox"
+                  name="alcohol"
+                  [ngModel]="vitalsDraft().alcohol"
+                  (ngModelChange)="updateVitalsField('alcohol', $event)"
+                />
+                Drinks alcohol
+              </label>
+            </div>
+
+            <div class="pf-edit-actions">
+              <button type="button" class="pf-btn pf-btn--outline" [disabled]="savingMedical()" (click)="cancelEditMedical()">
+                Cancel
+              </button>
+              <button type="submit" class="pf-btn pf-btn--primary" [disabled]="savingMedical()">
+                {{ savingMedical() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--rose">🚫</div>
+            Allergies
+          </div>
+          @if (!editingAllergies()) {
+            <button class="pf-card__edit" (click)="startEditAllergies()">Edit</button>
+          }
+        </div>
+
+        @if (!editingAllergies()) {
+          <div class="pf-card__body">
+            <div class="pf-tags">
+              @for (a of profile().allergies; track a) {
+                <span class="pf-tag" [attr.data-type]="allergyType(a)">{{ allergyIcon(a) }} {{ a }}</span>
+              }
+              @if (!profile().allergies.length) {
+                <span class="pf-field__val pf-field__val--muted">No known allergies</span>
+              }
+            </div>
+            <p class="pf-field__lbl" style="margin-top: 8px">Always shown to doctors before prescribing</p>
+          </div>
+        } @else {
+          <div class="pf-card__body">
+            @if (allergiesError()) {
+              <div class="pf-alert">{{ allergiesError() }}</div>
+            }
+            <div class="pf-tags">
+              @for (a of allergiesDraft(); track a; let i = $index) {
+                <span class="pf-tag pf-tag--editable" [attr.data-type]="allergyType(a)">
+                  {{ allergyIcon(a) }} {{ a }}
+                  <button type="button" class="pf-tag__remove" (click)="removeAllergyDraftItem(i)" aria-label="Remove">✕</button>
+                </span>
+              }
+            </div>
+            <div class="pf-tag-add">
+              <input
+                class="pf-input"
+                type="text"
+                placeholder="e.g. Penicillin"
+                [ngModel]="newAllergyInput()"
+                (ngModelChange)="newAllergyInput.set($event)"
+                (keydown.enter)="$event.preventDefault(); addAllergyDraftItem()"
+                name="newAllergy"
+              />
+              <button type="button" class="pf-btn pf-btn--outline" (click)="addAllergyDraftItem()">+ Add</button>
+            </div>
+            <div class="pf-edit-actions">
+              <button type="button" class="pf-btn pf-btn--outline" [disabled]="savingAllergies()" (click)="cancelEditAllergies()">
+                Cancel
+              </button>
+              <button type="button" class="pf-btn pf-btn--primary" [disabled]="savingAllergies()" (click)="saveAllergies()">
+                {{ savingAllergies() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--purple">🫀</div>
+            Chronic Conditions
+          </div>
+          @if (!editingConditions()) {
+            <button class="pf-card__edit" (click)="startEditConditions()">Edit</button>
+          }
+        </div>
+
+        @if (!editingConditions()) {
+          <div class="pf-card__body">
+            <div class="pf-tags">
+              @for (c of profile().conditions; track c) {
+                <span class="pf-tag pf-tag--blue">{{ c }}</span>
+              }
+              @if (!profile().conditions.length) {
+                <span class="pf-field__val pf-field__val--muted">No chronic conditions on file</span>
+              }
+            </div>
+          </div>
+        } @else {
+          <div class="pf-card__body">
+            @if (conditionsError()) {
+              <div class="pf-alert">{{ conditionsError() }}</div>
+            }
+            <div class="pf-tags">
+              @for (c of conditionsDraft(); track c; let i = $index) {
+                <span class="pf-tag pf-tag--blue pf-tag--editable">
+                  {{ c }}
+                  <button type="button" class="pf-tag__remove" (click)="removeConditionDraftItem(i)" aria-label="Remove">✕</button>
+                </span>
+              }
+            </div>
+            <div class="pf-tag-add">
+              <input
+                class="pf-input"
+                type="text"
+                placeholder="e.g. Hypertension"
+                [ngModel]="newConditionInput()"
+                (ngModelChange)="newConditionInput.set($event)"
+                (keydown.enter)="$event.preventDefault(); addConditionDraftItem()"
+                name="newCondition"
+              />
+              <button type="button" class="pf-btn pf-btn--outline" (click)="addConditionDraftItem()">+ Add</button>
+            </div>
+            <div class="pf-edit-actions">
+              <button type="button" class="pf-btn pf-btn--outline" [disabled]="savingConditions()" (click)="cancelEditConditions()">
+                Cancel
+              </button>
+              <button type="button" class="pf-btn pf-btn--primary" [disabled]="savingConditions()" (click)="saveConditions()">
+                {{ savingConditions() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--teal">💊</div>
+            Current Medications
+          </div>
+          @if (!editingMedications()) {
+            <button class="pf-card__edit" (click)="startEditMedications()">Edit</button>
+          }
+        </div>
+
+        @if (!editingMedications()) {
+          <div class="pf-card__body">
+            @for (m of profile().currentMedications; track m) {
+              <div class="pf-med-row">
+                <span class="pf-med-ic">💊</span>
+                <span class="pf-med-name">{{ m }}</span>
+                <span class="pf-tag pf-tag--green" style="margin-left: auto">Ongoing</span>
+              </div>
+            }
+            @if (!profile().currentMedications.length) {
+              <span class="pf-field__val pf-field__val--muted">No medications on file</span>
+            }
+          </div>
+        } @else {
+          <div class="pf-card__body">
+            @if (medicationsError()) {
+              <div class="pf-alert">{{ medicationsError() }}</div>
+            }
+            @for (m of medicationsDraft(); track m; let i = $index) {
+              <div class="pf-med-row">
+                <span class="pf-med-ic">💊</span>
+                <span class="pf-med-name">{{ m }}</span>
+                <button type="button" class="pf-tag__remove pf-tag__remove--row" (click)="removeMedicationDraftItem(i)" aria-label="Remove">
+                  ✕
+                </button>
+              </div>
+            }
+            <div class="pf-tag-add">
+              <input
+                class="pf-input"
+                type="text"
+                placeholder="e.g. Metformin 500mg"
+                [ngModel]="newMedicationInput()"
+                (ngModelChange)="newMedicationInput.set($event)"
+                (keydown.enter)="$event.preventDefault(); addMedicationDraftItem()"
+                name="newMedication"
+              />
+              <button type="button" class="pf-btn pf-btn--outline" (click)="addMedicationDraftItem()">+ Add</button>
+            </div>
+            <div class="pf-edit-actions">
+              <button type="button" class="pf-btn pf-btn--outline" [disabled]="savingMedications()" (click)="cancelEditMedications()">
+                Cancel
+              </button>
+              <button type="button" class="pf-btn pf-btn--primary" [disabled]="savingMedications()" (click)="saveMedications()">
+                {{ savingMedications() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ─── Tab: Insurance ───────────────────────────────────────────── -->
+  @if (activeTab() === 'insurance') {
+    <div class="pf-grid pf-grid--single">
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--amber">🛡</div>
+            Insurance Details
+          </div>
+          @if (!editingInsurance()) {
+            <button class="pf-card__edit" (click)="startEditInsurance()">Edit</button>
+          }
+        </div>
+
+        @if (!editingInsurance()) {
+          <div class="pf-card__body">
+            <div class="pf-ins-card pf-ins-card--large">
+              <p class="pf-ins__provider">Health Insurance</p>
+              <p class="pf-ins__name">{{ insurance().provider }}</p>
+              <div class="pf-ins__row pf-ins__row--wrap">
+                <div class="pf-ins__field">
+                  <span class="pf-ins__lbl">Policy Number</span>
+                  <span class="pf-ins__val">{{ insurance().policyNumber }}</span>
+                </div>
+                <div class="pf-ins__field">
+                  <span class="pf-ins__lbl">Expiry Date</span>
+                  <span class="pf-ins__val">{{ formatDate(insurance().expiryDate) }}</span>
+                </div>
+                <div class="pf-ins__field">
+                  <span class="pf-ins__lbl">Coverage Type</span>
+                  <span class="pf-ins__val">{{ insurance().coverage }}</span>
+                </div>
+                <div class="pf-ins__field">
+                  <span class="pf-ins__lbl">Status</span>
+                  <span class="pf-ins__val">Active ✅</span>
+                </div>
+              </div>
+              <div class="pf-ins__status"><span class="pf-ins__status-dot"></span> Active coverage</div>
+            </div>
+          </div>
+        } @else {
+          <form class="pf-card__body" (ngSubmit)="saveInsurance()">
+            @if (insuranceError()) {
+              <div class="pf-alert">{{ insuranceError() }}</div>
+            }
+            <div class="pf-field-grid">
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="i-provider">Provider</label>
+                <input
+                  id="i-provider"
+                  class="pf-input"
+                  type="text"
+                  name="provider"
+                  [ngModel]="insuranceDraft().provider"
+                  (ngModelChange)="updateInsuranceField('provider', $event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="i-policy">Policy Number</label>
+                <input
+                  id="i-policy"
+                  class="pf-input"
+                  type="text"
+                  name="policyNumber"
+                  [ngModel]="insuranceDraft().policyNumber"
+                  (ngModelChange)="updateInsuranceField('policyNumber', $event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="i-expiry">Expiry Date</label>
+                <input
+                  id="i-expiry"
+                  class="pf-input"
+                  type="date"
+                  name="expiryDate"
+                  [ngModel]="insuranceDraft().expiryDate"
+                  (ngModelChange)="updateInsuranceField('expiryDate', $event)"
+                />
+              </div>
+              <div class="pf-edit-field">
+                <label class="pf-field__lbl" for="i-coverage">Coverage Type</label>
+                <input
+                  id="i-coverage"
+                  class="pf-input"
+                  type="text"
+                  name="coverage"
+                  [ngModel]="insuranceDraft().coverage"
+                  (ngModelChange)="updateInsuranceField('coverage', $event)"
+                />
+              </div>
+            </div>
+
+            <label class="pf-checkbox">
+              <input
+                type="checkbox"
+                name="active"
+                [ngModel]="insuranceDraft().active"
+                (ngModelChange)="updateInsuranceField('active', $event)"
+              />
+              Coverage is currently active
+            </label>
+
+            <div class="pf-edit-actions">
+              <button type="button" class="pf-btn pf-btn--outline" [disabled]="savingInsurance()" (click)="cancelEditInsurance()">
+                Cancel
+              </button>
+              <button type="submit" class="pf-btn pf-btn--primary" [disabled]="savingInsurance()">
+                {{ savingInsurance() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- ─── Tab: Security ───────────────────────────────────────────── -->
+  @if (activeTab() === 'security') {
+    <div class="pf-grid pf-grid--single">
+      <div class="pf-card">
+        <div class="pf-card__head">
+          <div class="pf-card__title">
+            <div class="pf-card__ic pf-card__ic--blue">🔐</div>
+            Account & Security
+          </div>
+        </div>
+        <div class="pf-card__body pf-card__body--rows">
+          <div class="pf-sec-row">
+            <span class="pf-sec-label">🔑 Password</span>
+            <span class="pf-sec-val">Last changed 3 months ago</span>
+            <button class="pf-sec-btn">Change</button>
+          </div>
+          <div class="pf-sec-row">
+            <span class="pf-sec-label">📧 Email address</span>
+            <span class="pf-sec-val">{{ profile().email }}</span>
+            <button class="pf-sec-btn">Change</button>
+          </div>
+          <div class="pf-sec-row">
+            <span class="pf-sec-label">📱 Phone number</span>
+            <span class="pf-sec-val">{{ profile().phone }}</span>
+            <button class="pf-sec-btn">Change</button>
+          </div>
+          <div class="pf-sec-row">
+            <span class="pf-sec-label">🌐 Language</span>
+            <span class="pf-sec-val">English</span>
+            <button class="pf-sec-btn">Change</button>
+          </div>
+          <div class="pf-sec-row">
+            <span class="pf-sec-label">🔔 Notifications</span>
+            <span class="pf-sec-val">Email & SMS enabled</span>
+            <button class="pf-sec-btn">Manage</button>
+          </div>
+          <div class="pf-sec-row pf-sec-row--danger">
+            <span class="pf-sec-label">🗑 Delete account</span>
+            <span class="pf-sec-val">Permanently delete all your data</span>
+            <button class="pf-sec-btn pf-sec-btn--danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>

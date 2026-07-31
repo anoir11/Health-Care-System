@@ -1,0 +1,983 @@
+// ─── Page ────────────────────────────────────────────────────────────────────
+.pf-page {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 24px;
+  background: #f1f5f9;
+  min-height: 100vh;
+  font-family:
+    'Segoe UI',
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+// ─── Hero Card ───────────────────────────────────────────────────────────────
+.pf-hero {
+  background: #fff;
+  border: 1px solid #e4e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+  &__banner {
+    height: 90px;
+    background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 55%, #3b82f6 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.07);
+      bottom: -60px;
+      right: 60px;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      top: -30px;
+      right: -20px;
+    }
+  }
+
+  &__body {
+    padding: 0 24px 16px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__left {
+    display: flex;
+    align-items: flex-end;
+    gap: 16px;
+  }
+
+  &__info {
+    padding-bottom: 4px;
+  }
+
+  &__name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+    letter-spacing: -0.4px;
+  }
+
+  &__sub {
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  &__dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #cbd5e1;
+    flex-shrink: 0;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding-bottom: 4px;
+  }
+}
+
+// ─── Avatar ───────────────────────────────────────────────────────────────────
+.pf-avatar {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+  border: 4px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: -42px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+  position: relative;
+  cursor: pointer;
+
+  &__edit {
+    position: absolute;
+    bottom: 1px;
+    right: 1px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #2563eb;
+    border: 2px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 9px;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #1d4ed8;
+    }
+  }
+}
+
+// ─── Quick Stats ─────────────────────────────────────────────────────────────
+.pf-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-top: 1px solid #f1f5f9;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.pf-stat {
+  padding: 12px 10px;
+  text-align: center;
+  border-right: 1px solid #f1f5f9;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &__val {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1;
+  }
+
+  &__lbl {
+    display: block;
+    font-size: 10px;
+    color: #94a3b8;
+    margin-top: 3px;
+    font-weight: 500;
+  }
+
+  &--red &__val {
+    color: #dc2626;
+  }
+  &--blue &__val {
+    color: #2563eb;
+  }
+}
+
+// ─── Buttons ─────────────────────────────────────────────────────────────────
+.pf-btn {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--primary {
+    background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+    &:hover:not(:disabled) {
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+    }
+  }
+
+  &--outline {
+    background: #fff;
+    color: #374151;
+    border: 1px solid #e4e8f0;
+    &:hover:not(:disabled) {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+  }
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────────────────────
+.pf-tabs {
+  display: flex;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #e4e8f0;
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+
+  @media (max-width: 500px) {
+    width: 100%;
+  }
+}
+
+.pf-tab {
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  &:hover {
+    background: #f1f5f9;
+    color: #374151;
+  }
+
+  &--active {
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+  }
+
+  @media (max-width: 500px) {
+    flex: 1;
+    justify-content: center;
+    font-size: 11px;
+    padding: 0 8px;
+  }
+}
+
+// ─── Grid ─────────────────────────────────────────────────────────────────────
+.pf-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  &--single {
+    grid-template-columns: 1fr;
+    max-width: 640px;
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+.pf-card {
+  background: #fff;
+  border: 1px solid #e4e8f0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  &__title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__ic {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+
+    &--blue {
+      background: #eff6ff;
+    }
+    &--rose {
+      background: #fff1f2;
+    }
+    &--teal {
+      background: #f0fdfa;
+    }
+    &--purple {
+      background: #f5f3ff;
+    }
+    &--amber {
+      background: #fffbeb;
+    }
+    &--red {
+      background: #fef2f2;
+    }
+  }
+
+  &__edit {
+    font-size: 11px;
+    font-weight: 600;
+    color: #2563eb;
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: #eff6ff;
+    border: none;
+    cursor: pointer;
+    transition: background 0.12s;
+
+    &:hover {
+      background: #dbeafe;
+    }
+  }
+
+  &__body {
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    &--rows {
+      gap: 0;
+      padding: 0;
+    }
+  }
+}
+
+// ─── Field ────────────────────────────────────────────────────────────────────
+.pf-field-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  &--2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pf-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+
+  &__lbl {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__val {
+    font-size: 13px;
+    color: #0f172a;
+    font-weight: 500;
+
+    &--muted {
+      color: #64748b;
+    }
+    &--red {
+      color: #dc2626;
+      font-weight: 700;
+      font-size: 15px;
+    }
+  }
+}
+
+// ─── Inline edit forms (Personal / Vitals / Insurance) ───────────────────────
+.pf-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &.pf-field--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.pf-input {
+  height: 36px;
+  padding: 0 11px;
+  border-radius: 8px;
+  border: 1px solid #e4e8f0;
+  font-size: 13px;
+  color: #0f172a;
+  background: #fff;
+  font-family: inherit;
+  transition:
+    border-color 0.12s,
+    box-shadow 0.12s;
+
+  &:focus {
+    outline: none;
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+  }
+}
+
+select.pf-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 28px;
+  cursor: pointer;
+}
+
+.pf-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+
+  input[type='checkbox'] {
+    width: 16px;
+    height: 16px;
+    accent-color: #2563eb;
+    cursor: pointer;
+  }
+}
+
+.pf-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.pf-alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 9px 12px;
+}
+
+// ─── Editable tag lists (Allergies / Conditions / Medications) ───────────────
+.pf-tag--editable {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 6px;
+}
+
+.pf-tag__remove {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.12);
+  color: inherit;
+  font-size: 8px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s;
+  padding: 0;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.22);
+  }
+
+  &--row {
+    width: 22px;
+    height: 22px;
+    border-radius: 7px;
+    background: #fef2f2;
+    color: #dc2626;
+    font-size: 10px;
+    margin-left: auto;
+
+    &:hover {
+      background: #fee2e2;
+    }
+  }
+}
+
+.pf-tag-add {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+
+  .pf-input {
+    flex: 1;
+  }
+}
+
+// ─── Tags ─────────────────────────────────────────────────────────────────────
+.pf-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 2px;
+}
+
+.pf-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+
+  &[data-type='red'] {
+    background: #fee2e2;
+    color: #dc2626;
+    border-color: #fecaca;
+  }
+  &[data-type='amber'] {
+    background: #fef3c7;
+    color: #b45309;
+    border-color: #fde68a;
+  }
+  &--blue {
+    background: #dbeafe;
+    color: #1d4ed8;
+    border-color: #bfdbfe;
+  }
+  &--green {
+    background: #dcfce7;
+    color: #15803d;
+    border-color: #bbf7d0;
+  }
+  &--purple {
+    background: #ede9fe;
+    color: #7c3aed;
+    border-color: #ddd6fe;
+  }
+}
+
+// ─── Emergency Contact ────────────────────────────────────────────────────────
+.pf-emergency {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid;
+
+  &[data-color='orange'] {
+    background: #fff7ed;
+    border-color: #fed7aa;
+  }
+  &[data-color='teal'] {
+    background: #f0fdfa;
+    border-color: #99f6e4;
+  }
+  &[data-color='purple'] {
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+  }
+}
+
+.pf-em-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+
+  &[data-color='orange'] {
+    background: linear-gradient(135deg, #ea580c, #f97316);
+  }
+  &[data-color='teal'] {
+    background: linear-gradient(135deg, #0f766e, #14b8a6);
+  }
+  &[data-color='purple'] {
+    background: linear-gradient(135deg, #6d28d9, #8b5cf6);
+  }
+}
+
+.pf-em-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.pf-em-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.pf-em-rel {
+  font-size: 11px;
+  font-weight: 500;
+  color: #92400e;
+  margin-top: 1px;
+
+  .pf-emergency[data-color='teal'] & {
+    color: #0f766e;
+  }
+  .pf-emergency[data-color='purple'] & {
+    color: #6d28d9;
+  }
+}
+
+.pf-em-phone {
+  font-size: 12px;
+  font-weight: 500;
+  color: #374151;
+  flex-shrink: 0;
+}
+
+.pf-em-edit {
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  border: none;
+  background: rgba(255, 255, 255, 0.6);
+  color: #374151;
+  font-size: 11px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.12s;
+
+  &:hover {
+    background: #fff;
+  }
+}
+
+.pf-add-contact {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  background: none;
+  border: 1.5px dashed #bfdbfe;
+  border-radius: 8px;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: #eff6ff;
+  }
+}
+
+// ─── Insurance Card ───────────────────────────────────────────────────────────
+.pf-ins-card {
+  background: linear-gradient(135deg, #0f172a, #1e3a8a);
+  border-radius: 12px;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+
+  &--large {
+    padding: 20px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.06);
+    bottom: -20px;
+    right: 20px;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    top: -10px;
+    right: 60px;
+  }
+}
+
+.pf-ins {
+  &__provider {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 14px;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+
+    &--wrap {
+      flex-wrap: wrap;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__lbl {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__val {
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff;
+    margin-top: 2px;
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(74, 222, 128, 0.15);
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #4ade80;
+    margin-top: 12px;
+    position: relative;
+    z-index: 1;
+    width: fit-content;
+  }
+
+  &__status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+  }
+}
+
+// ─── Medication Row ───────────────────────────────────────────────────────────
+.pf-med-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f8fafc;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.pf-med-ic {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.pf-med-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #0f172a;
+  flex: 1;
+}
+
+// ─── Security Rows ────────────────────────────────────────────────────────────
+.pf-sec-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f8fafc;
+  transition: background 0.12s;
+
+  &:last-child {
+    border-bottom: none;
+  }
+  &:hover {
+    background: #fafbfc;
+  }
+
+  &--danger:hover {
+    background: #fff5f5;
+  }
+}
+
+.pf-sec-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  flex-shrink: 0;
+  min-width: 160px;
+}
+
+.pf-sec-val {
+  font-size: 12px;
+  color: #94a3b8;
+  flex: 1;
+}
+
+.pf-sec-btn {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid #e4e8f0;
+  background: #f8fafc;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.12s;
+  flex-shrink: 0;
+
+  &:hover {
+    border-color: #cbd5e1;
+    background: #f1f5f9;
+  }
+
+  &--danger {
+    border-color: #fecaca;
+    background: #fef2f2;
+    color: #dc2626;
+    &:hover {
+      background: #fee2e2;
+    }
+  }
+}
+
+// ─── email───────────────────────────────────────────────────────────────
+
+.pf-input {
+  // ...existing styles...
+
+  &:disabled,
+  &--locked {
+    background: #f8fafc;
+    color: #64748b;
+    border-color: #e4e8f0;
+    cursor: not-allowed;
+  }
+}
+
+.pf-field__hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #94a3b8;
+  margin-top: 2px;
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .pf-page {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .pf-hero__body {
+    padding: 0 16px 14px;
+  }
+  .pf-hero__actions {
+    width: 100%;
+  }
+  .pf-btn {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .pf-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .pf-stat:nth-child(4),
+  .pf-stat:nth-child(5) {
+    border-top: 1px solid #f1f5f9;
+  }
+
+  .pf-field-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pf-sec-label {
+    min-width: 120px;
+    font-size: 12px;
+  }
+  .pf-sec-val {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .pf-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pf-hero__name {
+    font-size: 17px;
+  }
+  .pf-avatar {
+    width: 68px;
+    height: 68px;
+    font-size: 24px;
+  }
+}

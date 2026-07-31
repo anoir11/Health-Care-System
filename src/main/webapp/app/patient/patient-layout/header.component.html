@@ -1,0 +1,39 @@
+<!-- ─── Patient Header ───────────────────────────────────────────────── -->
+<header class="ph">
+  <button class="ph__menu-btn" (click)="menuToggle.emit()" aria-label="Toggle menu">☰</button>
+
+  <div class="ph__titles">
+    <h1 class="ph__title">{{ title }} : {{ userName() }}</h1>
+    @if (subtitle) {
+      <p class="ph__subtitle">{{ subtitle }}</p>
+    }
+  </div>
+
+  <div class="ph__spacer"></div>
+
+  <div class="ph__actions">
+    <app-messages-bubbles />
+    <app-notifications-bell />
+    <div style="width: 0.5px; height: 22px; background-color: #d3d1c7; margin-right: -15px"></div>
+    <!-- Account menu trigger -->
+    <div class="sb__user">
+      <button class="sb__user-trigger" (click)="toggleUserMenu()">
+        <div class="sb__user-avatar">{{ patientInitial() }}</div>
+        <div class="sb__user-info">
+          <!-- <p class="sb__user-name">{{ patientName() }}</p>
+        <p class="sb__user-role">Patient</p> -->
+        </div>
+        <span class="sb__user-chevron"><i style="font-size: 9px" class="fa-solid fa-angle-down"></i></span>
+      </button>
+
+      @if (userMenuOpen()) {
+        <div class="sb__user-menu">
+          <button class="sb__user-menu-item" (click)="goTo('/patient/profile')"><span>👤</span> View profile</button>
+          <button class="sb__user-menu-item" (click)="goTo('/patient/settings')"><span>⚙️</span> Settings</button>
+          <div class="sb__user-menu-divider"></div>
+          <button class="sb__user-menu-item sb__user-menu-item--danger" (click)="logout()"><span>🚪</span> Log out</button>
+        </div>
+      }
+    </div>
+  </div>
+</header>

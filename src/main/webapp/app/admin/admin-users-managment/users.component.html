@@ -1,0 +1,351 @@
+<div class="users-page">
+  <!-- ══════════════════════════════════════
+       MAIN PANEL
+  ══════════════════════════════════════ -->
+  <div class="main-panel" [class.shrunk]="!!selectedUser">
+    <!-- Header -->
+    <div class="mp-header">
+      <div class="mp-hd-left">
+        <h1 class="mp-title">User Management</h1>
+        <p class="mp-sub">{{ totalCount }} accounts · {{ activeCount }} active</p>
+      </div>
+      <div class="hd-stats">
+        <div class="hd-stat">
+          <span class="hs-num">{{ patientCount }}</span>
+          <span class="hs-lbl">Patients</span>
+        </div>
+        <div class="hd-div"></div>
+        <div class="hd-stat">
+          <span class="hs-num hs-purple">{{ doctorCount }}</span>
+          <span class="hs-lbl">Doctors</span>
+        </div>
+        <div class="hd-div"></div>
+        <div class="hd-stat">
+          <span class="hs-num hs-amber">{{ suspendedCount }}</span>
+          <span class="hs-lbl">Suspended</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="16.5" y1="16.5" x2="22" y2="22" />
+        </svg>
+        <input type="text" placeholder="Search by name, email, city…" [(ngModel)]="searchQuery" (input)="applyFilters()" />
+        <span class="search-count" *ngIf="searchQuery">{{ filteredUsers.length }}</span>
+      </div>
+
+      <div class="toolbar-right">
+        <div class="seg-ctrl">
+          <button class="seg-btn" *ngFor="let r of roleFilters" [class.active]="roleFilter === r.value" (click)="setRoleFilter(r.value)">
+            {{ r.label }}
+            <span class="seg-cnt">{{ r.count }}</span>
+          </button>
+        </div>
+        <select class="fsel" [(ngModel)]="statusFilter" (change)="applyFilters()">
+          <option value="all">All statuses</option>
+          <option value="active">Active</option>
+          <option value="suspended">Suspended</option>
+          <option value="pending">Pending</option>
+        </select>
+        <select class="fsel" [(ngModel)]="sortBy" (change)="applyFilters()">
+          <option value="newest">Newest</option>
+          <option value="oldest">Oldest</option>
+          <option value="name">Name A–Z</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Bulk bar -->
+    <div class="bulk-bar" [class.visible]="selectedIds.size > 0">
+      <span class="bulk-count">{{ selectedIds.size }} selected</span>
+      <button class="bulk-btn amber" (click)="bulkSuspend()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+        </svg>
+        Suspend
+      </button>
+      <button class="bulk-btn red" (click)="bulkDelete()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+        </svg>
+        Delete
+      </button>
+      <button class="bulk-clear" (click)="clearSelection()">✕</button>
+    </div>
+
+    <!-- Table -->
+    <div class="table-wrap">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th class="th-chk">
+              <label class="chk-wrap">
+                <input type="checkbox" [checked]="isAllSelected()" (change)="toggleAll($event)" />
+                <span class="chkmark"></span>
+              </label>
+            </th>
+            <th>User</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>City</th>
+            <th>Last active</th>
+            <th>Joined</th>
+            <th class="th-act">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let u of paginatedUsers; trackBy: trackById"
+            [class.sel]="selectedIds.has(u.id)"
+            [class.hl]="selectedUser?.id === u.id"
+            (click)="selectUser(u)"
+          >
+            <td class="td-chk" (click)="$event.stopPropagation()">
+              <label class="chk-wrap">
+                <input type="checkbox" [checked]="selectedIds.has(u.id)" (change)="toggleSelect(u.id, $event)" />
+                <span class="chkmark"></span>
+              </label>
+            </td>
+
+            <td class="td-user">
+              <div class="ucell">
+                <div class="uavt" [style.background]="u.avatarBg">{{ u.initials }}</div>
+                <div class="uinfo">
+                  <span class="uname">{{ u.fullName }}</span>
+                  <span class="uemail">{{ u.email }}</span>
+                </div>
+              </div>
+            </td>
+
+            <td>
+              <span class="rbadge" [class]="'r-' + u.role">{{ u.role }}</span>
+            </td>
+
+            <td>
+              <span class="sbadge" [class]="'s-' + u.status"> <span class="sdot"></span>{{ u.status }} </span>
+            </td>
+
+            <td class="td-muted">{{ u.city }}</td>
+            <td class="td-mono">{{ u.lastActive }}</td>
+            <td class="td-mono">{{ u.joinedDate }}</td>
+
+            <td class="td-act" (click)="$event.stopPropagation()">
+              <div class="abtns">
+                <button class="abtn view" title="View" (click)="selectUser(u)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </button>
+                <button class="abtn suspend" [title]="u.status === 'suspended' ? 'Reactivate' : 'Suspend'" (click)="toggleSuspend(u)">
+                  <svg
+                    *ngIf="u.status !== 'suspended'"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+                  </svg>
+                  <svg
+                    *ngIf="u.status === 'suspended'"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </button>
+                <button class="abtn delete" title="Delete" (click)="promptDelete(u)">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="3 6 5 6 21 6" />
+                    <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="empty-state" *ngIf="filteredUsers.length === 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 00-3-3.87" />
+          <path d="M16 3.13a4 4 0 010 7.75" />
+        </svg>
+        <p>No users match your filters</p>
+        <span>Try adjusting search or role filter</span>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="filteredUsers.length > pageSize">
+      <span class="pag-info">
+        {{ (currentPage - 1) * pageSize + 1 }}–{{ min(currentPage * pageSize, filteredUsers.length) }} of {{ filteredUsers.length }}
+      </span>
+      <div class="pag-btns">
+        <button class="pag-btn" [disabled]="currentPage === 1" (click)="goPage(currentPage - 1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+        </button>
+        <button class="pag-num" *ngFor="let p of pageNumbers()" [class.on]="p === currentPage" (click)="goPage(p)">{{ p }}</button>
+        <button class="pag-btn" [disabled]="currentPage === totalPages()" (click)="goPage(currentPage + 1)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       PROFILE SIDEBAR
+  ══════════════════════════════════════ -->
+  <aside class="profile-sidebar" [class.open]="!!selectedUser">
+    @if (selectedUser) {
+      <div class="ps-hd">
+        <span class="ps-lbl">User Profile</span>
+        <button class="ps-close" (click)="closeProfile()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="ps-hero">
+        <div class="ps-avt" [style.background]="selectedUser.avatarBg">{{ selectedUser.initials }}</div>
+        <h2 class="ps-name">{{ selectedUser.fullName }}</h2>
+        <span class="ps-email">{{ selectedUser.email }}</span>
+        <div class="ps-badges">
+          <span class="rbadge" [class]="'r-' + selectedUser.role">{{ selectedUser.role }}</span>
+          <span class="sbadge" [class]="'s-' + selectedUser.status"> <span class="sdot"></span>{{ selectedUser.status }} </span>
+        </div>
+      </div>
+
+      <div class="ps-qstats">
+        <div class="qs" *ngFor="let q of getQuickStats(selectedUser)">
+          <span class="qs-num" [style.color]="q.color">{{ q.value }}</span>
+          <span class="qs-lbl">{{ q.label }}</span>
+        </div>
+      </div>
+
+      <div class="ps-body">
+        <div class="ps-sec">
+          <div class="ps-sec-hd">Contact</div>
+          <div class="ps-row">
+            <span class="pr-k">Phone</span><span class="pr-v">{{ selectedUser.phone }}</span>
+          </div>
+          <div class="ps-row">
+            <span class="pr-k">City</span><span class="pr-v">{{ selectedUser.city }}</span>
+          </div>
+          <div class="ps-row">
+            <span class="pr-k">Joined</span><span class="pr-v mono">{{ selectedUser.joinedDate }}</span>
+          </div>
+          <div class="ps-row">
+            <span class="pr-k">Last active</span><span class="pr-v mono">{{ selectedUser.lastActive }}</span>
+          </div>
+        </div>
+
+        @if (selectedUser.role === 'doctor') {
+          <div class="ps-sec">
+            <div class="ps-sec-hd">Professional</div>
+            <div class="ps-row">
+              <span class="pr-k">Specialty</span><span class="pr-v">{{ selectedUser.specialty }}</span>
+            </div>
+            <div class="ps-row">
+              <span class="pr-k">Clinic</span><span class="pr-v">{{ selectedUser.clinic }}</span>
+            </div>
+            <div class="ps-row">
+              <span class="pr-k">License</span><span class="pr-v mono">{{ selectedUser.licenseNumber }}</span>
+            </div>
+            <div class="ps-row">
+              <span class="pr-k">Experience</span><span class="pr-v">{{ selectedUser.yearsExperience }} yrs</span>
+            </div>
+          </div>
+        }
+
+        @if (selectedUser.suspensionLog && selectedUser.suspensionLog.length > 0) {
+          <div class="ps-sec">
+            <div class="ps-sec-hd">Suspension log</div>
+            <div class="sus-entry" *ngFor="let s of selectedUser.suspensionLog">
+              <span class="se-date mono">{{ s.date }}</span>
+              <span class="se-reason">{{ s.reason }}</span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="ps-footer">
+        <button class="psf-btn suspend" (click)="toggleSuspend(selectedUser)" *ngIf="selectedUser.status !== 'suspended'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
+          </svg>
+          Suspend account
+        </button>
+        <button class="psf-btn reactivate" (click)="toggleSuspend(selectedUser)" *ngIf="selectedUser.status === 'suspended'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          Reactivate account
+        </button>
+        <button class="psf-btn delete" (click)="promptDelete(selectedUser)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6" />
+            <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+          </svg>
+          Delete account
+        </button>
+      </div>
+    }
+  </aside>
+
+  <!-- DELETE MODAL -->
+  <div class="modal-overlay" [class.open]="showDeleteModal" (click)="cancelDelete()">
+    <div class="modal" (click)="$event.stopPropagation()" *ngIf="showDeleteModal">
+      <div class="modal-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+          <path d="M10 11v6" />
+          <path d="M14 11v6" />
+          <path d="M9 6V4h6v2" />
+        </svg>
+      </div>
+      <h3 class="modal-title">Delete account?</h3>
+      <p class="modal-body">
+        Permanently delete <strong>{{ deleteTarget?.fullName }}</strong
+        >'s account. This cannot be undone.
+      </p>
+      <div class="modal-actions">
+        <button class="modal-cancel" (click)="cancelDelete()">Cancel</button>
+        <button class="modal-confirm" (click)="confirmDelete()" [disabled]="isDeleting">
+          <span class="spinner" *ngIf="isDeleting"></span>
+          <span *ngIf="!isDeleting">Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

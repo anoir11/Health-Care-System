@@ -1,0 +1,358 @@
+<!-- ─── Prescriptions Page ────────────────────────────────────────────── -->
+<div class="rx-page">
+  <!-- ─── Header ──────────────────────────────────────────────────── -->
+  <div class="rx-header">
+    <div>
+      <h1 class="rx-header__title">Prescriptions</h1>
+      <p class="rx-header__sub">{{ prescriptions().length }} total prescriptions written</p>
+    </div>
+    <div class="rx-header__actions">
+      <div class="rx-search">
+        <span class="rx-search__icon">🔍</span>
+        <input
+          class="rx-search__input"
+          type="text"
+          placeholder="Search…"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+      <button class="rx-btn rx-btn--green" (click)="openWriter()">✏️ New Prescription</button>
+    </div>
+  </div>
+
+  <!-- ─── Main Layout ──────────────────────────────────────────────── -->
+  <div class="rx-layout">
+    <!-- ─── LEFT: list ───────────────────────────────────────────── -->
+    <div class="rx-list-panel">
+      @if (filteredPrescriptions().length === 0) {
+        <div class="rx-empty">
+          <span>💊</span>
+          <p>No prescriptions found</p>
+        </div>
+      }
+
+      @for (rx of filteredPrescriptions(); track rx.id) {
+        <div
+          class="rx-card"
+          [class.rx-card--active]="selectedPrescription()?.id === rx.id && !showWriter()"
+          (click)="selectPrescription(rx)"
+        >
+          <div class="rx-avatar" [attr.data-color]="rx.patientColor">{{ rx.patientInitials }}</div>
+          <div class="rx-card__body">
+            <div class="rx-card__name-row">
+              <span class="rx-card__name">{{ rx.patientName }}</span>
+              <span class="rx-type-badge" [attr.data-type]="rx.patientType">
+                {{ rx.patientType === 'medilink' ? '🟢 MediLink' : '🔘 Offline' }}
+              </span>
+            </div>
+            <p class="rx-card__diagnosis">{{ rx.diagnosis }}</p>
+            <p class="rx-card__meds">
+              {{ getMedsSummary(rx) }}
+              @if (rx.medications.length > 2) {
+                +{{ rx.medications.length - 2 }} more
+              }
+            </p>
+          </div>
+          <div class="rx-card__right">
+            <span class="rx-card__date">{{ formatDate(rx.date) }}</span>
+            <span class="rx-card__count">{{ rx.medications.length }} med{{ rx.medications.length > 1 ? 's' : '' }}</span>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- ─── RIGHT ────────────────────────────────────────────────── -->
+    <aside class="rx-right-panel">
+      <!-- ════ WRITER ════════════════════════════════════════════ -->
+      @if (showWriter()) {
+        <div class="rx-writer">
+          <!-- Head -->
+          <div class="rx-writer__head">
+            <h2 class="rx-writer__title">New Prescription</h2>
+            <div class="rx-writer__head-actions">
+              <button class="rx-ai-toggle" [class.active]="showAiChat()" (click)="showAiChat.set(!showAiChat())">✨ AI Assistant</button>
+              <button class="rx-close-btn" (click)="closeWriter()">✕</button>
+            </div>
+          </div>
+
+          <!-- Body — split when AI open -->
+          <div class="rx-writer__body" [class.rx-writer__body--split]="showAiChat()">
+            <!-- ── Form ─────────────────────────────────────── -->
+            <div class="rx-form">
+              <!-- Patient -->
+              <div class="rx-field">
+                <label class="rx-label">Patient *</label>
+                <select class="rx-select" [ngModel]="selectedPatientId()" (ngModelChange)="selectedPatientId.set($event)">
+                  <option value="">Select a patient…</option>
+                  @if (mediLinkPatients().length > 0) {
+                    <optgroup label="🟢 MediLink patients">
+                      @for (p of mediLinkPatients(); track p.id) {
+                        <option [value]="p.id">{{ p.name }} · {{ p.age }}y · {{ p.bloodType }}</option>
+                      }
+                    </optgroup>
+                  }
+                  @if (offlinePatients().length > 0) {
+                    <optgroup label="🔘 Offline patients">
+                      @for (p of offlinePatients(); track p.id) {
+                        <option [value]="p.id">{{ p.name }} · {{ p.age }}y · {{ p.bloodType }}</option>
+                      }
+                    </optgroup>
+                  }
+                </select>
+              </div>
+
+              <!-- Patient info strip -->
+              @if (selectedPatient(); as p) {
+                <div class="rx-patient-strip">
+                  <div class="rx-avatar rx-avatar--sm" [attr.data-color]="p.color">{{ p.initials }}</div>
+                  <div class="rx-patient-strip__info">
+                    <span class="rx-patient-strip__name">{{ p.name }}</span>
+                    <span class="rx-patient-strip__meta">{{ p.age }}y · {{ p.gender }} · {{ p.bloodType }}</span>
+                  </div>
+                  @if (p.allergies.length > 0) {
+                    <div class="rx-patient-strip__right">
+                      @for (a of p.allergies; track a) {
+                        <span class="rx-tag rx-tag--red">⚠️ {{ a }}</span>
+                      }
+                    </div>
+                  }
+                  @if (p.conditions.length > 0) {
+                    <div class="rx-patient-strip__right">
+                      @for (c of p.conditions; track c) {
+                        <span class="rx-tag rx-tag--blue">{{ c }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Diagnosis -->
+              <div class="rx-field">
+                <label class="rx-label">Diagnosis *</label>
+                <input
+                  class="rx-input"
+                  type="text"
+                  placeholder="e.g. Hypertension management, Post-op care…"
+                  [ngModel]="diagnosis()"
+                  (ngModelChange)="diagnosis.set($event)"
+                />
+              </div>
+
+              <!-- Medications -->
+              <div class="rx-field">
+                <div class="rx-label-row">
+                  <label class="rx-label">Medications *</label>
+                  <button class="rx-add-btn" (click)="addMedication()">+ Add medication</button>
+                </div>
+
+                @for (med of medications(); track $index; let i = $index) {
+                  <div class="rx-med-block">
+                    <div class="rx-med-block__num">{{ i + 1 }}</div>
+                    <div class="rx-med-block__fields">
+                      <input
+                        class="rx-input"
+                        placeholder="Medication name *"
+                        (input)="updateMed(i, 'name', $any($event.target).value)"
+                        [value]="med.name"
+                      />
+                      <div class="rx-med-row">
+                        <input
+                          class="rx-input"
+                          placeholder="Dosage (e.g. 10mg)"
+                          (input)="updateMed(i, 'dosage', $any($event.target).value)"
+                          [value]="med.dosage"
+                        />
+                        <input
+                          class="rx-input"
+                          placeholder="Frequency"
+                          (input)="updateMed(i, 'frequency', $any($event.target).value)"
+                          [value]="med.frequency"
+                        />
+                        <input
+                          class="rx-input"
+                          placeholder="Duration"
+                          (input)="updateMed(i, 'duration', $any($event.target).value)"
+                          [value]="med.duration"
+                        />
+                      </div>
+                      <input
+                        class="rx-input"
+                        placeholder="Special instructions (optional)"
+                        (input)="updateMed(i, 'notes', $any($event.target).value)"
+                        [value]="med.notes"
+                      />
+                    </div>
+                    @if (medications().length > 1) {
+                      <button class="rx-remove-btn" (click)="removeMedication(i)">✕</button>
+                    }
+                  </div>
+                }
+              </div>
+
+              <!-- Notes -->
+              <div class="rx-field">
+                <label class="rx-label">Doctor notes (optional)</label>
+                <textarea
+                  class="rx-input rx-textarea"
+                  placeholder="Additional instructions for the patient…"
+                  [ngModel]="writerNotes()"
+                  (ngModelChange)="writerNotes.set($event)"
+                >
+                </textarea>
+              </div>
+            </div>
+
+            <!-- ── AI Chat ─────────────────────────────────── -->
+            @if (showAiChat()) {
+              <div class="rx-ai">
+                <div class="rx-ai__head">
+                  <span class="rx-ai__title">✨ AI Medical Assistant</span>
+                  <span class="rx-ai__sub">Ask about medications, dosages, interactions</span>
+                </div>
+
+                <div class="rx-ai__messages">
+                  @for (msg of aiMessages(); track msg.id) {
+                    <div class="rx-ai__msg" [class.rx-ai__msg--user]="msg.role === 'user'">
+                      @if (msg.loading) {
+                        <div class="rx-ai__typing"><span></span><span></span><span></span></div>
+                      } @else {
+                        <div class="rx-ai__bubble">{{ msg.text }}</div>
+                      }
+                    </div>
+                  }
+                </div>
+
+                <div class="rx-ai__input-row">
+                  <input
+                    class="rx-input rx-ai__input"
+                    placeholder="Ask about medications…"
+                    [ngModel]="aiInput()"
+                    (ngModelChange)="aiInput.set($event)"
+                    (keydown)="handleAiKey($event)"
+                  />
+                  <button class="rx-ai__send" [class.active]="aiInput().trim().length > 0" (click)="sendAiMessage()">➤</button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Footer -->
+          <div class="rx-writer__foot">
+            <div class="rx-writer__foot-note">
+              @if (selectedPatient()?.type === 'medilink') {
+                <span class="rx-note rx-note--green">✓ Will be added to patient's MediLink folder automatically</span>
+              } @else if (selectedPatient()?.type === 'offline') {
+                <span class="rx-note rx-note--grey">🖨 Print only — patient has no MediLink account</span>
+              }
+            </div>
+            <div class="rx-writer__foot-btns">
+              <button class="rx-btn rx-btn--outline" (click)="closeWriter()">Cancel</button>
+              @if (selectedPatient()?.type === 'offline') {
+                <button class="rx-btn rx-btn--green" [disabled]="!canSubmit()" (click)="submitPrescription()">🖨 Issue & Print</button>
+              } @else {
+                <button class="rx-btn rx-btn--green" [disabled]="!canSubmit()" (click)="submitPrescription()">
+                  💊 Issue & Send to Folder
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- ════ DETAIL ══════════════════════════════════════════════ -->
+      @if (!showWriter() && selectedPrescription(); as rx) {
+        <div class="rx-detail">
+          <div class="rx-detail__head">
+            <h2 class="rx-detail__title">Prescription</h2>
+            <div class="rx-detail__head-right">
+              <span class="rx-type-badge" [attr.data-type]="rx.patientType">
+                {{ rx.patientType === 'medilink' ? '🟢 MediLink' : '🔘 Offline' }}
+              </span>
+              <button class="rx-icon-btn" title="Print">🖨</button>
+            </div>
+          </div>
+
+          <!-- Printable prescription -->
+          <div class="rx-print">
+            <div class="rx-print__header">
+              <div>
+                <div class="rx-print__doctor">Dr. Sarah Johnson</div>
+                <div class="rx-print__spec">Cardiologist · Clinique du Lac, Tunis</div>
+                <div class="rx-print__spec">Tel: +216 71 000 000</div>
+              </div>
+              <div class="rx-print__date-box">
+                <span class="rx-print__date-lbl">Date</span>
+                <span class="rx-print__date-val">{{ formatDate(rx.date) }}</span>
+              </div>
+            </div>
+
+            <div class="rx-print__divider"></div>
+
+            <div class="rx-print__patient">
+              <div class="rx-avatar rx-avatar--sm" [attr.data-color]="rx.patientColor">{{ rx.patientInitials }}</div>
+              <div>
+                <p class="rx-print__patient-name">{{ rx.patientName }}</p>
+                <p class="rx-print__patient-diag">{{ rx.diagnosis }}</p>
+              </div>
+            </div>
+
+            <div class="rx-print__divider"></div>
+
+            <div class="rx-print__meds">
+              @for (med of rx.medications; track med.name; let i = $index) {
+                <div class="rx-print__med">
+                  <div class="rx-print__med-num">{{ i + 1 }}</div>
+                  <div class="rx-print__med-body">
+                    <p class="rx-print__med-name">
+                      {{ med.name }} <span class="rx-print__med-dose">{{ med.dosage }}</span>
+                    </p>
+                    <p class="rx-print__med-detail">{{ med.frequency }} · {{ med.duration }}</p>
+                    @if (med.notes) {
+                      <p class="rx-print__med-note">📝 {{ med.notes }}</p>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+
+            @if (rx.notes) {
+              <div class="rx-print__divider"></div>
+              <div class="rx-print__notes">
+                <span class="rx-print__notes-lbl">Doctor notes</span>
+                <p class="rx-print__notes-text">{{ rx.notes }}</p>
+              </div>
+            }
+
+            <div class="rx-print__footer">
+              <div class="rx-print__sig">
+                <div class="rx-print__sig-line"></div>
+                <span class="rx-print__sig-name">Dr. Sarah Johnson</span>
+              </div>
+              @if (rx.patientType === 'medilink') {
+                <span class="rx-print__sent">✓ Added to patient's MediLink folder</span>
+              }
+            </div>
+          </div>
+
+          <div class="rx-detail__actions">
+            <button class="rx-btn rx-btn--outline rx-btn--block">🖨 Print prescription</button>
+            @if (rx.patientType === 'medilink') {
+              <button class="rx-btn rx-btn--outline rx-btn--block">📤 Resend to patient</button>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- ════ EMPTY ═══════════════════════════════════════════════ -->
+      @if (!showWriter() && !selectedPrescription()) {
+        <div class="rx-panel-empty">
+          <span class="rx-panel-empty__icon">💊</span>
+          <p class="rx-panel-empty__title">Select a prescription to view</p>
+          <p class="rx-panel-empty__sub">or write a new one for a patient</p>
+          <button class="rx-btn rx-btn--green" (click)="openWriter()">✏️ New Prescription</button>
+        </div>
+      }
+    </aside>
+  </div>
+</div>

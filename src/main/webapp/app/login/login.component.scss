@@ -1,0 +1,784 @@
+// ─── Tokens ──────────────────────────────────────────────────────────────────
+$red: #e53e3e;
+$red-dk: #c53030;
+$dark: #131c2e;
+$r: 6px;
+$r-md: 8px;
+$r-lg: 16px;
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+.page {
+  min-height: 100vh;
+  background: #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+// ─── Wrapper ──────────────────────────────────────────────────────────────────
+.wrapper {
+  display: flex;
+  align-items: stretch;
+  border-radius: $r-lg;
+  overflow: hidden;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+}
+
+// ─── LEFT PANEL ───────────────────────────────────────────────────────────────
+.lcard {
+  width: 340px;
+  flex-shrink: 0;
+  background: $dark;
+  display: flex;
+  flex-direction: column;
+}
+
+.lcard-top {
+  display: flex;
+  align-items: flex-start;
+  padding: 22px 22px 0;
+}
+
+.lcard-top-text {
+  flex: 1;
+  padding-right: 8px;
+}
+
+// Network widget
+.net-widget {
+  width: 118px;
+  height: 108px;
+  flex-shrink: 0;
+  background: #0d1420;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba($red, 0.12);
+  svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+// Logo
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 14px;
+
+  &-mk {
+    width: 26px;
+    height: 26px;
+    background: $red;
+    border-radius: $r;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
+}
+
+// Hero
+.hero {
+  h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    line-height: 1.1;
+    margin: 0 0 8px;
+    letter-spacing: -0.03em;
+    em {
+      color: $red;
+      font-style: normal;
+    }
+  }
+  p {
+    font-size: 10.5px;
+    color: #4b5563;
+    line-height: 1.65;
+    margin: 0;
+  }
+}
+
+// Body
+.lcard-body {
+  padding: 16px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+// Role selector cards
+.role-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.role-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: $r-md;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  &.role-active {
+    background: rgba($red, 0.1);
+    border-color: rgba($red, 0.3);
+  }
+}
+
+.rc-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: $r;
+  background: rgba($red, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #f87171;
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .role-active & {
+    background: rgba($red, 0.25);
+  }
+}
+
+.role-card strong {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #e5e7eb;
+  margin-bottom: 1px;
+}
+
+.role-card p {
+  font-size: 9px;
+  color: #4b5563;
+  margin: 0;
+}
+
+.rc-check {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: $red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  svg {
+    width: 9px;
+    height: 9px;
+    stroke: white;
+  }
+}
+
+.divdr {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 10px 0;
+}
+
+// Stats
+.stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.stat {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: $r;
+  padding: 8px 11px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    background: $red;
+  }
+}
+
+.sn {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: white;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.sl {
+  display: block;
+  font-size: 9px;
+  color: #4b5563;
+}
+
+// Testimonial
+.testi {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9px;
+  padding: 11px 13px;
+  margin-top: auto;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 5px;
+  svg {
+    width: 9px;
+    height: 9px;
+    fill: #f59e0b;
+  }
+}
+
+.tq {
+  font-size: 9.5px;
+  color: #9ca3af;
+  line-height: 1.55;
+  font-style: italic;
+  margin: 0 0 7px;
+}
+
+.tauth {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  &-l {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+}
+
+.tavat {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: $red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.tname {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+.trole {
+  display: block;
+  font-size: 8.5px;
+  color: #4b5563;
+}
+
+.lfooter {
+  font-size: 9px;
+  color: #1f2937;
+  margin-top: 10px;
+}
+
+// ─── RIGHT PANEL ──────────────────────────────────────────────────────────────
+.rcard {
+  flex: 1;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.form-area {
+  padding: 28px 28px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+// Role toggle
+.rtog {
+  display: flex;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+  margin-bottom: 22px;
+}
+
+.rtbtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px;
+  font-size: 12.5px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.15s;
+  font-family: inherit;
+
+  svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  &--on {
+    background: white;
+    color: #111827;
+    border-color: #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  &:not(&--on):hover {
+    color: #374151;
+  }
+}
+
+// Form heading
+.form-hd {
+  margin-bottom: 20px;
+}
+
+.rth {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.rsub {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  a {
+    color: $red;
+    font-weight: 600;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// Doctor pending notice
+.doctor-notice {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: #fff5f5;
+  border: 1px solid rgba($red, 0.2);
+  border-left: 3px solid $red;
+  border-radius: 0 $r $r 0;
+  font-size: 11px;
+  color: #7f1d1d;
+  margin-bottom: 18px;
+  line-height: 1.5;
+  animation: fadeSlide 0.2s ease-out;
+
+  svg {
+    width: 13px;
+    height: 13px;
+    stroke: $red;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  strong {
+    font-weight: 700;
+  }
+}
+
+// Form fields
+.ff {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 14px;
+
+  label {
+    font-size: 9px;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.forgot-link {
+  font-size: 9px;
+  font-weight: 500;
+  color: $red;
+  text-decoration: none;
+  text-transform: none;
+  letter-spacing: 0;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  svg:first-child {
+    position: absolute;
+    left: 10px;
+    width: 14px;
+    height: 14px;
+    stroke: #d1d5db;
+    pointer-events: none;
+    transition: stroke 0.15s;
+  }
+
+  input {
+    width: 100%;
+    height: 40px;
+    padding: 0 36px 0 34px;
+    border: 1px solid #e5e7eb;
+    border-radius: $r;
+    font-size: 13px;
+    color: #111827;
+    background: white;
+    box-sizing: border-box;
+    font-family: inherit;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+    appearance: none;
+
+    &::placeholder {
+      color: #d1d5db;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $red;
+      box-shadow: 0 0 0 3px rgba($red, 0.07);
+      & ~ svg:first-child {
+        stroke: $red;
+      }
+    }
+
+    &.invalid {
+      border-color: $red;
+      background: #fff5f5;
+    }
+  }
+
+  &:focus-within svg:first-child {
+    stroke: $red;
+  }
+}
+
+.eye-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: #9ca3af;
+  transition: color 0.15s;
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+  &:hover {
+    color: #6b7280;
+  }
+}
+
+.err {
+  font-size: 10px;
+  color: $red-dk;
+}
+
+// Remember me
+.remember-row {
+  margin-bottom: 16px;
+}
+
+.chk-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  cursor: pointer;
+  user-select: none;
+
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.chkmark {
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  background: white;
+
+  .chk-label input:checked ~ & {
+    background: $red;
+    border-color: $red;
+
+    &::after {
+      content: '';
+      width: 5px;
+      height: 9px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
+  }
+}
+
+// Error banner
+.error-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff5f5;
+  border: 1px solid rgba($red, 0.25);
+  border-radius: $r;
+  font-size: 12px;
+  color: #7f1d1d;
+  margin-bottom: 14px;
+  animation: fadeSlide 0.2s ease-out;
+  svg {
+    width: 14px;
+    height: 14px;
+    stroke: $red;
+    flex-shrink: 0;
+  }
+}
+
+// Submit button
+.sbtn {
+  width: 100%;
+  height: 42px;
+  background: $red;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.15s;
+  margin-bottom: 20px;
+
+  svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &:hover:not(:disabled) {
+    background: $red-dk;
+  }
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+// Spinner
+.spinner {
+  width: 17px;
+  height: 17px;
+  border: 2px solid rgba(white, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+// OR divider
+.or-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+
+  span {
+    flex: 1;
+    height: 1px;
+    background: #f1f5f9;
+  }
+
+  p {
+    font-size: 11px;
+    color: #9ca3af;
+    white-space: nowrap;
+  }
+}
+
+// OAuth
+.oauth-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.oauth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 38px;
+  border: 1px solid #e5e7eb;
+  border-radius: $r-md;
+  background: white;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+  }
+}
+
+// Admin link
+.admin-link {
+  margin-top: auto;
+  display: flex;
+  justify-content: center;
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #9ca3af;
+    text-decoration: none;
+    transition: color 0.15s;
+    svg {
+      width: 11px;
+      height: 11px;
+    }
+    &:hover {
+      color: $red;
+    }
+  }
+}
+
+// ─── Animations ───────────────────────────────────────────────────────────────
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────────────
+@media (max-width: 680px) {
+  .wrapper {
+    flex-direction: column;
+  }
+  .lcard {
+    width: 100%;
+  }
+  .net-widget {
+    display: none;
+  }
+  .role-cards {
+    flex-direction: row;
+  }
+  .stats {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .testi {
+    display: none;
+  }
+  .form-area {
+    padding: 20px 18px;
+  }
+}

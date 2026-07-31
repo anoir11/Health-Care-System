@@ -1,0 +1,472 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Raleway:wght@300;400;500;600&display=swap');
+
+body {
+  font-family: 'Poppins', 'Raleway', sans-serif;
+}
+
+.swiper-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.swiper-slide {
+  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center; /* Default — center both ways */
+  display: block;
+}
+
+.text-overlay {
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  /* background: rgba(0,0,0,0.5); */
+  color: #fff;
+  padding: 10px;
+}
+
+/* 🔥 Zoom In-Out Animation for Images */
+@keyframes zoomInOut {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1); /* Zoom in slightly */
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Apply animation to each slide image */
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  transition: transform 5s ease-out;
+  animation: zoomInOut 10s ease-in-out infinite;
+}
+
+.swiper-slide {
+  text-align: center;
+  position: relative;
+  overflow: hidden; /* ✅ Prevent image overflow when zooming */
+}
+
+/* .slide {
+  flex: 0 0 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 100px;
+} */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.164);
+  /* background: #006aff6b; */
+  background: rgba(255, 255, 255, 0.062); /* Semi-transparent blue */
+  /* background: #0022526b; */
+  backdrop-filter: blur(0.5px);
+}
+
+/* ✅ This puts the text left & vertically centered */
+.text-overlay {
+  position: absolute;
+  top: 57%;
+  /* background-color: #e02626; */
+  left: 15vw; /* distance from left */
+  transform: translateY(-50%); /* vertical center */
+  color: #001533;
+  color: #ff5f40;
+  z-index: 2;
+  max-width: 50%;
+  width: 650px;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+  gap: 3vh;
+  text-align: start;
+  height: 43vh;
+}
+
+/* Optional: Style the text */
+.text-overlay h2 {
+  font-size: 3.5rem;
+  margin: 0 0 10px;
+  font-weight: 500;
+  font-family: 'Poppins', 'Raleway', sans-serif;
+}
+
+.text-overlay p {
+  font-size: 1.2rem;
+  margin: 0;
+  line-height: 1.8;
+  width: 90%;
+  color: #001533;
+  font-family: 'Poppins', 'Raleway', sans-serif;
+}
+
+.dots {
+  position: absolute;
+  bottom: 100px; /* 70px */
+  left: 20%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 10px;
+}
+
+.dots span {
+  width: 30px;
+  height: 4px;
+  background: #ccc;
+  display: inline-block;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+.dots span.active {
+  background: #006bff;
+}
+
+/* Emergency button */
+.emergency-btn {
+  background: #006bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 50px;
+}
+
+.emergency-btn:hover {
+  background: #e02626;
+}
+
+.medType {
+  /* background-color: #e02626; */
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.medType img {
+  width: 50px; /* adjust this value as you like */
+  height: 50px; /* keep proportions consistent */
+  object-fit: contain; /* ensures the image doesn’t stretch */
+}
+
+.medTypeSous1 {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.icon-box {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+/* Optional hover effect */
+.icon-box:hover {
+  transform: translateY(-4px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.15));
+}
+
+/* Icon style (SVG or font icon) */
+.icon-box i,
+.icon-box svg {
+  color: #fff;
+  font-size: 36px;
+}
+
+/* 🔥 Animations */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 1s ease-out forwards;
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 1s ease-out forwards;
+}
+
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+input {
+  object-fit: none;
+  border: none;
+}
+
+.findDoc {
+  background: rgba(87, 87, 87, 0.1); /* Slightly transparent layer */
+  background: rgba(87, 87, 87, 0.1); /* Slightly transparent layer */
+
+  background:
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(240, 165, 4, 0) 50%, rgba(255, 255, 255, 0.9) 100%),
+    url('/assets/images/bc4.png');
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  backdrop-filter: blur(1px); /* Adjust blur strength */
+  -webkit-backdrop-filter: blur(1px); /* Safari support */
+  /* width: calc(100vw - 81vw); */
+  height: 500px;
+  max-height: fit-content;
+  /* position: absolute; */
+  z-index: 9;
+  /* bottom: 0;
+  right: 0; */
+  /* margin-right: calc(100vw - 87vw); */
+  /* margin-bottom: 10vh; */
+  border-top-left-radius: 3px; /* optional, looks nicer */
+  border-top-right-radius: 3px; /* optional, looks nicer */
+  border-left: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
+  border-right: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
+  border-top: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
+
+  padding: 25px;
+}
+
+.titlePart {
+  /* background-color:#001533; */
+  height: 13%;
+}
+
+.titlePart h2 {
+  font-size: 1.3rem;
+  color: #001533;
+  letter-spacing: 1px;
+  font-family: 'Poppins', 'Raleway', sans-serif;
+}
+
+.forum {
+  /* background-color: #e02626; */
+  min-height: 85%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-control {
+  padding: 15px;
+  /* width: 100%; */
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.363);
+  color: gray;
+}
+
+.form-control2 {
+  padding: 3px;
+  /* width: 100%; */
+  border-radius: 4px;
+  /* background-color: #e02626; */
+  font-size: small;
+  border: none;
+}
+.form-control2 ::placeholder {
+  color: rgb(184, 184, 184);
+}
+
+.dropdown {
+  position: relative;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: small;
+  color: #777777;
+}
+
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  transition: border 0.2s ease;
+}
+
+.dropdown.open .dropdown-trigger {
+  border-color: #3f51b5;
+}
+
+.dropdown .selected-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown .selected-option img {
+  width: 20px;
+  height: 20px;
+}
+
+.arrow {
+  transition: transform 0.3s;
+  color: #777777;
+}
+
+.dropdown.open .arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 1000000;
+  overflow: hidden;
+  max-height: fit-content;
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 1000000;
+}
+
+.dropdown-option:hover {
+  background: #f3f6ff;
+}
+
+.dropdown-option img {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .icon-box {
+    width: 50px;
+    height: 50px;
+  }
+
+  .findDoc {
+    display: block;
+  }
+
+  .overlay {
+    background: rgba(255, 255, 255, 0.315);
+    backdrop-filter: blur(2px);
+  }
+
+  /* Ensure Swiper slide takes full height of its container */
+  .swiper-slide {
+    height: 100%;
+    display: flex;
+  }
+
+  /* ✅ Make the image fill the slide's height */
+  .swiper-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* or 'contain' if you don’t want cropping */
+    display: block;
+    object-position: 45% center; /* ✅ shift image content 20% from the left */
+  }
+
+  .text-overlay {
+    left: 3vw;
+    max-width: 90%;
+    width: auto;
+    height: auto;
+    top: 50%;
+    transform: translateY(-50%);
+    justify-content: flex-start;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4vh;
+  }
+
+  .text-overlay h2 {
+    font-size: 1.7rem;
+    margin-bottom: 8px;
+  }
+
+  .text-overlay p {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .highlight {
+    font-size: 1.7rem !important;
+  }
+}
+
+.highlight {
+  font-size: 3.5rem;
+  color: #006bff !important;
+  color: #2680ff !important;
+  font-weight: bold !important;
+}

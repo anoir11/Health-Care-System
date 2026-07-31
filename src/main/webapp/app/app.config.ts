@@ -20,7 +20,7 @@ import { TranslationModule } from 'app/shared/language/translation.module';
 import { environment } from 'environments/environment';
 import FindLanguageFromKeyPipe from 'app/shared/language/find-language-from-key.pipe';
 import { httpInterceptorProviders } from './core/interceptor';
-import routes from './app.routes';
+import { routes } from './app.routes';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { NgbDateDayjsAdapter } from './config/datepicker-adapter';
 import { AppPageTitleStrategy } from './app-page-title-strategy';

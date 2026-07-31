@@ -1,0 +1,332 @@
+<!-- ─── Doctor Appointments Page ──────────────────────────────────────── -->
+<div class="da-page">
+  <!-- ─── Page Header ──────────────────────────────────────────────── -->
+  <div class="da-header">
+    <div class="da-header__left">
+      <h1 class="da-header__title">My Appointments</h1>
+      <p class="da-header__sub">Manage your daily schedule and patient slots</p>
+    </div>
+    <div class="da-header__actions">
+      <button class="da-btn da-btn--outline" (click)="showBlockModal.set(true)">🚫 Block slot</button>
+      <button class="da-btn da-btn--outline" (click)="goToday()">📅 Today</button>
+    </div>
+  </div>
+
+  <!-- ─── Quick Stats ───────────────────────────────────────────────── -->
+  <div class="da-stats">
+    <div class="da-stat da-stat--green">
+      <span class="da-stat__val">{{ stats().total }}</span>
+      <span class="da-stat__lbl">Total today</span>
+    </div>
+    <div class="da-stat da-stat--teal">
+      <span class="da-stat__val">{{ stats().done }}</span>
+      <span class="da-stat__lbl">Completed</span>
+    </div>
+    <div class="da-stat da-stat--blue">
+      <span class="da-stat__val">{{ stats().upcoming }}</span>
+      <span class="da-stat__lbl">Upcoming</span>
+    </div>
+    <div class="da-stat da-stat--grey">
+      <span class="da-stat__val">{{ stats().available }}</span>
+      <span class="da-stat__lbl">Available</span>
+    </div>
+  </div>
+
+  <!-- ─── Week Strip ────────────────────────────────────────────────── -->
+  <div class="da-week">
+    <button class="da-week__arrow" (click)="prevDay()">‹</button>
+    <div class="da-week__days">
+      @for (day of weekDays(); track day.date.toDateString()) {
+        <div
+          class="da-week__day"
+          [class.da-week__day--today]="day.isToday"
+          [class.da-week__day--selected]="isSelectedDate(day.date)"
+          (click)="selectDate(day.date)"
+        >
+          <span class="da-week__day-name">{{ day.dayShort }}</span>
+          <span class="da-week__day-num">{{ day.label }}</span>
+          @if (day.appointmentCount > 0) {
+            <span class="da-week__day-dot"></span>
+          }
+        </div>
+      }
+    </div>
+    <button class="da-week__arrow" (click)="nextDay()">›</button>
+  </div>
+
+  <!-- ─── Main Layout ───────────────────────────────────────────────── -->
+  <div class="da-layout">
+    <!-- ─── Timeline ───────────────────────────────────────────────── -->
+    <div class="da-timeline-card">
+      <div class="da-timeline-card__head">
+        <span class="da-timeline-card__date">{{ formatSelectedDate() }}</span>
+        <div class="da-legend">
+          <span class="da-legend-item da-legend-item--done">Done</span>
+          <span class="da-legend-item da-legend-item--upcoming">Upcoming</span>
+          <span class="da-legend-item da-legend-item--available">Available</span>
+          <span class="da-legend-item da-legend-item--blocked">Blocked</span>
+          <span class="da-legend-item da-legend-item--cancelled">Cancelled</span>
+        </div>
+      </div>
+
+      <div class="da-slots">
+        @for (slot of slots(); track slot.id) {
+          <div
+            class="da-slot"
+            [class.da-slot--selected]="selectedSlot()?.id === slot.id"
+            [class.da-slot--clickable]="slot.status !== 'available'"
+            (click)="selectSlot(slot)"
+          >
+            <!-- Time -->
+            <div class="da-slot__time">{{ slot.time }}</div>
+
+            <!-- Status line -->
+            <div class="da-slot__line" [attr.data-status]="slot.status"></div>
+
+            <!-- Content -->
+            <div class="da-slot__content">
+              <!-- Booked / Done -->
+              @if (slot.status === 'booked' || slot.status === 'done') {
+                <div class="da-slot__card" [attr.data-status]="slot.status">
+                  <div class="da-pat-avatar" [attr.data-color]="slot.patient?.color">
+                    {{ slot.patient?.initials }}
+                  </div>
+                  <div class="da-slot__card-body">
+                    <div class="da-slot__card-name">
+                      {{ slot.patient?.name }}
+                      @if (slot.patient?.isNew) {
+                        <span class="da-new-badge">New</span>
+                      }
+                    </div>
+                    <div class="da-slot__card-reason">{{ slot.patient?.reason }}</div>
+                  </div>
+                  <div class="da-slot__card-right">
+                    <span class="da-status-badge" [attr.data-status]="slot.status">
+                      {{ statusLabel(slot.status) }}
+                    </span>
+                    <div class="da-slot__card-actions">
+                      <button class="da-slot-btn">📁</button>
+                      <button class="da-slot-btn">💊</button>
+                      <button class="da-slot-btn da-slot-btn--danger">✕</button>
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <!-- Cancelled -->
+              @if (slot.status === 'cancelled') {
+                <div class="da-slot__card da-slot__card--cancelled">
+                  <div class="da-pat-avatar da-pat-avatar--grey">
+                    {{ slot.patient?.initials }}
+                  </div>
+                  <div class="da-slot__card-body">
+                    <div class="da-slot__card-name da-slot__card-name--strike">{{ slot.patient?.name }}</div>
+                    <div class="da-slot__card-reason">{{ slot.patient?.reason }}</div>
+                  </div>
+                  <div class="da-slot__card-right">
+                    <span class="da-status-badge" data-status="cancelled">Cancelled</span>
+                  </div>
+                </div>
+              }
+
+              <!-- Blocked -->
+              @if (slot.status === 'blocked') {
+                <div class="da-slot__blocked">
+                  🚫 {{ slot.notes ?? 'Blocked' }}
+                  <button class="da-unblock-btn" (click)="toggleBlock(slot)">Unblock</button>
+                </div>
+              }
+
+              <!-- Available -->
+              @if (slot.status === 'available') {
+                <div class="da-slot__available">
+                  <span class="da-slot__available-dot"></span>
+                  Available
+                  <button class="da-block-btn" (click)="showBlockModal.set(true)">Block</button>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ─── Right Panel ─────────────────────────────────────────────── -->
+    <aside class="da-detail-panel">
+      @if (selectedSlot(); as slot) {
+        <!-- Panel tabs -->
+        <div class="da-panel-tabs">
+          <button class="da-panel-tab" [class.active]="activePanel() === 'details'" (click)="activePanel.set('details')">
+            Patient Details
+          </button>
+          <button class="da-panel-tab" [class.active]="activePanel() === 'manage'" (click)="activePanel.set('manage')">Medical Info</button>
+        </div>
+
+        <!-- Details -->
+        @if (activePanel() === 'details') {
+          <div class="da-panel-body">
+            <!-- Patient hero -->
+            <div class="da-patient-hero">
+              <div class="da-pat-avatar da-pat-avatar--lg" [attr.data-color]="slot.patient?.color">
+                {{ slot.patient?.initials }}
+              </div>
+              <div class="da-patient-hero__info">
+                <h2 class="da-patient-hero__name">{{ slot.patient?.name }}</h2>
+                <p class="da-patient-hero__meta">{{ slot.patient?.age }} years old</p>
+                <span class="da-status-badge" [attr.data-status]="slot.status"> {{ statusLabel(slot.status) }} · {{ slot.time }} </span>
+              </div>
+            </div>
+
+            <!-- Info grid -->
+            <div class="da-info-grid">
+              <div class="da-info-field">
+                <span class="da-info-lbl">Reason</span>
+                <span class="da-info-val">{{ slot.patient?.reason }}</span>
+              </div>
+              <div class="da-info-field">
+                <span class="da-info-lbl">Phone</span>
+                <span class="da-info-val">{{ slot.patient?.phone }}</span>
+              </div>
+              <div class="da-info-field">
+                <span class="da-info-lbl">Blood Type</span>
+                <span class="da-info-val da-info-val--red">{{ slot.patient?.bloodType }}</span>
+              </div>
+              <div class="da-info-field">
+                <span class="da-info-lbl">Patient type</span>
+                <span class="da-info-val">{{ slot.patient?.isNew ? '🆕 New patient' : '🔁 Returning' }}</span>
+              </div>
+            </div>
+
+            <!-- Allergies -->
+            @if (slot.patient?.allergies && slot.patient!.allergies!.length > 0) {
+              <div class="da-info-section">
+                <span class="da-info-section-title">⚠️ Allergies</span>
+                <div class="da-tags">
+                  @for (a of slot.patient!.allergies!; track a) {
+                    <span class="da-tag da-tag--red">{{ a }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Conditions -->
+            @if (slot.patient?.conditions && slot.patient!.conditions!.length > 0) {
+              <div class="da-info-section">
+                <span class="da-info-section-title">🩺 Conditions</span>
+                <div class="da-tags">
+                  @for (c of slot.patient!.conditions!; track c) {
+                    <span class="da-tag da-tag--blue">{{ c }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Actions -->
+            <div class="da-panel-actions">
+              <button class="da-btn da-btn--green da-btn--block">📁 View Medical Folder</button>
+              <button class="da-btn da-btn--outline da-btn--block">💊 Write Prescription</button>
+              <button class="da-btn da-btn--outline da-btn--block">✉️ Send Message</button>
+              @if (slot.status === 'booked') {
+                <button class="da-btn da-btn--danger da-btn--block">✕ Cancel Appointment</button>
+              }
+            </div>
+          </div>
+        }
+
+        <!-- Medical info tab -->
+        @if (activePanel() === 'manage') {
+          <div class="da-panel-body">
+            <p class="da-panel-note">📋 Full medical folder access granted by patient</p>
+            <div class="da-info-grid">
+              <div class="da-info-field">
+                <span class="da-info-lbl">Blood Type</span>
+                <span class="da-info-val da-info-val--red">{{ slot.patient?.bloodType }}</span>
+              </div>
+            </div>
+            @if (slot.patient?.allergies && slot.patient!.allergies!.length > 0) {
+              <div class="da-info-section">
+                <span class="da-info-section-title">⚠️ Allergies</span>
+                <div class="da-tags">
+                  @for (a of slot.patient!.allergies!; track a) {
+                    <span class="da-tag da-tag--red">{{ a }}</span>
+                  }
+                </div>
+              </div>
+            }
+            @if (slot.patient?.conditions && slot.patient!.conditions!.length > 0) {
+              <div class="da-info-section">
+                <span class="da-info-section-title">🩺 Chronic Conditions</span>
+                <div class="da-tags">
+                  @for (c of slot.patient!.conditions!; track c) {
+                    <span class="da-tag da-tag--blue">{{ c }}</span>
+                  }
+                </div>
+              </div>
+            }
+            <div class="da-panel-actions">
+              <button class="da-btn da-btn--green da-btn--block">📁 Open Full Medical Folder</button>
+            </div>
+          </div>
+        }
+      } @else {
+        <!-- Empty state -->
+        <div class="da-panel-empty">
+          <span class="da-panel-empty__icon">👆</span>
+          <p class="da-panel-empty__title">Select an appointment</p>
+          <p class="da-panel-empty__sub">Click on a booked slot to see patient details</p>
+        </div>
+      }
+
+      <!-- Next appointment card -->
+      @if (nextSlot(); as next) {
+        <div class="da-next-card">
+          <div class="da-next-card__tag">
+            <span class="da-next-card__dot"></span>
+            Next patient
+          </div>
+          <div class="da-next-card__time">{{ next.time }}</div>
+          <div class="da-next-card__name">{{ next.patient?.name }}</div>
+          <div class="da-next-card__reason">{{ next.patient?.reason }}</div>
+          <div class="da-next-card__actions">
+            <button class="da-btn da-btn--white">📁 Folder</button>
+            <button class="da-btn da-btn--ghost">💊 Write Rx</button>
+          </div>
+        </div>
+      }
+    </aside>
+  </div>
+</div>
+
+<!-- ─── Block Slot Modal ───────────────────────────────────────────────── -->
+@if (showBlockModal()) {
+  <div class="da-modal-backdrop" (click)="showBlockModal.set(false)">
+    <div class="da-modal" (click)="$event.stopPropagation()">
+      <div class="da-modal__head">
+        <h2>Block a slot</h2>
+        <button class="da-modal__close" (click)="showBlockModal.set(false)">✕</button>
+      </div>
+      <div class="da-modal__body">
+        <div class="da-field">
+          <label>Reason</label>
+          <input
+            class="da-input"
+            type="text"
+            placeholder="e.g. Lunch break, Administrative work…"
+            [ngModel]="blockNote()"
+            (ngModelChange)="blockNote.set($event)"
+          />
+        </div>
+        <div class="da-quick-reasons">
+          <span class="da-quick-reason" (click)="blockNote.set('Lunch break')">☕ Lunch break</span>
+          <span class="da-quick-reason" (click)="blockNote.set('Administrative work')">📋 Administrative work</span>
+          <span class="da-quick-reason" (click)="blockNote.set('Personal')">🔒 Personal</span>
+          <span class="da-quick-reason" (click)="blockNote.set('Meeting')">👥 Meeting</span>
+        </div>
+      </div>
+      <div class="da-modal__foot">
+        <button class="da-btn da-btn--outline" (click)="showBlockModal.set(false)">Cancel</button>
+        <button class="da-btn da-btn--green" (click)="confirmBlock()">Block slot</button>
+      </div>
+    </div>
+  </div>
+}

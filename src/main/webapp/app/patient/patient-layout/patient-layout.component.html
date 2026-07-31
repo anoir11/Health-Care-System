@@ -1,0 +1,21 @@
+<!-- ─── Patient Layout ───────────────────────────────────────────────── -->
+<div class="lay">
+  <!-- Sidebar (desktop: collapsible rail · mobile: slide-in drawer) -->
+  <div class="lay__sidebar" [class.lay__sidebar--open]="mobileNavOpen()">
+    <app-patient-sidebar />
+  </div>
+
+  <!-- Backdrop, mobile only, closes drawer on tap -->
+  @if (mobileNavOpen()) {
+    <div class="lay__backdrop" (click)="closeMobileNav()"></div>
+  }
+
+  <!-- Main column: header + routed page content -->
+  <div class="lay__main">
+    <app-patient-header [title]="pageTitle()" [subtitle]="pageSubtitle()" (menuToggle)="toggleMobileNav()" />
+
+    <main class="lay__content">
+      <router-outlet />
+    </main>
+  </div>
+</div>

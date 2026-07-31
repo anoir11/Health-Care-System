@@ -1,0 +1,381 @@
+<div class="verif-page">
+  <!-- ══════════════════════════════════════
+       LIST PANEL (left)
+  ══════════════════════════════════════ -->
+  <section class="list-panel" [class.collapsed]="!!selectedDoctor">
+    <!-- Header -->
+    <div class="lp-header">
+      <div>
+        <h1 class="lp-title">Doctor Verification</h1>
+        <p class="lp-sub">{{ pendingList.length }} requests awaiting review</p>
+      </div>
+      <div class="lp-stats">
+        <div class="mini-stat">
+          <span class="ms-num">{{ pendingList.length }}</span>
+          <span class="ms-lbl">Pending</span>
+        </div>
+        <div class="mini-stat">
+          <span class="ms-num ms-green">{{ approvedToday }}</span>
+          <span class="ms-lbl">Approved today</span>
+        </div>
+        <div class="mini-stat">
+          <span class="ms-num ms-red">{{ rejectedToday }}</span>
+          <span class="ms-lbl">Rejected today</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" />
+          <line x1="16.5" y1="16.5" x2="22" y2="22" />
+        </svg>
+        <input type="text" placeholder="Search by name, specialty, clinic…" [(ngModel)]="searchQuery" (input)="applyFilters()" />
+      </div>
+      <div class="filter-pills">
+        <button class="pill" *ngFor="let f of filterOptions" [class.active]="activeFilter === f.value" (click)="setFilter(f.value)">
+          {{ f.label }}
+          <span class="pill-count" *ngIf="f.count > 0">{{ f.count }}</span>
+        </button>
+      </div>
+      <div class="sort-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <line x1="6" y1="12" x2="18" y2="12" />
+          <line x1="9" y1="18" x2="15" y2="18" />
+        </svg>
+        <select [(ngModel)]="sortBy" (change)="applyFilters()">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="name">Name A–Z</option>
+          <option value="specialty">Specialty</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Doctor cards -->
+    <div class="doctor-list">
+      <div
+        class="doc-card"
+        *ngFor="let d of filteredList; trackBy: trackById"
+        [class.selected]="selectedDoctor?.id === d.id"
+        [class.approved]="d.status === 'approved'"
+        [class.rejected]="d.status === 'rejected'"
+        (click)="selectDoctor(d)"
+      >
+        <div class="dc-left">
+          <div class="dc-avt" [style.background]="d.avatarBg">{{ d.initials }}</div>
+          <div class="dc-info">
+            <div class="dc-name-row">
+              <span class="dc-name">Dr. {{ d.fullName }}</span>
+              <span class="dc-badge" [class]="'badge-' + d.status">{{ d.status }}</span>
+            </div>
+            <span class="dc-spec">{{ d.specialty }} · {{ d.clinic }}</span>
+            <span class="dc-loc">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              {{ d.city }} · {{ d.yearsExperience }} yrs exp.
+            </span>
+          </div>
+        </div>
+
+        <div class="dc-right">
+          <span class="dc-time">{{ d.submittedAgo }}</span>
+          <div class="dc-docs-count">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            {{ d.documents.length }} docs
+          </div>
+          <svg class="dc-arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <polyline points="9 18 15 12 9 6" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div class="empty-state" *ngIf="filteredList.length === 0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <polyline points="9 12 11 14 15 10" />
+        </svg>
+        <p>No requests match your filters</p>
+        <span>Try changing the search or status filter</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       REVIEW PANEL (right — slide in)
+  ══════════════════════════════════════ -->
+  <section class="review-panel" [class.open]="!!selectedDoctor">
+    @if (selectedDoctor) {
+      <!-- Panel header -->
+      <div class="rp-header">
+        <button class="rp-close" (click)="closePanel()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <div class="rp-hd-actions">
+          <button class="rp-nav" (click)="navigateTo(-1)" [disabled]="currentIndex === 0">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+          </button>
+          <span class="rp-counter">{{ currentIndex + 1 }} / {{ filteredList.length }}</span>
+          <button class="rp-nav" (click)="navigateTo(1)" [disabled]="currentIndex === filteredList.length - 1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Doctor hero -->
+      <div class="rp-hero">
+        <div class="rp-avt" [style.background]="selectedDoctor.avatarBg">{{ selectedDoctor.initials }}</div>
+        <div class="rp-hero-info">
+          <h2 class="rp-name">Dr. {{ selectedDoctor.fullName }}</h2>
+          <span class="rp-spec">{{ selectedDoctor.specialty }}</span>
+          <span class="rp-badge" [class]="'badge-' + selectedDoctor.status">{{ selectedDoctor.status }}</span>
+        </div>
+      </div>
+
+      <div class="rp-body">
+        <!-- Personal info -->
+        <div class="rp-section">
+          <div class="rp-section-hd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Personal Information
+          </div>
+          <div class="info-grid">
+            <div class="info-row">
+              <span class="ir-key">Full name</span>
+              <span class="ir-val">{{ selectedDoctor.fullName }}</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">Email</span>
+              <span class="ir-val">{{ selectedDoctor.email }}</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">Phone</span>
+              <span class="ir-val">{{ selectedDoctor.phone }}</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">City</span>
+              <span class="ir-val">{{ selectedDoctor.city }}</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">CIN Number</span>
+              <span class="ir-val mono">{{ selectedDoctor.cinNumber }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Professional info -->
+        <div class="rp-section">
+          <div class="rp-section-hd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2" />
+              <path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2" />
+            </svg>
+            Professional Information
+          </div>
+          <div class="info-grid">
+            <div class="info-row">
+              <span class="ir-key">Specialty</span>
+              <span class="ir-val">{{ selectedDoctor.specialty }}</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">Clinic / Hospital</span>
+              <span class="ir-val">{{ selectedDoctor.clinic }}</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">Years of experience</span>
+              <span class="ir-val">{{ selectedDoctor.yearsExperience }} years</span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">Medical license</span>
+              <span class="ir-val mono license-val">
+                {{ selectedDoctor.licenseNumber }}
+                <span class="verified-chip">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                  Format OK
+                </span>
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="ir-key">Submitted</span>
+              <span class="ir-val mono">{{ selectedDoctor.submittedDate }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documents -->
+        <div class="rp-section">
+          <div class="rp-section-hd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+            </svg>
+            Uploaded Documents
+          </div>
+          <div class="doc-list">
+            <div class="doc-file" *ngFor="let doc of selectedDoctor.documents">
+              <div class="doc-icon" [class]="'doc-' + doc.type">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                  <polyline points="14 2 14 8 20 8" />
+                </svg>
+              </div>
+              <div class="doc-info">
+                <span class="doc-name">{{ doc.name }}</span>
+                <span class="doc-meta">{{ doc.size }} · {{ doc.uploadedAt }}</span>
+              </div>
+              <button class="doc-view-btn" title="Preview">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+              <button class="doc-dl-btn" title="Download">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin notes -->
+        <div class="rp-section">
+          <div class="rp-section-hd">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            Admin Notes
+            <span class="optional-tag">optional</span>
+          </div>
+          <textarea class="notes-area" placeholder="Add internal notes about this doctor's application…" [(ngModel)]="adminNotes" rows="3">
+          </textarea>
+        </div>
+      </div>
+
+      <!-- Decision footer -->
+      <div class="rp-footer" *ngIf="selectedDoctor.status === 'pending'">
+        <!-- Reject reason (shown when rejecting) -->
+        <div class="reject-reason" *ngIf="showRejectReason">
+          <label class="rr-label">Rejection reason <span class="rr-req">*</span></label>
+          <div class="rr-pills">
+            <button class="rr-pill" *ngFor="let r of rejectionReasons" [class.selected]="selectedReason === r" (click)="selectedReason = r">
+              {{ r }}
+            </button>
+          </div>
+          <textarea class="rr-area" placeholder="Additional details sent to the doctor…" [(ngModel)]="rejectNote" rows="2"> </textarea>
+          <div class="rr-actions">
+            <button class="rr-cancel" (click)="showRejectReason = false; selectedReason = ''">Cancel</button>
+            <button class="rr-confirm" (click)="confirmReject()" [disabled]="!selectedReason">Confirm rejection</button>
+          </div>
+        </div>
+
+        <div class="decision-btns" *ngIf="!showRejectReason">
+          <button class="btn-reject-open" (click)="showRejectReason = true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+            Reject
+          </button>
+          <button class="btn-approve" (click)="approveDoctor()" [disabled]="isProcessing">
+            <span *ngIf="!isProcessing">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+              Approve Doctor
+            </span>
+            <span class="spinner" *ngIf="isProcessing"></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Already decided footer -->
+      <div class="rp-footer decided" *ngIf="selectedDoctor.status !== 'pending'">
+        <div class="decided-badge" [class]="'decided-' + selectedDoctor.status">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            *ngIf="selectedDoctor.status === 'approved'"
+          >
+            <polyline points="20 6 9 17 4 12" />
+          </svg>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            *ngIf="selectedDoctor.status === 'rejected'"
+          >
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+          This account was {{ selectedDoctor.status }}
+        </div>
+        <button class="btn-undo" (click)="undoDecision()">Undo decision</button>
+      </div>
+    }
+
+    <!-- Empty review state -->
+    @if (!selectedDoctor) {
+      <div class="rp-empty">
+        <div class="rpe-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+        </div>
+        <h3>Select a request</h3>
+        <p>Click any doctor card on the left to review their application and documents.</p>
+      </div>
+    }
+  </section>
+</div>

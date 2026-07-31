@@ -1,0 +1,194 @@
+<!-- ─── Messages Page ─────────────────────────────────────────────────── -->
+<div class="ms-page">
+  <div class="ms-shell" [class.ms-show-chat]="showChatOnMobile()">
+    <!-- ─── LEFT: Conversation List ───────────────────────────────── -->
+    <aside class="ms-conv-panel">
+      <!-- Header -->
+      <div class="ms-conv-header">
+        <span class="ms-conv-header__title">Messages</span>
+        @if (totalUnread() > 0) {
+          <span class="ms-conv-header__badge">{{ totalUnread() }}</span>
+        }
+      </div>
+
+      <!-- Search -->
+      <div class="ms-conv-search">
+        <div class="ms-conv-search__box">
+          <span class="ms-conv-search__icon">🔍</span>
+          <input
+            class="ms-conv-search__input"
+            type="text"
+            placeholder="Search conversations…"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+          />
+        </div>
+      </div>
+
+      <!-- List -->
+      <div class="ms-conv-list">
+        <!-- Doctors -->
+        @if (doctorConversations().length > 0) {
+          <p class="ms-conv-section">Doctors</p>
+          @for (conv of doctorConversations(); track conv.id) {
+            <div class="ms-conv-item" [class.ms-conv-item--active]="activeConvId() === conv.id" (click)="selectConversation(conv.id)">
+              <div class="ms-avatar" [attr.data-color]="conv.avatarColor">
+                {{ conv.initials }}
+                @if (conv.isOnline) {
+                  <span class="ms-online-dot"></span>
+                }
+              </div>
+              <div class="ms-conv-item__body">
+                <p class="ms-conv-item__name">{{ conv.name }}</p>
+                <p class="ms-conv-item__preview" [class.ms-conv-item__preview--unread]="conv.unreadCount > 0">
+                  {{ conv.lastMessage }}
+                </p>
+              </div>
+              <div class="ms-conv-item__right">
+                <span class="ms-conv-item__time">{{ formatTime(conv.lastMessageTime) }}</span>
+                @if (conv.unreadCount > 0) {
+                  <span class="ms-unread-badge">{{ conv.unreadCount }}</span>
+                }
+              </div>
+            </div>
+          }
+        }
+
+        <!-- Support -->
+        @if (supportConversations().length > 0) {
+          <p class="ms-conv-section">Support</p>
+          @for (conv of supportConversations(); track conv.id) {
+            <div class="ms-conv-item" [class.ms-conv-item--active]="activeConvId() === conv.id" (click)="selectConversation(conv.id)">
+              <div class="ms-avatar" [attr.data-color]="conv.avatarColor">
+                {{ conv.initials }}
+                @if (conv.isOnline) {
+                  <span class="ms-online-dot"></span>
+                }
+              </div>
+              <div class="ms-conv-item__body">
+                <p class="ms-conv-item__name">{{ conv.name }}</p>
+                <p class="ms-conv-item__preview" [class.ms-conv-item__preview--unread]="conv.unreadCount > 0">
+                  {{ conv.lastMessage }}
+                </p>
+              </div>
+              <div class="ms-conv-item__right">
+                <span class="ms-conv-item__time">{{ formatTime(conv.lastMessageTime) }}</span>
+                @if (conv.unreadCount > 0) {
+                  <span class="ms-unread-badge">{{ conv.unreadCount }}</span>
+                }
+              </div>
+            </div>
+          }
+        }
+
+        <!-- Empty search -->
+        @if (doctorConversations().length === 0 && supportConversations().length === 0) {
+          <div class="ms-conv-empty">
+            <span>🔍</span>
+            <p>No conversations found</p>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- ─── RIGHT: Chat View ───────────────────────────────────────── -->
+    @if (activeConversation(); as conv) {
+      <div class="ms-chat-panel">
+        <!-- Chat Header -->
+        <div class="ms-chat-header">
+          <button class="ms-back-btn" (click)="backToList()">←</button>
+          <div class="ms-avatar ms-avatar--md" [attr.data-color]="conv.avatarColor">
+            {{ conv.initials }}
+            @if (conv.isOnline) {
+              <span class="ms-online-dot"></span>
+            }
+          </div>
+          <div class="ms-chat-header__info">
+            <p class="ms-chat-header__name">{{ conv.name }}</p>
+            <p class="ms-chat-header__status" [class.ms-chat-header__status--online]="conv.isOnline">
+              @if (conv.isOnline) {
+                <span class="ms-status-dot"></span> Online · {{ conv.subtitle }}
+              } @else {
+                <span class="ms-status-dot ms-status-dot--offline"></span> Offline · {{ conv.subtitle }}
+              }
+            </p>
+          </div>
+          <div class="ms-chat-header__actions">
+            <button class="ms-header-btn" title="View appointment">📅</button>
+            <button class="ms-header-btn" title="View profile">👤</button>
+            <button class="ms-header-btn" title="More options">⋯</button>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="ms-messages">
+          @for (msg of conv.messages; track msg.id; let i = $index) {
+            <!-- Day divider -->
+            @if (isNewDay(conv.messages, i)) {
+              <div class="ms-day-divider">
+                <span>{{ formatDay(msg.timestamp) }}</span>
+              </div>
+            }
+
+            <!-- System message -->
+            @if (msg.type === 'system') {
+              <div class="ms-sys-msg">{{ msg.text }}</div>
+            }
+
+            <!-- Regular message -->
+            @if (msg.type === 'text') {
+              <div class="ms-bubble-row" [class.ms-bubble-row--me]="msg.sender === 'me'">
+                @if (msg.sender === 'other') {
+                  <div class="ms-avatar ms-avatar--sm" [attr.data-color]="conv.avatarColor">
+                    {{ conv.initials }}
+                  </div>
+                }
+                <div class="ms-bubble-wrap">
+                  <div class="ms-bubble" [class.ms-bubble--me]="msg.sender === 'me'">
+                    {{ msg.text }}
+                  </div>
+                  <p class="ms-bubble-time" [class.ms-bubble-time--me]="msg.sender === 'me'">
+                    {{ formatMessageTime(msg.timestamp) }}
+                    @if (msg.sender === 'me') {
+                      ✓✓
+                    }
+                  </p>
+                </div>
+              </div>
+            }
+          }
+
+          <!-- Typing indicator -->
+          @if (isTyping()) {
+            <div class="ms-bubble-row">
+              <div class="ms-avatar ms-avatar--sm" [attr.data-color]="conv.avatarColor">
+                {{ conv.initials }}
+              </div>
+              <div class="ms-typing">
+                <span class="ms-typing__dot"></span>
+                <span class="ms-typing__dot"></span>
+                <span class="ms-typing__dot"></span>
+              </div>
+            </div>
+          }
+
+          <div #messagesEnd></div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="ms-input-area">
+          <button class="ms-attach-btn" title="Attach file">📎</button>
+          <input
+            class="ms-input"
+            type="text"
+            placeholder="Type a message…"
+            [ngModel]="newMessage()"
+            (ngModelChange)="newMessage.set($event)"
+            (keydown)="handleKeydown($event)"
+          />
+          <button class="ms-send-btn" [class.ms-send-btn--active]="newMessage().trim().length > 0" (click)="sendMessage()">➤</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

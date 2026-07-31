@@ -1,5 +1,5 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Component, OnInit, inject, signal, HostListener } from '@angular/core';
+import { Router, RouterModule, NavigationEnd, RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { StateStorageService } from 'app/core/auth/state-storage.service';
@@ -14,11 +14,14 @@ import { environment } from 'environments/environment';
 import ActiveMenuDirective from './active-menu.directive';
 import NavbarItem from './navbar-item.model';
 
+import { CommonModule } from '@angular/common'; // ← add
+
 @Component({
   selector: 'jhi-navbar',
+  standalone: true, // ← add
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
-  imports: [RouterModule, SharedModule, HasAnyAuthorityDirective, ActiveMenuDirective],
+  imports: [RouterModule, SharedModule, CommonModule, RouterLink],
 })
 export default class NavbarComponent implements OnInit {
   inProduction?: boolean;
@@ -28,6 +31,18 @@ export default class NavbarComponent implements OnInit {
   version = '';
   account = inject(AccountService).trackCurrentAccount();
   entitiesNavbarItems: NavbarItem[] = [];
+
+  sidebarOpen = false;
+  isSearchPage = false;
+  isDoctorProfilePage = false;
+  isRegister = false;
+  isAdminDashboard = false;
+  isDocRequest = false;
+  isScrolled = false;
+  isTask = false;
+  isEmailVerif = false;
+  isPatientDashboard = false;
+  isTask2 = false;
 
   private readonly loginService = inject(LoginService);
   private readonly translateService = inject(TranslateService);
@@ -43,33 +58,58 @@ export default class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.entitiesNavbarItems = EntityNavbarItems;
-    this.profileService.getProfileInfo().subscribe(profileInfo => {
-      this.inProduction = profileInfo.inProduction;
-      this.openAPIEnabled = profileInfo.openAPIEnabled;
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.isSearchPage = event.urlAfterRedirects === '/search-result';
+        this.isDoctorProfilePage = event.urlAfterRedirects === '/doctor-profile';
+        this.isRegister = event.urlAfterRedirects === '/register';
+        // this.isAdminDashboard = event.urlAfterRedirects === '/admin-dashboard';
+        this.isAdminDashboard = this.router.url.startsWith('/admin');
+        this.isPatientDashboard = this.router.url.startsWith('/patient');
+        this.isDocRequest = event.urlAfterRedirects === '/admin-verification';
+        this.isEmailVerif = event.urlAfterRedirects.startsWith('/verify-email');
+
+        this.isTask = event.urlAfterRedirects.startsWith('/tas');
+        this.isTask2 = event.urlAfterRedirects === '/task5';
+      }
     });
+
+    // this.entitiesNavbarItems = EntityNavbarItems;
+    // this.profileService.getProfileInfo().subscribe(profileInfo => {
+    //   this.inProduction = profileInfo.inProduction;
+    //   this.openAPIEnabled = profileInfo.openAPIEnabled;
+    // });
   }
 
-  changeLanguage(languageKey: string): void {
-    this.stateStorageService.storeLocale(languageKey);
-    this.translateService.use(languageKey);
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 100;
   }
 
-  collapseNavbar(): void {
-    this.isNavbarCollapsed.set(true);
+  toggleSidebar() {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 
-  login(): void {
-    this.router.navigate(['/login']);
-  }
+  // changeLanguage(languageKey: string): void {
+  //   this.stateStorageService.storeLocale(languageKey);
+  //   this.translateService.use(languageKey);
+  // }
 
-  logout(): void {
-    this.collapseNavbar();
-    this.loginService.logout();
-    this.router.navigate(['']);
-  }
+  // collapseNavbar(): void {
+  //   this.isNavbarCollapsed.set(true);
+  // }
 
-  toggleNavbar(): void {
-    this.isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed);
-  }
+  // login(): void {
+  //   this.router.navigate(['/login']);
+  // }
+
+  // logout(): void {
+  //   this.collapseNavbar();
+  //   this.loginService.logout();
+  //   this.router.navigate(['']);
+  // }
+
+  // toggleNavbar(): void {
+  //   this.isNavbarCollapsed.update(isNavbarCollapsed => !isNavbarCollapsed);
+  // }
 }

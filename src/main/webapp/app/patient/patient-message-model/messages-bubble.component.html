@@ -1,0 +1,46 @@
+<!-- ─── Messages ─────────────────────────────────────────────────────── -->
+<div class="mb">
+  <button class="mb__trigger" (click)="toggle()" aria-label="Messages">
+    <span class="mb__icon"><i style="font-size: 19px" class="fa-regular fa-comment-dots"></i></span>
+    @if (unreadCount() > 0) {
+      <span class="mb__badge">{{ unreadCount() > 9 ? '9+' : unreadCount() }}</span>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="mb__panel">
+      <div class="mb__panel-head">
+        <span class="mb__panel-title">Messages</span>
+        @if (unreadCount() > 0) {
+          <button class="mb__mark-all" (click)="markAllRead()">Mark all as read</button>
+        }
+      </div>
+
+      <div class="mb__list">
+        @if (messages().length === 0) {
+          <div class="mb__empty">
+            <span class="mb__empty-icon">💬</span>
+            <p>No messages</p>
+          </div>
+        }
+        @for (m of messages(); track m.id) {
+          <div class="mb__item" [class.mb__item--unread]="!m.read" (click)="markRead(m.id)">
+            <div class="mb__item-avatar">{{ m.avatarInitials }}</div>
+            <div class="mb__item-body">
+              <p class="mb__item-title">{{ m.sender }}</p>
+              <p class="mb__item-msg">{{ m.preview }}</p>
+              <p class="mb__item-time">{{ m.time }}</p>
+            </div>
+            @if (!m.read) {
+              <span class="mb__dot"></span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="mb__footer">
+        <button class="mb__view-all">View all messages</button>
+      </div>
+    </div>
+  }
+</div>
