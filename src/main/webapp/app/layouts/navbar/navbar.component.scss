@@ -1,36 +1,521 @@
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
-
-/* ==========================================================================
-Navbar
-========================================================================== */
-
-.navbar-version {
-  font-size: 0.65em;
-  color: $navbar-dark-color;
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.profile-image {
-  height: 1.75em;
-  width: 1.75em;
+.navbarContainer {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 50px;
+  /*backdrop-filter: blur(8px); /* Gives the "frosted" look */
+  background: rgba(70, 140, 255, 0.85); /* Semi-transparent blue */
+  background: rgba(70, 140, 255, 0.85); /* Semi-transparent blue */
+  background: rgba(255, 255, 255, 0.705); /* Semi-transparent blue */
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 99;
+
+  transition:
+    background-color 0.6s ease,
+    box-shadow 0.6s ease;
 }
 
-.navbar {
-  padding: 0.2rem 1rem;
+.green-bg {
+  background-color: #ffffff;
+  box-shadow: none;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.164);
+  color: white;
+}
 
-  a.nav-link {
-    font-weight: 400;
+.blue-bg {
+  background-color: #0f1923;
+  box-shadow: none;
+}
+
+.blue-bg .navbarContainerPart1 .logo-text .logo img {
+  width: 370px;
+}
+
+.whiteColor {
+  color: #ffffff !important;
+}
+
+.navbarContainer.scrolled {
+  /* 👇 Solid color after scrolling */
+  background-color: rgb(70, 141, 255);
+  background-color: #001635;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.navbarContainerPart1 {
+  /* background-color: #ff2e2e; */
+  display: flex;
+  width: 35%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 90%;
+}
+
+.navbarContainerPart2 {
+  /* background-color: green; */
+  display: flex;
+  width: 55%;
+  height: 90%;
+  align-items: center;
+  justify-content: start;
+  gap: 3vw;
+}
+
+.navbarContainerPart2 i {
+  display: none;
+}
+
+/* Logo text */
+.logo {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: white;
+  /* background-color: green; */
+  width: 215px;
+  position: relative;
+}
+
+.logo span {
+  color: #ff5f40;
+}
+
+.logo img {
+  height: 70%; /* scales image inside navbar */
+  width: auto;
+  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+}
+
+.logo img {
+  /*  width: calc(100vw - 80vw);          adjust this value as needed */
+  width: 260px;
+  height: auto; /* keeps aspect ratio */
+  vertical-align: middle;
+  object-fit: contain; /* prevents stretching */
+  display: flex;
+}
+
+.shape {
+  width: 20px;
+  height: 20px;
+  font-size: 1.2rem;
+  background: #fd0000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0; /* Position at the top */
+  right: 0; /* Position at the right */
+  border-radius: 7px;
+}
+
+/* Nav links */
+nav ul {
+  display: flex;
+  list-style: none;
+}
+
+nav ul li {
+  margin: 0 15px;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+nav ul li a:hover {
+  color: #cce0ff;
+}
+
+/* Emergency button */
+.emergency-btn {
+  background: #ff2e2e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  height: 50px;
+}
+
+.emergency-btn:hover {
+  background: #e02626;
+}
+
+/* Sidebar base */
+.mobile-sidebar {
+  position: fixed;
+  top: 70px;
+  right: -300px; /* hidden by default */
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+  padding: 20px;
+
+  backdrop-filter: blur(8px); /* Gives the "frosted" look */
+  background: rgba(70, 140, 255, 0.85); /* Semi-transparent blue */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-top: 1px solid rgba(128, 175, 252, 0.85);
+}
+
+/* Show sidebar */
+.mobile-sidebar.active {
+  right: 0;
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 70px;
+  right: -300px; /* hidden by default */
+  width: 250px;
+  height: 100%;
+  background: #fff;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999;
+
+  &.active {
+    transform: translateX(0);
   }
 }
 
-/* ==========================================================================
-Logo styles
-========================================================================== */
-.logo-img {
-  height: 45px;
-  width: 45px;
+/* iocerekkj */
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+
+  &.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+.mobile-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 82%;
+  max-width: 320px;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 999;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &.active {
+    transform: translateX(0);
+  }
+}
+
+.sb-header {
+  padding: 24px 20px 20px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.sb-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sb-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ef4444, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.sb-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.sb-role {
+  font-size: 12px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.sb-close {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f4f4f4;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.sb-nav {
+  padding: 16px 12px;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sb-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9ca3af;
+  padding: 8px 8px 6px;
+}
+
+.sb-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 2px;
+  text-decoration: none;
+
+  &:hover {
+    background: #f8f7f5;
+  }
+
+  &.active {
+    background: #fef2f2;
+
+    .sb-item-label {
+      color: #ef4444;
+    }
+  }
+}
+
+.sb-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sb-item-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.sb-item-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.sb-item-sub {
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 1px;
+}
+
+.sb-badge {
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 100px;
+  padding: 2px 7px;
+  min-width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.sb-divider {
+  height: 0.5px;
+  background: rgba(0, 0, 0, 0.06);
+  margin: 8px 12px;
+}
+
+.sb-footer {
+  padding: 16px;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
+}
+
+.sb-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background: darken(#ef4444, 6%);
+  }
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+
+  &.show {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* Optional: Hide desktop nav on mobile */
+@media (max-width: 768px) {
+  .navbarContainer {
+    /* background-color: violet; */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    height: 60px;
+  }
+
+  .navbarContainerPart2 nav,
+  button {
+    display: none;
+  }
+
+  .navbarContainerPart2 {
+    /* background-color: orange; */
+    display: flex;
+    flex: 1;
+    justify-content: end;
+  }
+  .navbarContainerPart2 i {
+    margin-right: 10px;
+    display: block;
+    color: #ffffff;
+  }
+  .navbarContainerPart1 {
+    /* background-color: green; */
+    display: flex;
+    justify-content: start;
+    flex: 1;
+  }
+  .logo {
+    margin-left: 10px;
+    font-size: 2rem;
+    width: 110%;
+    /* background-color: blue; */
+  }
+
+  .shape {
+    width: 15px;
+    height: 15px;
+    font-size: 1rem;
+    border-radius: 25%;
+  }
+
+  .fa-bars {
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .logo img {
+    width: 60vw; /* adjust this value as needed */
+    margin-left: -40px !important;
+    height: auto; /* keeps aspect ratio */
+    vertical-align: middle;
+    object-fit: contain; /* prevents stretching */
+    display: flex;
+  }
+
+  .blue-bg .navbarContainerPart1 .logo-text .logo img {
+    width: 250px;
+  }
+}
+
+nav ul li {
+  margin: 0 15px;
+  position: relative; /* Needed for pseudo-element positioning */
+
+  transition: border-color 0.3s ease;
+  /* 
+  background-color: #e02626; */
+  height: 80px;
+  display: flex;
+  align-items: center;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+/* Orange border on hover */
+nav ul li:hover {
+  border-top: 5px solid #ff5f40;
+  border-bottom: 5px solid #ff5f40;
+  border-radius: 5px;
+}
+
+/* Optional: smooth color + spacing effect */
+nav ul li a {
+  color: rgb(53, 52, 52);
+  text-decoration: none;
+  font-weight: 500;
   display: inline-block;
-  vertical-align: middle;
-  background: url('/content/images/logo-jhipster.png') no-repeat center center;
-  background-size: contain;
+  padding: 10px 0;
+  transition: color 0.3s ease;
+}
+
+.navbarContainer.scrolled nav ul li a {
+  color: white;
+}
+
+nav ul li:hover a {
+  color: #ff5f40; /* optional: color change on hover */
 }

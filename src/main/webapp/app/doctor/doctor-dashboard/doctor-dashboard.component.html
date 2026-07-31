@@ -1,0 +1,229 @@
+<!-- ─── Doctor Dashboard ──────────────────────────────────────────────── -->
+<div class="dd-page">
+  <!-- ─── Header ───────────────────────────────────────────────────── -->
+  <header class="dd-header">
+    <div class="dd-header__left">
+      <div class="dd-header__avatar">SJ</div>
+      <div class="dd-header__info">
+        <p class="dd-header__greeting">👋 Good morning,</p>
+        <h1 class="dd-header__name">Dr. Sarah Johnson</h1>
+        <p class="dd-header__spec">Cardiologist · Clinique du Lac</p>
+      </div>
+    </div>
+    <div class="dd-header__actions">
+      <button class="dd-btn dd-btn--outline">📅 My Schedule</button>
+      <button class="dd-btn dd-btn--primary">✏️ New Prescription</button>
+      <button class="dd-notif-btn">
+        🔔
+        <span class="dd-notif-btn__dot"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── Stats ────────────────────────────────────────────────────── -->
+  <div class="dd-stats">
+    <div class="dd-stat dd-stat--green">
+      <div class="dd-stat__icon">📅</div>
+      <span class="dd-stat__num">{{ stats().todayAppointments }}</span>
+      <span class="dd-stat__divider"></span>
+      <div class="dd-stat__text">
+        <span class="dd-stat__label">Today's Appointments</span>
+        <span class="dd-stat__sub">{{ stats().remaining }} remaining</span>
+      </div>
+    </div>
+    <div class="dd-stat dd-stat--blue">
+      <div class="dd-stat__icon">👥</div>
+      <span class="dd-stat__num">{{ stats().totalPatients }}</span>
+      <span class="dd-stat__divider"></span>
+      <div class="dd-stat__text">
+        <span class="dd-stat__label">Total Patients</span>
+        <span class="dd-stat__sub">+{{ stats().newThisWeek }} this week</span>
+      </div>
+    </div>
+    <div class="dd-stat dd-stat--purple">
+      <div class="dd-stat__icon">💊</div>
+      <span class="dd-stat__num">{{ stats().prescriptions }}</span>
+      <span class="dd-stat__divider"></span>
+      <div class="dd-stat__text">
+        <span class="dd-stat__label">Prescriptions</span>
+        <span class="dd-stat__sub">This month</span>
+      </div>
+    </div>
+    <div class="dd-stat dd-stat--amber">
+      <div class="dd-stat__icon">✉️</div>
+      <span class="dd-stat__num">{{ stats().unreadMessages }}</span>
+      <span class="dd-stat__divider"></span>
+      <div class="dd-stat__text">
+        <span class="dd-stat__label">Unread Messages</span>
+        <span class="dd-stat__sub">From patients</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── Main Grid ─────────────────────────────────────────────────── -->
+  <div class="dd-main">
+    <!-- ─── Today's Schedule ─────────────────────────────────────── -->
+    <div class="dd-card dd-timeline">
+      <div class="dd-card__head">
+        <div class="dd-card__title">
+          <div class="dd-card__ic dd-card__ic--green">📅</div>
+          Today's Schedule
+        </div>
+        <button class="dd-card__action">Manage slots</button>
+      </div>
+
+      <!-- Date navigation -->
+      <div class="dd-date-nav">
+        <button class="dd-date-nav__btn" (click)="prevDay()">←</button>
+        <span class="dd-date-nav__label">{{ formatDisplayDate(displayDate()) }}</span>
+        <button class="dd-date-nav__btn" (click)="nextDay()">→</button>
+        @if (!isToday()) {
+          <button class="dd-date-nav__today" (click)="goToday()">Today</button>
+        }
+      </div>
+
+      <!-- Slots -->
+      <div class="dd-slots">
+        @for (slot of timeSlots(); track slot.id) {
+          <div class="dd-slot">
+            <span class="dd-slot__time">{{ slot.time }}</span>
+            <div class="dd-slot__line" [attr.data-status]="slot.status"></div>
+            <div class="dd-slot__content">
+              <!-- Booked slot -->
+              @if (slot.status === 'booked-done' || slot.status === 'booked-upcoming') {
+                <div class="dd-slot-card" [attr.data-status]="slot.status">
+                  <div class="dd-pat-avatar" [attr.data-color]="slot.patient?.avatarColor">
+                    {{ slot.patient?.initials }}
+                  </div>
+                  <div class="dd-slot-card__body">
+                    <p class="dd-slot-card__name">{{ slot.patient?.name }}</p>
+                    <p class="dd-slot-card__reason">{{ slot.patient?.reason }}</p>
+                  </div>
+                  <div class="dd-slot-card__right">
+                    @if (slot.status === 'booked-done') {
+                      <span class="dd-slot-badge dd-slot-badge--done">✓ Done</span>
+                    }
+                    @if (slot.status === 'booked-upcoming' && slot.patient?.isNew) {
+                      <span class="dd-slot-badge dd-slot-badge--new">New patient</span>
+                    }
+                    @if (slot.status === 'booked-upcoming' && !slot.patient?.isNew) {
+                      <span class="dd-slot-badge dd-slot-badge--upcoming">Upcoming</span>
+                    }
+                    <div class="dd-slot-actions">
+                      <button class="dd-slot-btn">📁 Folder</button>
+                      @if (slot.status === 'booked-upcoming') {
+                        <button class="dd-slot-btn">💊 Rx</button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              }
+
+              <!-- Available slot -->
+              @if (slot.status === 'available') {
+                <div class="dd-slot-available">
+                  <span class="dd-slot-available__dot"></span>
+                  Available
+                </div>
+              }
+
+              <!-- Blocked slot -->
+              @if (slot.status === 'blocked') {
+                <div class="dd-slot-blocked">☕ {{ slot.blockReason }} — blocked</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ─── Right Column ──────────────────────────────────────────── -->
+    <aside class="dd-right-col">
+      <!-- Next patient hero -->
+      @if (nextAppointment(); as next) {
+        <div class="dd-next-card">
+          <div class="dd-next-card__tag">
+            <span class="dd-next-card__tag-dot"></span>
+            Next patient
+            @if (minutesUntilNext(); as mins) {
+              <span class="dd-next-card__tag-time">in {{ mins }} min</span>
+            }
+          </div>
+          <p class="dd-next-card__time">{{ next.time }}</p>
+          <p class="dd-next-card__patient">
+            {{ next.patient?.name }}
+            @if (next.patient?.age) {
+              · {{ next.patient?.age }} years old
+            }
+          </p>
+          <p class="dd-next-card__reason">{{ next.patient?.reason }}</p>
+          <div class="dd-next-card__actions">
+            <button class="dd-next-btn dd-next-btn--white">📁 View folder</button>
+            <button class="dd-next-btn dd-next-btn--ghost">💊 Write Rx</button>
+          </div>
+        </div>
+      }
+
+      @if (!nextAppointment()) {
+        <div class="dd-next-card dd-next-card--empty">
+          <div class="dd-next-card__empty-icon">✅</div>
+          <p class="dd-next-card__empty-title">All done for today!</p>
+          <p class="dd-next-card__empty-sub">No more upcoming appointments</p>
+        </div>
+      }
+
+      <!-- Messages -->
+      <div class="dd-card">
+        <div class="dd-card__head">
+          <div class="dd-card__title">
+            <div class="dd-card__ic dd-card__ic--blue">✉️</div>
+            Messages
+          </div>
+          <button class="dd-card__action dd-card__action--blue">View all</button>
+        </div>
+        @for (msg of messages(); track msg.id) {
+          <div class="dd-msg-item">
+            <div class="dd-pat-avatar dd-pat-avatar--sm" [attr.data-color]="msg.avatarColor">
+              {{ msg.initials }}
+            </div>
+            <div class="dd-msg-item__body">
+              <p class="dd-msg-item__name">{{ msg.patientName }}</p>
+              <p class="dd-msg-item__preview" [class.dd-msg-item__preview--unread]="msg.unread > 0">
+                {{ msg.preview }}
+              </p>
+            </div>
+            <div class="dd-msg-item__right">
+              <span class="dd-msg-item__time">{{ msg.time }}</span>
+              @if (msg.unread > 0) {
+                <span class="dd-msg-item__badge">{{ msg.unread }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Recent patients -->
+      <div class="dd-card">
+        <div class="dd-card__head">
+          <div class="dd-card__title">
+            <div class="dd-card__ic dd-card__ic--purple">👥</div>
+            Recent Patients
+          </div>
+          <button class="dd-card__action dd-card__action--purple">View all</button>
+        </div>
+        @for (pat of recentPatients(); track pat.id) {
+          <div class="dd-pat-item">
+            <div class="dd-pat-avatar dd-pat-avatar--sm" [attr.data-color]="pat.avatarColor">
+              {{ pat.initials }}
+            </div>
+            <div class="dd-pat-item__body">
+              <p class="dd-pat-item__name">{{ pat.name }}</p>
+              <p class="dd-pat-item__meta">{{ pat.lastVisit }} · {{ pat.reason }}</p>
+            </div>
+            <button class="dd-pat-item__folder">📁</button>
+          </div>
+        }
+      </div>
+    </aside>
+  </div>
+</div>

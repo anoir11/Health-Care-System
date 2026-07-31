@@ -1,0 +1,72 @@
+<div class="verify-page">
+  <div class="verify-card">
+    <div class="icon-badge">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+        <path d="M22 6l-10 7L2 6" />
+      </svg>
+    </div>
+
+    <h1>Check your email</h1>
+    <p class="subtitle">
+      We sent a 6-digit code to <strong>{{ maskedEmail }}</strong>
+    </p>
+
+    <div class="digit-row" (paste)="onPaste($event)">
+      @for (digit of digits; track $index) {
+        <input
+          #digitInput
+          type="text"
+          inputmode="numeric"
+          maxlength="1"
+          class="digit-box"
+          [class.filled]="digit"
+          [class.error]="errorMessage"
+          [value]="digit"
+          (input)="onDigitInput($event, $index)"
+          (keydown)="onKeydown($event, $index)"
+          [disabled]="isVerifying"
+        />
+      }
+    </div>
+
+    @if (errorMessage) {
+      <div class="msg msg--error">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <circle cx="12" cy="12" r="10" />
+          <line x1="12" y1="8" x2="12" y2="12" />
+          <line x1="12" y1="16" x2="12.01" y2="16" />
+        </svg>
+        {{ errorMessage }}
+      </div>
+    }
+
+    @if (successMessage) {
+      <div class="msg msg--success">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+        {{ successMessage }}
+      </div>
+    }
+
+    @if (isVerifying) {
+      <div class="verifying-state">
+        <span class="spinner"></span>
+        Verifying...
+      </div>
+    }
+
+    <div class="resend-row">
+      @if (resendCooldown > 0) {
+        <span class="cooldown-text">Resend code in {{ resendCooldown }}s</span>
+      } @else {
+        <button type="button" class="resend-btn" (click)="resend()" [disabled]="isResending">
+          {{ isResending ? 'Sending...' : 'Resend code' }}
+        </button>
+      }
+    </div>
+
+    <a routerLink="/register" class="back-link">← Back to register</a>
+  </div>
+</div>

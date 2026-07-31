@@ -1,58 +1,316 @@
-<div>
-  <div class="d-flex justify-content-center">
-    <div class="col-lg-6 col-md-8 col-sm-10">
-      <h1 data-cy="loginTitle" jhiTranslate="login.title">Sign in</h1>
-      @if (authenticationError()) {
-        <div class="alert alert-danger" data-cy="loginError" jhiTranslate="login.messages.error.authentication">
-          <strong>Failed to sign in!</strong> Please check your credentials and try again.
-        </div>
-      }
-      <form class="form" (ngSubmit)="login()" [formGroup]="loginForm">
-        <div class="mb-3">
-          <label class="username-label" for="username" jhiTranslate="global.form.username.label">Username</label>
-          <input
-            type="text"
-            class="form-control"
-            name="username"
-            id="username"
-            placeholder="{{ 'global.form.username.placeholder' | translate }}"
-            formControlName="username"
-            data-cy="username"
-          />
+<div class="page">
+  <div class="wrapper">
+    <!-- ═══════════════════════════════
+         LEFT PANEL
+    ═══════════════════════════════ -->
+    <aside class="lcard">
+      <div class="lcard-top">
+        <div class="lcard-top-text">
+          <!-- Logo -->
+          <div class="logo">
+            <div class="logo-mk">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="white" stroke-width="1.8" />
+                <path d="M12 8v4l2.5 1.5" stroke="white" stroke-width="1.8" stroke-linecap="round" />
+              </svg>
+            </div>
+            MediLink
+          </div>
+
+          <!-- Hero -->
+          <div class="hero">
+            <h2>Welcome<br />back<em>.</em></h2>
+            <p>Your health journey continues here. Sign in to access your appointments, records, and care team.</p>
+          </div>
         </div>
 
-        <div class="mb-3">
-          <label for="password" jhiTranslate="login.form.password">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            name="password"
-            id="password"
-            placeholder="{{ 'login.form.password.placeholder' | translate }}"
-            formControlName="password"
-            data-cy="password"
-          />
+        <!-- Network widget -->
+        <div class="net-widget">
+          <svg viewBox="0 0 118 108" xmlns="http://www.w3.org/2000/svg">
+            <rect width="118" height="108" fill="#0d1420" rx="12" />
+            <line x1="59" y1="54" x2="17" y2="21" stroke="rgba(229,62,62,0.3)" stroke-width="1" />
+            <line x1="59" y1="54" x2="101" y2="17" stroke="rgba(229,62,62,0.25)" stroke-width="1" />
+            <line x1="59" y1="54" x2="104" y2="57" stroke="rgba(229,62,62,0.3)" stroke-width="1" />
+            <line x1="59" y1="54" x2="84" y2="93" stroke="rgba(229,62,62,0.2)" stroke-width="1" />
+            <line x1="59" y1="54" x2="24" y2="86" stroke="rgba(229,62,62,0.25)" stroke-width="1" />
+            <line x1="59" y1="54" x2="11" y2="60" stroke="rgba(229,62,62,0.18)" stroke-width="1" />
+            <circle cx="17" cy="21" r="3.5" fill="rgba(229,62,62,0.55)" />
+            <circle cx="17" cy="21" r="6" fill="rgba(229,62,62,0.1)" />
+            <circle cx="101" cy="17" r="3" fill="rgba(229,62,62,0.45)" />
+            <circle cx="104" cy="57" r="3.5" fill="rgba(229,62,62,0.5)" />
+            <circle cx="84" cy="93" r="2.5" fill="rgba(229,62,62,0.35)" />
+            <circle cx="24" cy="86" r="3" fill="rgba(229,62,62,0.4)" />
+            <circle cx="11" cy="60" r="2.5" fill="rgba(229,62,62,0.3)" />
+            <circle cx="59" cy="54" r="23" fill="rgba(229,62,62,0.07)" />
+            <circle cx="59" cy="54" r="15" fill="rgba(229,62,62,0.11)" />
+            <rect x="43" y="45" width="32" height="24" rx="4.5" fill="#e53e3e" />
+            <rect x="51" y="39" width="16" height="9" rx="3" fill="#c53030" />
+            <rect x="55" y="50" width="8" height="14" rx="1.5" fill="white" opacity="0.95" />
+            <rect x="49" y="56" width="20" height="3.5" rx="1.5" fill="white" opacity="0.95" />
+            <rect x="45" y="47" width="28" height="4" rx="2" fill="rgba(255,255,255,0.12)" />
+          </svg>
         </div>
-
-        <div class="form-check">
-          <label class="form-check-label" for="rememberMe">
-            <input class="form-check-input" type="checkbox" name="rememberMe" id="rememberMe" formControlName="rememberMe" />
-            <span jhiTranslate="login.form.rememberme">Remember me</span>
-          </label>
-        </div>
-
-        <button type="submit" class="btn btn-primary" data-cy="submit" jhiTranslate="login.form.button">Sign in</button>
-      </form>
-      <div class="mt-3 alert alert-warning">
-        <a class="alert-link" routerLink="/account/reset/request" data-cy="forgetYourPasswordSelector" jhiTranslate="login.password.forgot"
-          >Did you forget your password?</a
-        >
       </div>
 
-      <div class="alert alert-warning">
-        <span jhiTranslate="global.messages.info.register.noaccount">You don&apos;t have an account yet?</span>
-        <a class="alert-link" routerLink="/account/register" jhiTranslate="global.messages.info.register.link">Register a new account</a>
+      <div class="lcard-body">
+        <!-- Role indicators -->
+        <div class="role-cards">
+          <div class="role-card" [class.role-active]="role === 'patient'" (click)="setRole('patient')">
+            <div class="rc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <div>
+              <strong>Patient</strong>
+              <p>Book appointments & manage your health</p>
+            </div>
+            <div class="rc-check" *ngIf="role === 'patient'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+          </div>
+          <div class="role-card" [class.role-active]="role === 'doctor'" (click)="setRole('doctor')">
+            <div class="rc-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+                <line x1="12" y1="11" x2="12" y2="17" />
+                <line x1="9" y1="14" x2="15" y2="14" />
+              </svg>
+            </div>
+            <div>
+              <strong>Doctor</strong>
+              <p>Manage patients, prescriptions & schedule</p>
+            </div>
+            <div class="rc-check" *ngIf="role === 'doctor'">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="divdr"></div>
+
+        <!-- Stats -->
+        <div class="stats">
+          <div class="stat"><span class="sn">12K+</span><span class="sl">Patients</span></div>
+          <div class="stat"><span class="sn">320+</span><span class="sl">Doctors</span></div>
+          <div class="stat"><span class="sn">98%</span><span class="sl">Satisfaction</span></div>
+          <div class="stat"><span class="sn">47+</span><span class="sl">Specialties</span></div>
+        </div>
+
+        <div class="divdr"></div>
+
+        <!-- Testimonial -->
+        <div class="testi">
+          <div class="stars">
+            <svg *ngFor="let s of [1, 2, 3, 4, 5]" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          </div>
+          <p class="tq">"I manage my entire practice through MediLink. Prescriptions, appointments, patient records — all in one place."</p>
+          <div class="tauth">
+            <div class="tauth-l">
+              <div class="tavat">KM</div>
+              <div>
+                <span class="tname">Dr. Karim Mansour</span>
+                <span class="trole">Cardiologist · Tunis</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="lfooter">© 2026 MediLink · Tunisia</p>
       </div>
-    </div>
+    </aside>
+
+    <!-- ═══════════════════════════════
+         RIGHT PANEL
+    ═══════════════════════════════ -->
+    <main class="rcard">
+      <div class="form-area">
+        <!-- Role toggle -->
+        <div class="rtog">
+          <button type="button" class="rtbtn" [class.rtbtn--on]="role === 'patient'" (click)="setRole('patient')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Patient
+          </button>
+          <button type="button" class="rtbtn" [class.rtbtn--on]="role === 'doctor'" (click)="setRole('doctor')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+              <line x1="12" y1="11" x2="12" y2="17" />
+              <line x1="9" y1="14" x2="15" y2="14" />
+            </svg>
+            Doctor
+          </button>
+        </div>
+
+        <!-- Heading -->
+        <div class="form-hd">
+          <h1 class="rth">
+            {{ role === 'patient' ? 'Sign in as patient' : 'Doctor portal' }}
+          </h1>
+          <p class="rsub">
+            Don't have an account?
+            <a routerLink="/register">Create one</a>
+          </p>
+        </div>
+
+        <!-- Doctor pending notice -->
+        <div class="doctor-notice" *ngIf="role === 'doctor'">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <span>Your account must be <strong>verified</strong> by our team before you can log in.</span>
+        </div>
+
+        <!-- Form -->
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <div class="ff">
+            <label for="email">Email address</label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="you@example.com"
+                [class.invalid]="isInvalid('email')"
+                autocomplete="email"
+              />
+            </div>
+            <span class="err" *ngIf="isInvalid('email')">Valid email required</span>
+          </div>
+
+          <div class="ff">
+            <label for="password">
+              Password
+              <a class="forgot-link" routerLink="/forgot-password">Forgot password?</a>
+            </label>
+            <div class="input-wrap">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0110 0v4" />
+              </svg>
+              <input
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Your password"
+                [class.invalid]="isInvalid('password')"
+                autocomplete="current-password"
+              />
+              <button type="button" class="eye-btn" (click)="showPassword = !showPassword" tabindex="-1">
+                <svg *ngIf="!showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <svg *ngIf="showPassword" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94" />
+                  <path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+              </button>
+            </div>
+            <span class="err" *ngIf="isInvalid('password')">Password required</span>
+          </div>
+
+          <!-- Remember me -->
+          <div class="remember-row">
+            <label class="chk-label">
+              <input type="checkbox" formControlName="rememberMe" />
+              <span class="chkmark"></span>
+              Remember me for 30 days
+            </label>
+          </div>
+
+          <!-- Error banner -->
+          <div class="error-banner" *ngIf="loginError">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            {{ loginError }}
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="sbtn" [disabled]="isSubmitting">
+            <span *ngIf="!isSubmitting">
+              Sign in
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12" />
+                <polyline points="12 5 19 12 12 19" />
+              </svg>
+            </span>
+            <span class="spinner" *ngIf="isSubmitting"></span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="or-divider">
+          <span></span>
+          <p>or continue with</p>
+          <span></span>
+        </div>
+
+        <!-- OAuth -->
+        <div class="oauth-row">
+          <button class="oauth-btn" type="button">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                fill="#4285F4"
+              />
+              <path
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                fill="#34A853"
+              />
+              <path
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                fill="#EA4335"
+              />
+            </svg>
+            Google
+          </button>
+          <button class="oauth-btn" type="button">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+              />
+            </svg>
+            Facebook
+          </button>
+        </div>
+
+        <!-- Admin link -->
+        <div class="admin-link">
+          <a routerLink="/admin/dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+            Admin panel access
+          </a>
+        </div>
+      </div>
+    </main>
   </div>
 </div>

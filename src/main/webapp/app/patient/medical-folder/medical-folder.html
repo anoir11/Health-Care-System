@@ -1,0 +1,394 @@
+<!-- ─── Page Shell ─────────────────────────────────────────────────── -->
+<div class="mf-page">
+  <!-- ─── Header ──────────────────────────────────────────────────── -->
+  <!-- <header class="mf-header">
+    <div class="mf-header__left">
+      <h1 class="mf-header__title">My Medical Folder</h1>
+      <p class="mf-header__sub">Your complete health history — owned by you, shared on your terms</p>
+    </div>
+    <div class="mf-header__actions">
+      <div class="mf-search">
+        <span class="mf-search__icon">🔍</span>
+        <input
+          class="mf-search__input"
+          type="text"
+          placeholder="Search documents…"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+      <button class="mf-btn mf-btn--primary" (click)="showUploadModal.set(true)">
+        <span>↑</span> Upload document
+      </button>
+    </div>
+  </header> -->
+
+  <header class="mf-header">
+    <div class="mf-header__left">
+      <div class="mf-header__icon">🗂️</div>
+      <div>
+        <h1 class="mf-header__title">My Medical Folder</h1>
+        <p class="mf-header__sub">Your complete health history — owned by you, shared on your terms</p>
+      </div>
+    </div>
+    <div class="mf-header__actions">
+      <div class="mf-search">
+        <span class="mf-search__icon">🔍</span>
+        <input
+          class="mf-search__input"
+          type="text"
+          placeholder="Search documents…"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+      <button class="mf-btn mf-btn--primary" (click)="showUploadModal.set(true)">
+        <span class="mf-btn__icon">↑</span>
+        Upload document
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── Stats Bar ────────────────────────────────────────────────── -->
+  <!-- <div class="mf-stats">
+    <div class="mf-stat mf-stat--blue">
+      <span class="mf-stat__value">{{ stats().total }}</span>
+      <span class="mf-stat__label">Total Documents</span>
+      <span class="mf-stat__sub">All categories</span>
+    </div>
+    <div class="mf-stat mf-stat--teal">
+      <span class="mf-stat__value">{{ stats().lab }}</span>
+      <span class="mf-stat__label">Lab Results</span>
+      <span class="mf-stat__sub">Last: 10 Apr 2026</span>
+    </div>
+    <div class="mf-stat mf-stat--purple">
+      <span class="mf-stat__value">{{ stats().imaging }}</span>
+      <span class="mf-stat__label">Imaging</span>
+      <span class="mf-stat__sub">IRM, X-ray, Echo</span>
+    </div>
+    <div class="mf-stat mf-stat--rose">
+      <span class="mf-stat__value">{{ stats().doctorsWithAccess }}</span>
+      <span class="mf-stat__label">Doctors with Access</span>
+      <span class="mf-stat__sub">Manage access →</span>
+    </div>
+  </div> -->
+
+  <!-- ─── Stats Bar ────────────────────────────────────────────────────── -->
+  <!-- <div class="mf-stats">
+
+  <div class="mf-stat mf-stat--blue">
+    <span class="mf-stat__icon">📁</span>
+    <span class="mf-stat__value">{{ stats().total }}</span>
+    <span class="mf-stat__label">Total Documents</span>
+    <span class="mf-stat__sub">All categories</span>
+  </div>
+
+  <div class="mf-stat mf-stat--teal">
+    <span class="mf-stat__icon">🧪</span>
+    <span class="mf-stat__value">{{ stats().lab }}</span>
+    <span class="mf-stat__label">Lab Results</span>
+    <span class="mf-stat__sub">Last: 10 Apr 2026</span>
+  </div>
+
+  <div class="mf-stat mf-stat--purple">
+    <span class="mf-stat__icon">🩻</span>
+    <span class="mf-stat__value">{{ stats().imaging }}</span>
+    <span class="mf-stat__label">Imaging</span>
+    <span class="mf-stat__sub">IRM, X-ray, Echo</span>
+  </div>
+
+  <div class="mf-stat mf-stat--rose">
+    <span class="mf-stat__icon">👨‍⚕️</span>
+    <span class="mf-stat__value">{{ stats().doctorsWithAccess }}</span>
+    <span class="mf-stat__label">Doctors with Access</span>
+    <span class="mf-stat__sub">Manage access →</span>
+  </div>
+
+</div> -->
+
+  <div class="mf-stats">
+    <div class="mf-stat mf-stat--blue">
+      <span class="mf-stat__num">{{ stats().total }}</span>
+      <span class="mf-stat__divider"></span>
+      <div class="mf-stat__text">
+        <span class="mf-stat__label">Total Documents</span>
+        <span class="mf-stat__sub">All categories</span>
+      </div>
+      <div class="mf-stat__icon">📁</div>
+    </div>
+
+    <div class="mf-stat mf-stat--teal">
+      <span class="mf-stat__num">{{ stats().lab }}</span>
+      <span class="mf-stat__divider"></span>
+      <div class="mf-stat__text">
+        <span class="mf-stat__label">Lab Results</span>
+        <span class="mf-stat__sub">Last: 10 Apr 2026</span>
+      </div>
+      <div class="mf-stat__icon">🧪</div>
+    </div>
+
+    <div class="mf-stat mf-stat--purple">
+      <span class="mf-stat__num">{{ stats().imaging }}</span>
+      <span class="mf-stat__divider"></span>
+      <div class="mf-stat__text">
+        <span class="mf-stat__label">Imaging</span>
+        <span class="mf-stat__sub">IRM, X-ray, Echo</span>
+      </div>
+      <div class="mf-stat__icon">🩻</div>
+    </div>
+
+    <div class="mf-stat mf-stat--rose">
+      <span class="mf-stat__num">{{ stats().doctorsWithAccess }}</span>
+      <span class="mf-stat__divider"></span>
+      <div class="mf-stat__text">
+        <span class="mf-stat__label">Doctors with Access</span>
+        <span class="mf-stat__sub">Manage access →</span>
+      </div>
+      <div class="mf-stat__icon">👨‍⚕️</div>
+    </div>
+  </div>
+
+  <!-- ─── Main Layout ──────────────────────────────────────────────── -->
+  <div class="mf-layout">
+    <!-- ─── Left: Document list ───────────────────────────────────── -->
+    <div style="background-color: rgb(255, 255, 255); flex: 3; border-radius: 16px; height: 100%" class="mf-list-panel">
+      <!-- Toolbar -->
+      <div class="mf-toolbar">
+        <div class="mf-tabs">
+          @for (cat of categories; track cat) {
+          <button class="mf-tab" [class.mf-tab--active]="activeCategory() === cat" (click)="activeCategory.set(cat)">
+            @if (cat !== 'all') { <span>{{ categoryIcon(cat) }}</span> } {{ categoryLabel(cat) }}
+          </button>
+          }
+        </div>
+        <div class="mf-toolbar__right">
+          <select class="mf-select" [ngModel]="sortKey()" (ngModelChange)="sortKey.set($event)">
+            @for (opt of sortOptions; track opt.key) {
+            <option [value]="opt.key">{{ opt.label }}</option>
+            }
+          </select>
+          <div class="mf-view-toggle">
+            <button class="mf-view-btn" [class.active]="viewMode() === 'list'" (click)="viewMode.set('list')" title="List view">☰</button>
+            <button class="mf-view-btn" [class.active]="viewMode() === 'grid'" (click)="viewMode.set('grid')" title="Grid view">⊞</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Document groups -->
+      <div class="mf-docs" [class.mf-docs--grid]="viewMode() === 'grid'">
+        @if (filteredDocs().length === 0) {
+        <div class="mf-empty">
+          <span class="mf-empty__icon">📂</span>
+          <p>No documents found</p>
+        </div>
+        } @if (viewMode() === 'list') { @for (group of groupedDocs(); track group.month;) {
+        <div class="mf-group" style="display: flex; flex-direction: column">
+          <div class="mf-group__header">
+            <span class="mf-group__label">{{ group.month }}</span>
+            <div style="background-color: rgba(128, 128, 128, 0.13); height: 1px; width: 80%; margin-left: 0px; margin-right: auto"></div>
+            <span class="mf-group__count">{{ group.items.length }} document{{ group.items.length > 1 ? 's' : '' }}</span>
+          </div>
+          @for (doc of group.items; track doc.id; ) {
+          <div
+            style="border-radius: 0px; border-bottom: 0px solid rgba(128, 128, 128, 0.062); height: 70px"
+            class="mf-doc-card"
+            [ngClass]="'mf-doc-card--' + doc.category"
+            [class.mf-doc-card--active]="selectedDoc()?.id === doc.id"
+            [attr.data-cat]="doc.category"
+            (click)="selectDoc(doc)"
+          >
+            <div class="mf-doc-card__icon" [attr.data-cat]="doc.category">{{ categoryIcon(doc.category) }}</div>
+            <div class="mf-doc-card__body">
+              <p class="mf-doc-card__title">{{ doc.title }}</p>
+              <p class="mf-doc-card__meta">{{ doc.doctor }} · {{ formatDate(doc.date) }} · {{ doc.clinic }}</p>
+            </div>
+            <div class="mf-doc-card__right">
+              <span class="mf-badge" [attr.data-cat]="doc.category"> {{ categoryLabel(doc.category) }} </span>
+              <span class="mf-share-dot" [class.shared]="doc.isShared" [title]="doc.isShared ? 'Shared' : 'Private'"></span>
+            </div>
+          </div>
+          }
+        </div>
+        } } @if (viewMode() === 'grid') { @for (doc of filteredDocs(); track doc.id;) {
+        <div class="mf-doc-grid-card" [class.mf-doc-grid-card--active]="selectedDoc()?.id === doc.id" (click)="selectDoc(doc)">
+          <div class="mf-doc-grid-card__icon" [attr.data-cat]="doc.category">{{ categoryIcon(doc.category) }}</div>
+          <p class="mf-doc-grid-card__title">{{ doc.title }}</p>
+          <p class="mf-doc-grid-card__doctor">{{ doc.doctor }}</p>
+          <p class="mf-doc-grid-card__date">{{ formatDate(doc.date) }}</p>
+          <div class="mf-doc-grid-card__footer">
+            <span class="mf-badge" [attr.data-cat]="doc.category"> {{ categoryLabel(doc.category) }} </span>
+            <span class="mf-share-dot" [class.shared]="doc.isShared"></span>
+          </div>
+        </div>
+        } }
+      </div>
+    </div>
+
+    <!-- ─── Right: Detail / Access panel ─────────────────────────── -->
+    <aside style="background-color: rgb(255, 255, 255); border-radius: 16px; flex: 1" class="mf-detail-panel">
+      <!-- Panel tabs -->
+      <div class="mf-panel-tabs">
+        <button class="mf-panel-tab" [class.active]="activePanel() === 'details'" (click)="activePanel.set('details')">
+          📄 Document Details
+        </button>
+        <button class="mf-panel-tab" [class.active]="activePanel() === 'access'" (click)="activePanel.set('access')">
+          🔐 Folder Access
+        </button>
+      </div>
+
+      <!-- Details Panel -->
+      @if (activePanel() === 'details') { @if (selectedDoc(); as doc) {
+      <div class="mf-details">
+        <div class="mf-details__hero" [attr.data-cat]="doc.category">
+          <span class="mf-details__hero-icon">{{ categoryIcon(doc.category) }}</span>
+        </div>
+        <div class="mf-details__info">
+          <h2 class="mf-details__title">{{ doc.title }}</h2>
+          <div class="mf-details__meta-grid">
+            <div class="mf-details__meta-item">
+              <span class="mf-details__meta-label">Doctor</span>
+              <span class="mf-details__meta-value">{{ doc.doctor }}</span>
+            </div>
+            <div class="mf-details__meta-item">
+              <span class="mf-details__meta-label">Clinic</span>
+              <span class="mf-details__meta-value">{{ doc.clinic }}</span>
+            </div>
+            <div class="mf-details__meta-item">
+              <span class="mf-details__meta-label">Date</span>
+              <span class="mf-details__meta-value">{{ formatDate(doc.date) }}</span>
+            </div>
+            <div class="mf-details__meta-item">
+              <span class="mf-details__meta-label">Category</span>
+              <span class="mf-badge" [attr.data-cat]="doc.category">{{ categoryLabel(doc.category) }}</span>
+            </div>
+          </div>
+
+          @if (doc.note) {
+          <div class="mf-details__note">
+            <span class="mf-details__note-label">📝 Note</span>
+            <p>{{ doc.note }}</p>
+          </div>
+          }
+
+          <div class="mf-details__actions">
+            <button class="mf-btn mf-btn--outline">👁 View</button>
+            <button class="mf-btn mf-btn--outline">⬇ Download</button>
+          </div>
+
+          <!-- Per-document access by doctor -->
+          <div class="mf-details__access-section">
+            <h3 class="mf-details__section-title">Doctor access to this document</h3>
+            @for (dr of doctors(); track dr.id;) {
+            <div class="mf-doc-access-row">
+              <div class="mf-avatar">{{ dr.avatarInitials }}</div>
+              <div class="mf-doc-access-row__info">
+                <span class="mf-doc-access-row__name">{{ dr.name }}</span>
+                <span class="mf-doc-access-row__spec">{{ dr.specialty }}</span>
+              </div>
+              <label class="mf-toggle">
+                <input type="checkbox" [checked]="hasDocAccess(dr.id, doc.id)" (change)="toggleDocAccess(dr.id, doc.id)" />
+                <span style="" class="mf-toggle__track">
+                  <span class="mf-toggle__thumb"></span>
+                </span>
+              </label>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+      } @else {
+      <div class="mf-empty mf-empty--panel">
+        <span class="mf-empty__icon">👆</span>
+        <p>Select a document to see details</p>
+      </div>
+      } }
+
+      <!-- Access Panel -->
+      @if (activePanel() === 'access') {
+      <div class="mf-access">
+        <p class="mf-access__desc">
+          Control which doctors can see your medical folder. You can grant full, selective, or temporary access.
+        </p>
+        <div class="mf-access__list">
+          @for (dr of doctors(); track dr.id;) {
+          <div class="mf-access-card">
+            <div class="mf-avatar mf-avatar--lg">{{ dr.avatarInitials }}</div>
+            <div class="mf-access-card__info">
+              <p class="mf-access-card__name">{{ dr.name }}</p>
+              <p class="mf-access-card__spec">{{ dr.specialty }}</p>
+              <div class="mf-access-card__meta">
+                <span class="mf-access-badge" [attr.data-level]="dr.accessLevel"> {{ accessLevelLabel(dr.accessLevel) }} </span>
+                @if (dr.accessLevel === 'temp' && dr.expiresDate) {
+                <span class="mf-access-card__expires"> Expires {{ formatDate(dr.expiresDate) }} </span>
+                }
+              </div>
+              <p class="mf-access-card__since">
+                Access granted {{ formatDate(dr.grantedDate) }} · {{ dr.sharedDocs.length }} doc{{ dr.sharedDocs.length !== 1 ? 's' : '' }}
+                shared
+              </p>
+            </div>
+            <button class="mf-btn mf-btn--danger-sm" (click)="revokeAccess(dr.id)" title="Revoke access">Revoke</button>
+          </div>
+          }
+        </div>
+
+        <button class="mf-btn mf-btn--outline mf-btn--block">+ Grant access to a doctor</button>
+      </div>
+      }
+    </aside>
+  </div>
+</div>
+
+<!-- ─── Upload Modal ──────────────────────────────────────────────────── -->
+@if (showUploadModal()) {
+<div class="mf-modal-backdrop" (click)="showUploadModal.set(false)">
+  <div class="mf-modal" (click)="$event.stopPropagation()">
+    <div class="mf-modal__header">
+      <h2>Upload Document</h2>
+      <button class="mf-modal__close" (click)="showUploadModal.set(false)">✕</button>
+    </div>
+    <div class="mf-modal__body">
+      <div class="mf-upload-zone">
+        <span class="mf-upload-zone__icon">📤</span>
+        <p>Drag & drop your file here</p>
+        <p class="mf-upload-zone__sub">PDF, JPG, PNG — max 20MB</p>
+        <button class="mf-btn mf-btn--outline">Browse files</button>
+      </div>
+      <div class="mf-modal__fields">
+        <div class="mf-field">
+          <label>Document type</label>
+          <select class="mf-select mf-select--full">
+            <option value="">Select type…</option>
+            <option value="prescription">Prescription</option>
+            <option value="lab">Lab Result</option>
+            <option value="imaging">Imaging</option>
+            <option value="report">Consultation Report</option>
+            <option value="vaccination">Vaccination</option>
+            <option value="surgery">Surgery / Hospitalization</option>
+          </select>
+        </div>
+        <div class="mf-field">
+          <label>Doctor name</label>
+          <input class="mf-input" type="text" placeholder="e.g. Dr. Sarah Johnson" />
+        </div>
+        <div class="mf-field">
+          <label>Clinic / Lab</label>
+          <input class="mf-input" type="text" placeholder="e.g. Clinique du Lac" />
+        </div>
+        <div class="mf-field">
+          <label>Date</label>
+          <input class="mf-input" type="date" />
+        </div>
+        <div class="mf-field">
+          <label>Note (optional)</label>
+          <textarea class="mf-input mf-input--textarea" placeholder="Add a personal note…"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="mf-modal__footer">
+      <button class="mf-btn mf-btn--ghost" (click)="showUploadModal.set(false)">Cancel</button>
+      <button class="mf-btn mf-btn--primary">Upload</button>
+    </div>
+  </div>
+</div>
+}

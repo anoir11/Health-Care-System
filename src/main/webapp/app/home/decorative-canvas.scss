@@ -1,0 +1,52 @@
+/* ================================================================
+   MEDILINK — CANVAS DECORATIVE LAYER
+   
+   HOW TO USE:
+   1. Paste this CSS at the bottom of home.component.scss
+   2. Add this ONE line inside your homeContainer div in home.component.html,
+      as the very first child:
+      <canvas id="ml-deco-canvas"></canvas>
+   3. Add initDecoCanvas() call in home.component.ts ngAfterViewInit()
+   4. Paste the initDecoCanvas() function from the .ts section below
+      into your home.component.ts
+   ================================================================ */
+
+/* ── Canvas positioning ────────────────────────────────────── */
+#ml-deco-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  opacity: 1;
+}
+
+#ml-deco-canvas2 {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  opacity: 1;
+}
+
+#ml-deco-canvas3 {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  opacity: 1;
+}
+/* ── Keep all content above canvas ────────────────────────── */
+.homeContainerPart1,
+.searchDocMobile,
+.homeContainerPart5,
+.homeContainerPart2,
+.forPatientBloc,
+.forDoctorBloc,
+.forContactBloc,
+app-footer {
+  position: relative;
+  z-index: 1;
+}

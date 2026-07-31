@@ -1,0 +1,451 @@
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero__red-bar"></div>
+  <div class="hero__dots">
+    <div class="hero__dot hero__dot--lg"></div>
+    <div class="hero__dot hero__dot--md"></div>
+    <div class="hero__dot hero__dot--sm"></div>
+  </div>
+
+  <div class="hero__inner">
+    <nav class="bc">
+      <a routerLink="/search" class="bc__link">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5M12 5l-7 7 7 7" />
+        </svg>
+        Search results
+      </a>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+      <span>{{ doctor.specialty }} · {{ doctor.city }}</span>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+      <span>{{ doctor.name }}</span>
+    </nav>
+
+    <div class="hero__grid">
+      <div class="av">
+        <img *ngIf="doctor.photo" [src]="doctor.photo" [alt]="doctor.name" class="av__img" />
+        <span *ngIf="!doctor.photo" class="av__initials">{{ doctor.initials }}</span>
+        <span class="av__status" *ngIf="doctor.isOnline"></span>
+      </div>
+
+      <div class="id">
+        <h1 class="id__name">{{ doctor.name }}</h1>
+        <p class="id__spec">{{ doctor.specialty }} · {{ doctor.subspecialty }}</p>
+        <div class="id__badges">
+          <span class="badge badge--green" *ngIf="doctor.isVerified">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            Verified
+          </span>
+          <span class="badge badge--amber" *ngIf="doctor.isTopRated">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+            </svg>
+            Top rated {{ doctor.topRatedYear }}
+          </span>
+          <span class="badge badge--blue" *ngIf="doctor.availableToday">Available today</span>
+          <span class="badge badge--red" *ngIf="doctor.offersOnlineConsult">Online consult</span>
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <div class="price">
+          <span class="price__from">From</span>
+          <div class="price__amount">
+            <span class="price__val">{{ doctor.price }}</span>
+            <span class="price__unit">DT</span>
+          </div>
+          <div class="price__rating">
+            <span class="price__stars">★★★★★</span>
+            <span class="price__num">{{ doctor.rating }}</span>
+            <span class="price__cnt">({{ doctor.reviewCount }})</span>
+          </div>
+        </div>
+        <button class="btn-primary" (click)="scrollToBooking()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M3 10h18M8 2v4M16 2v4" />
+          </svg>
+          Book appointment
+        </button>
+
+        <div style="display: flex; margin: auto; gap: 10px">
+          <button class="btn-ghost btn-message">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            Send message
+          </button>
+
+          <button class="btn-ghost btn-video">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="m22 8-6 4 6 4V8z" />
+              <rect x="2" y="6" width="14" height="12" rx="2" />
+            </svg>
+            Video consult
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__meta">
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+          <circle cx="12" cy="10" r="3" />
+        </svg>
+        {{ doctor.clinic }}, {{ doctor.city }}
+      </div>
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 8v4l3 3" />
+        </svg>
+        {{ doctor.experience }} years experience
+      </div>
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+        </svg>
+        {{ doctor.patientCount }} patients
+      </div>
+      <div class="meta-item">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10" />
+          <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+        </svg>
+        {{ doctor.languages.join(' · ') }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TABS ══ -->
+<div class="tabs-bar">
+  <div class="tabs-inner">
+    <button class="tab" [class.tab--on]="activeTab === 'overview'" (click)="setTab('overview')">Overview</button>
+    <button class="tab" [class.tab--on]="activeTab === 'availability'" (click)="setTab('availability')">Availability</button>
+    <button class="tab" [class.tab--on]="activeTab === 'reviews'" (click)="setTab('reviews')">Reviews</button>
+    <button class="tab" [class.tab--on]="activeTab === 'location'" (click)="setTab('location')">Location</button>
+    <button class="tab" [class.tab--on]="activeTab === 'similar'" (click)="setTab('similar')">Similar doctors</button>
+  </div>
+</div>
+
+<!-- ══ BODY ══ -->
+<div class="body">
+  <!-- LEFT -->
+  <div class="left">
+    <!-- Stats -->
+    <div class="card">
+      <div class="stats-grid">
+        <div class="stat">
+          <span class="stat__val">{{ doctor.experience }}</span
+          ><span class="stat__lbl">Years exp.</span>
+        </div>
+        <div class="stat">
+          <span class="stat__val">{{ doctor.patientCount }}</span
+          ><span class="stat__lbl">Patients</span>
+        </div>
+        <div class="stat">
+          <span class="stat__val">{{ doctor.satisfaction }}%</span><span class="stat__lbl">Satisfaction</span>
+        </div>
+        <div class="stat">
+          <span class="stat__val">{{ doctor.reviewCount }}</span
+          ><span class="stat__lbl">Reviews</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- About -->
+    <div class="card">
+      <div class="card__header">
+        <div class="card__header-left">
+          <span class="card__icon card__icon--red"
+            ><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E63535" stroke-width="2">
+              <circle cx="12" cy="8" r="4" />
+              <path d="M6 20c0-4 2.7-6 6-6s6 2 6 6" /></svg
+          ></span>
+          <span class="card__title">About</span>
+        </div>
+      </div>
+      <div class="card__body">
+        <p class="about-text">{{ doctor.bio }}</p>
+        <blockquote class="about-quote" *ngIf="doctor.quote">
+          <p>"{{ doctor.quote }}"</p>
+        </blockquote>
+      </div>
+    </div>
+
+    <!-- Expertise -->
+    <div class="card">
+      <div class="card__header">
+        <div class="card__header-left">
+          <span class="card__icon card__icon--red-light"
+            ><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#E63535" stroke-width="2">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" /></svg
+          ></span>
+          <span class="card__title">Expertise & procedures</span>
+        </div>
+      </div>
+      <div class="card__body">
+        <div class="exp-tags">
+          <span class="exp-tag" *ngFor="let tag of doctor.expertise">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#E63535" stroke-width="2.5">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+            </svg>
+            {{ tag }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="card">
+      <div class="card__header">
+        <div class="card__header-left">
+          <span class="card__icon card__icon--blue"
+            ><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+              <path d="M6 12v5c3 3 9 3 12 0v-5" /></svg
+          ></span>
+          <span class="card__title">Education & training</span>
+        </div>
+      </div>
+      <div class="card__body">
+        <div class="timeline">
+          <div class="tl-item" *ngFor="let edu of doctor.education; let first = first">
+            <div class="tl-dot" [class.tl-dot--primary]="first" [class.tl-dot--gray]="!first"></div>
+            <div class="tl-year" [class.tl-year--primary]="first" [class.tl-year--gray]="!first">{{ edu.year }}</div>
+            <div class="tl-content">
+              <div class="tl-degree">{{ edu.degree }}</div>
+              <div class="tl-institution">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+                {{ edu.institution }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="card">
+      <div class="card__header">
+        <div class="card__header-left">
+          <span class="card__icon card__icon--green"
+            ><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
+              <circle cx="12" cy="12" r="10" />
+              <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg
+          ></span>
+          <span class="card__title">Languages</span>
+        </div>
+      </div>
+      <div class="card__body">
+        <div class="lang-row">
+          <div class="lang-card" *ngFor="let lang of doctor.languageDetails">
+            <span class="lang-card__flag">{{ lang.flag }}</span>
+            <div class="lang-card__info">
+              <span class="lang-card__name">{{ lang.name }}</span>
+              <span class="lang-card__level">{{ lang.level }}</span>
+            </div>
+            <div class="lang-card__dots">
+              <span class="ld" *ngFor="let d of [1, 2, 3, 4, 5]" [class.ld--off]="d > lang.proficiency"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews -->
+    <div class="card" id="reviews">
+      <div class="card__header">
+        <div class="card__header-left">
+          <span class="card__icon card__icon--amber"
+            ><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#ca8a04" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg
+          ></span>
+          <span class="card__title">Patient reviews</span>
+        </div>
+        <span class="card__count">{{ doctor.reviewCount }} total</span>
+      </div>
+      <div class="card__body">
+        <div class="rev-summary">
+          <div class="rev-score">
+            <div class="rev-score__num">{{ doctor.rating }}</div>
+            <span class="rev-score__stars">★★★★★</span>
+            <span class="rev-score__sub">out of 5</span>
+          </div>
+          <div class="rev-bars">
+            <div class="rbar" *ngFor="let bar of ratingBars">
+              <span class="rbar__n">{{ bar.stars }}</span>
+              <div class="rbar__track">
+                <div class="rbar__fill" [style.width.%]="bar.pct"></div>
+              </div>
+              <span class="rbar__count">{{ bar.count }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="rev-filters">
+          <button class="rf" *ngFor="let f of reviewFilters" [class.rf--on]="activeReviewFilter === f" (click)="filterReviews(f)">
+            {{ f }}
+          </button>
+        </div>
+        <div class="rev-list">
+          <div class="ri" *ngFor="let rev of filteredReviews">
+            <div class="ri-av" [style.background]="rev.avatarColor">{{ rev.initials }}</div>
+            <div class="ri-body">
+              <div class="ri-head">
+                <span class="ri-name">{{ rev.name }}</span>
+                <span class="ri-date">{{ rev.date }}</span>
+                <span class="ri-stars">★★★★★</span>
+              </div>
+              <p class="ri-text">{{ rev.text }}</p>
+              <span class="ri-tag">{{ rev.tag }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right" id="booking">
+    <div class="book-card">
+      <div class="book-card__head">
+        <span class="book-card__title">Book a slot</span>
+        <div class="avail-pill" *ngIf="doctor.availableToday">
+          <span class="avail-pill__dot"></span>
+          <span class="avail-pill__text">Available today</span>
+        </div>
+      </div>
+      <div class="book-card__body">
+        <div class="consult-types">
+          <button class="ct" [class.ct--on]="consultType === 'in-person'" (click)="consultType = 'in-person'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+            <span class="ct__label">In-person</span>
+          </button>
+          <button class="ct" [class.ct--on]="consultType === 'video'" (click)="consultType = 'video'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="3" width="20" height="14" rx="2" />
+              <path d="M8 21h8M12 17v4" />
+            </svg>
+            <span class="ct__label">Video</span>
+          </button>
+          <button class="ct" [class.ct--on]="consultType === 'home'" (click)="consultType = 'home'">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+              <polyline points="9 22 9 12 15 12 15 22" />
+            </svg>
+            <span class="ct__label">Home</span>
+          </button>
+        </div>
+        <ng-container *ngFor="let day of availableDays">
+          <div class="day-label">
+            {{ day.label }}<span>{{ day.sublabel }}</span>
+          </div>
+          <div class="slots">
+            <button
+              class="slot"
+              *ngFor="let slot of day.slots"
+              [class.slot--on]="selectedSlot === slot.id"
+              [class.slot--na]="slot.taken"
+              [disabled]="slot.taken"
+              (click)="selectSlot(slot.id)"
+            >
+              {{ slot.time }}
+            </button>
+          </div>
+        </ng-container>
+      </div>
+      <div class="book-card__footer">
+        <div class="fee-row">
+          <span class="fee-row__label">Consultation fee</span>
+          <span class="fee-row__val">{{ doctor.price }} DT</span>
+        </div>
+        <button class="confirm-btn" [disabled]="!selectedSlot" (click)="confirmBooking()">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <path d="M3 10h18M8 2v4M16 2v4" />
+          </svg>
+          Confirm booking
+        </button>
+        <p class="cancel-note">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          Free cancellation up to 24h before
+        </p>
+      </div>
+    </div>
+
+    <div class="clinic-card">
+      <div class="clinic-card__map">
+        <!-- Replace with <agm-map> or Leaflet -->
+        <!-- <div class="clinic-card__map-placeholder">{{ doctor.clinic }}</div> -->
+        <!-- <iframe style="border-radius: 16px;" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0"
+          marginwidth="0"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-149.95%2C61.168%2C-149.85%2C61.268&amp;layer=mapnik&amp;marker=61.2181%2C-149.9003">
+        </iframe> -->
+        <iframe
+          style="border-radius: 16px"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          scrolling="no"
+          marginheight="0"
+          marginwidth="0"
+          src="https://www.openstreetmap.org/export/embed.html?bbox=-149.827%2C61.184%2C-149.813%2C61.190&amp;layer=mapnik&amp;marker=61.1871%2C-149.8200"
+        >
+        </iframe>
+      </div>
+      <div class="clinic-card__body">
+        <h3 class="clinic-card__name">{{ doctor.clinic }}</h3>
+        <p class="clinic-card__addr">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
+            <circle cx="12" cy="10" r="3" />
+          </svg>
+          {{ doctor.clinicAddress }} · {{ doctor.distance }} km
+        </p>
+        <div class="hours">
+          <div
+            class="hour-row"
+            *ngFor="let h of doctor.clinicHours"
+            [class.hour-row--today]="h.isToday"
+            [class.hour-row--closed]="h.closed"
+          >
+            <span class="hour-row__day">{{ h.day }}</span>
+            <span class="hour-row__time">{{ h.closed ? 'Closed' : h.time }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="similar-card">
+      <div class="similar-card__head">Similar doctors</div>
+      <div class="sim-item" *ngFor="let doc of similarDoctors" [routerLink]="['/doctor', doc.id]">
+        <div class="sim-av" [style.background]="doc.avatarColor">{{ doc.initials }}</div>
+        <div class="sim-info">
+          <span class="sim-info__name">{{ doc.name }}</span>
+          <span class="sim-info__spec">{{ doc.specialty }}</span>
+        </div>
+        <div class="sim-right">
+          <span class="sim-right__price">{{ doc.price }} DT</span>
+          <span class="sim-right__rating">★ {{ doc.rating }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

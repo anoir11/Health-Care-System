@@ -1,0 +1,160 @@
+<!-- ─── Doctor Messages Page ──────────────────────────────────────────── -->
+<div class="dm-page">
+  <div class="dm-shell" [class.dm-show-chat]="showChatOnMobile()">
+    <!-- ─── LEFT: Patient conversation list ──────────────────────── -->
+    <aside class="dm-conv-panel">
+      <div class="dm-conv-header">
+        <span class="dm-conv-header__title">Messages</span>
+        @if (totalUnread() > 0) {
+          <span class="dm-conv-header__badge">{{ totalUnread() }}</span>
+        }
+      </div>
+
+      <div class="dm-conv-search">
+        <div class="dm-conv-search__box">
+          <span class="dm-conv-search__icon">🔍</span>
+          <input
+            class="dm-conv-search__input"
+            type="text"
+            placeholder="Search patients…"
+            [ngModel]="searchQuery()"
+            (ngModelChange)="searchQuery.set($event)"
+          />
+        </div>
+      </div>
+
+      <div class="dm-conv-list">
+        <p class="dm-conv-section">Patients</p>
+
+        @if (filteredConversations().length === 0) {
+          <div class="dm-conv-empty">
+            <span>🔍</span>
+            <p>No patients found</p>
+          </div>
+        }
+
+        @for (conv of filteredConversations(); track conv.id) {
+          <div class="dm-conv-item" [class.dm-conv-item--active]="activeConvId() === conv.id" (click)="selectConversation(conv.id)">
+            <div class="dm-avatar" [attr.data-color]="conv.avatarColor">
+              {{ conv.initials }}
+              @if (conv.isOnline) {
+                <span class="dm-online-dot"></span>
+              }
+            </div>
+            <div class="dm-conv-item__body">
+              <p class="dm-conv-item__name">{{ conv.name }}</p>
+              <p class="dm-conv-item__subtitle">{{ conv.subtitle }}</p>
+              <p class="dm-conv-item__preview" [class.dm-conv-item__preview--unread]="conv.unreadCount > 0">
+                {{ conv.lastMessage }}
+              </p>
+            </div>
+            <div class="dm-conv-item__right">
+              <span class="dm-conv-item__time">{{ formatTime(conv.lastMessageTime) }}</span>
+              @if (conv.unreadCount > 0) {
+                <span class="dm-unread-badge">{{ conv.unreadCount }}</span>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- ─── RIGHT: Chat view ─────────────────────────────────────── -->
+    @if (activeConversation(); as conv) {
+      <div class="dm-chat-panel">
+        <!-- Chat header -->
+        <div class="dm-chat-header">
+          <button class="dm-back-btn" (click)="backToList()">←</button>
+          <div class="dm-avatar dm-avatar--md" [attr.data-color]="conv.avatarColor">
+            {{ conv.initials }}
+            @if (conv.isOnline) {
+              <span class="dm-online-dot"></span>
+            }
+          </div>
+          <div class="dm-chat-header__info">
+            <p class="dm-chat-header__name">{{ conv.name }}</p>
+            <p class="dm-chat-header__status" [class.dm-chat-header__status--online]="conv.isOnline">
+              @if (conv.isOnline) {
+                <span class="dm-status-dot"></span> Online ·
+              } @else {
+                <span class="dm-status-dot dm-status-dot--offline"></span> Offline ·
+              }
+              {{ conv.subtitle }}
+            </p>
+          </div>
+          <div class="dm-chat-header__actions">
+            <button class="dm-header-btn" title="View patient folder">📁</button>
+            <button class="dm-header-btn" title="View appointments">📅</button>
+            <button class="dm-header-btn" title="Write prescription">💊</button>
+          </div>
+        </div>
+
+        <!-- Messages area -->
+        <div class="dm-messages">
+          @for (msg of conv.messages; track msg.id; let i = $index) {
+            @if (isNewDay(conv.messages, i)) {
+              <div class="dm-day-divider">
+                <span>{{ formatDay(msg.timestamp) }}</span>
+              </div>
+            }
+
+            @if (msg.type === 'system') {
+              <div class="dm-sys-msg">{{ msg.text }}</div>
+            }
+
+            @if (msg.type === 'text') {
+              <div class="dm-bubble-row" [class.dm-bubble-row--me]="msg.sender === 'me'">
+                @if (msg.sender === 'other') {
+                  <div class="dm-avatar dm-avatar--sm" [attr.data-color]="conv.avatarColor">
+                    {{ conv.initials }}
+                  </div>
+                }
+                <div class="dm-bubble-wrap">
+                  <div class="dm-bubble" [class.dm-bubble--me]="msg.sender === 'me'">
+                    {{ msg.text }}
+                  </div>
+                  <p class="dm-bubble-time" [class.dm-bubble-time--me]="msg.sender === 'me'">
+                    {{ formatMessageTime(msg.timestamp) }}
+                    @if (msg.sender === 'me') {
+                      ✓✓
+                    }
+                  </p>
+                </div>
+              </div>
+            }
+          }
+
+          <!-- Typing indicator -->
+          @if (isTyping()) {
+            <div class="dm-bubble-row">
+              <div class="dm-avatar dm-avatar--sm" [attr.data-color]="conv.avatarColor">
+                {{ conv.initials }}
+              </div>
+              <div class="dm-typing">
+                <span class="dm-typing__dot"></span>
+                <span class="dm-typing__dot"></span>
+                <span class="dm-typing__dot"></span>
+              </div>
+            </div>
+          }
+
+          <div #messagesEnd></div>
+        </div>
+
+        <!-- Input area -->
+        <div class="dm-input-area">
+          <button class="dm-attach-btn" title="Attach file">📎</button>
+          <input
+            class="dm-input"
+            type="text"
+            placeholder="Type a message…"
+            [ngModel]="newMessage()"
+            (ngModelChange)="newMessage.set($event)"
+            (keydown)="handleKeydown($event)"
+          />
+          <button class="dm-send-btn" [class.dm-send-btn--active]="newMessage().trim().length > 0" (click)="sendMessage()">➤</button>
+        </div>
+      </div>
+    }
+  </div>
+</div>

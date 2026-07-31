@@ -1,236 +1,761 @@
-@import 'bootstrap-variables';
-@import 'bootstrap/scss/functions';
-@import 'bootstrap/scss/variables';
+/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hibbo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;700&display=swap');
 
-/* ==============================================================
-Bootstrap tweaks
-===============================================================*/
-
-body,
-h1,
-h2,
-h3,
-h4 {
-  font-weight: 300;
+/* Define your custom colors using CSS variables */
+:root {
+  /* --primary-color: #3f51b5; Indigo */
+  --accent-color: #e91e63;
+  /* Pink */
+  --background-color: #f1f1f1;
 }
 
-/* Increase contrast of links to get 100% on Lighthouse Accessibility Audit. Override this color if you want to change the link color, or use a Bootswatch theme */
-a {
-  color: #533f03;
-  font-weight: bold;
-}
-
-/* override hover color for dropdown-item forced by bootstrap to all a:not([href]):not([tabindex]) elements in _reboot.scss */
-a:not([href]):not([tabindex]):hover.dropdown-item {
-  color: $dropdown-link-hover-color;
-}
-
-/* override .dropdown-item.active background-color on hover */
-.dropdown-item.active:hover {
-  background-color: mix($dropdown-link-hover-bg, $dropdown-link-active-bg, 50%);
-}
-
-a:hover {
-  color: #533f03;
-  /* make sure browsers use the pointer cursor for anchors, even with no href */
-  cursor: pointer;
-}
-
-.dropdown-item:hover {
-  color: $dropdown-link-hover-color;
-}
-
-/* ==========================================================================
-Browser Upgrade Prompt
-========================================================================== */
-.browserupgrade {
-  margin: 0.2em 0;
-  background: #ccc;
-  color: #000;
-  padding: 0.2em 0;
-}
-
-/* ==========================================================================
-Generic styles
-========================================================================== */
-
-/* Error highlight on input fields */
-.ng-valid[required],
-.ng-valid.required {
-  border-left: 5px solid green;
-}
-
-.ng-invalid:not(form) {
-  border-left: 5px solid red;
-}
-
-/* other generic styles */
-
-.jh-card {
-  padding: 1.5%;
-  margin-top: 20px;
-  border: none;
-}
-
-.error {
+/* Apply custom colors to Angular Material components */
+mat-expansion-panel-header {
+  background-color: var(--primary-color);
   color: white;
-  background-color: red;
 }
 
-.pad {
-  padding: 10px;
+mat-expansion-panel-body {
+  background-color: var(--background-color);
 }
 
-.w-40 {
-  width: 40% !important;
+mat-button {
+  color: var(--accent-color);
 }
 
-.w-60 {
-  width: 60% !important;
+app-hero-slider,
+app-hero-slider * {
+  overflow: visible !important;
 }
 
-.break {
-  white-space: normal;
-  word-break: break-all;
-}
-
-.form-control {
-  background-color: #fff;
-}
-
-.readonly {
-  background-color: #eee;
-  opacity: 1;
-}
-
-.footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.hand,
-[jhisortby] {
-  cursor: pointer;
-}
-
-/* ==========================================================================
-Custom alerts for notification
-========================================================================== */
-.alerts {
-  .alert {
-    text-overflow: ellipsis;
-    pre {
-      background: none;
-      border: none;
-      font: inherit;
-      color: inherit;
-      padding: 0;
-      margin: 0;
-    }
-    .popover pre {
-      font-size: 10px;
-    }
+@media screen and (max-width: 768px) {
+  .custom-snackbar {
+    max-width: 50vw !important;
   }
-  .jhi-toast {
-    position: fixed;
-    width: 100%;
-    &.left {
-      left: 5px;
-    }
-    &.right {
-      right: 5px;
-    }
-    &.top {
-      top: 55px;
-    }
-    &.bottom {
-      bottom: 55px;
-    }
+
+  body.dark-mode .ico.expanded {
+    color: #575dcf !important;
+  }
+
+  body.dark-mode .nvFooter .mat-icon {
+    color: #ffffff !important;
+  }
+
+  body.dark-mode .usersMangmentBloc2TitleMobile {
+    color: #575dcf;
   }
 }
 
-@media screen and (min-width: 480px) {
-  .alerts .jhi-toast {
-    width: 50%;
-  }
+/* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
 }
 
-/* ==========================================================================
-entity list page css
-========================================================================== */
-
-.table-entities thead th .d-flex > * {
-  margin: auto 0;
+html,
+body {
+  height: 100%;
 }
 
-/* ==========================================================================
-entity detail page css
-========================================================================== */
-.row-md.jh-entity-details {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  column-gap: 10px;
-  line-height: 1.5;
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
 }
 
-@media screen and (min-width: 768px) {
-  .row-md.jh-entity-details > {
-    dt {
-      float: left;
-      overflow: hidden;
-      clear: left;
-      text-align: right;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      padding: 0.5em 0;
-    }
-    dd {
-      border-bottom: 1px solid #eee;
-      padding: 0.5em 0;
-      margin-left: 0;
-    }
-  }
+.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #00bfae;
 }
 
-/* ==========================================================================
-ui bootstrap tweaks
-========================================================================== */
-.nav,
-.pagination,
-.carousel,
-.panel-title a {
-  cursor: pointer;
+.foe.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #ffffff;
 }
 
-.thread-dump-modal-lock {
-  max-width: 450px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.foe.mat-form-field-appearance-fill .foe.mat-form-field-appearance-fill {
+  color: #ffffff;
 }
 
-.dropdown-menu {
-  padding-left: 0;
+/* Change text color inside the input when unselected */
+.foe .mat-select-trigger {
+  color: white;
 }
 
-/* ==========================================================================
-angular-cli removes postcss-rtl processed inline css, processed rules must be added here instead
-========================================================================== */
-/* page-ribbon.component.scss */
-.ribbon {
-  left: -3.5em;
-  -moz-transform: rotate(-45deg);
-  -ms-transform: rotate(-45deg);
-  -o-transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
-  transform: rotate(-45deg);
+/* Change text color inside the input after selecting a value */
+.foe .mat-select-value {
+  color: white;
 }
 
-/* navbar.component.scss */
-.navbar {
-  ul.navbar-nav {
-    .nav-item {
-      margin-left: 0.5em;
-    }
-  }
+.foe .mat-form-field-underline {
+  background-color: white;
 }
-/* jhipster-needle-scss-add-main JHipster will add new css style */
+
+.custom-snackbar {
+  background-color: #2c325c;
+  color: white;
+  font-weight: bold;
+  min-width: 12vw !important;
+  box-shadow: 0px 0px 10px 5px rgba(255, 255, 255, 0.11) !important;
+  font-size: 70vw !important;
+}
+
+.success-snackbar {
+  min-width: 20vw !important;
+  font-size: 15px !important;
+}
+
+/* app.component.css */
+
+/* Custom background color for the snackbar */
+.orange-snackbar {
+  background-color: orange !important;
+  color: white;
+}
+
+/* Style for the exclamation icon inside the snackbar */
+.mat-snack-bar-container .mat-icon {
+  margin-right: 8px;
+}
+
+/* Target the dialog container______affect both cart home and model charts in admin dash medicine */
+.mat-dialog-container {
+  background-color: #2c325c !important;
+  color: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 0 auto;
+}
+
+mat-dialog-content.adminDetails {
+  background-color: #20234c !important;
+  padding: 5px !important;
+}
+
+mat-dialog-actions.adminDetailsActions {
+  height: 50px !important;
+}
+
+/* Change font size of the snackbar content text  */
+.mat-snack-bar-container .mat-simple-snackbar {
+  font-weight: bolder;
+  /* Optionally, set font weight */
+  letter-spacing: 1px;
+}
+
+/*ModalDetailsMed*/
+
+/* Custom modal style */
+.custom-modal .mat-dialog-container {
+  margin: auto;
+  position: relative;
+  width: 95vw;
+  /* Full width of the screen */
+  height: 95vh;
+  /* Full height of the screen */
+  background-color: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  padding: 0;
+  overflow-y: auto;
+}
+
+/* Light Theme (Default) */
+body {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+body.dark-mode .sidebarContainer {
+  background: linear-gradient(to bottom, #575dcf, #575dcf 80%, #7f84eb 100%);
+}
+
+body.dark-mode .navbarContainer {
+  background: linear-gradient(45deg, #575dcf 72%, white 1%);
+  color: #ffffff;
+  border-bottom: 0px solid rgba(128, 128, 128, 0.144) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Horizontal, Vertical, Blur, Color */
+}
+
+body.dark-mode .nvFooter mat-icon {
+  color: #575dcf !important;
+}
+
+body.dark-mode .nvFooter i {
+  color: #575dcf !important;
+}
+
+body.dark-mode .userIcon {
+  background-color: #575dcf !important;
+  border-radius: 50%;
+}
+
+body.dark-mode .circle {
+  border: 1px solid #575dcf !important;
+}
+
+body.dark-mode .content5 {
+  background-color: #f4f7fc;
+  /* Light greyish-blue */
+
+  background: linear-gradient(to right, #e1e8f0, #f4f7fc);
+  /* Soft pale blue gradient */
+
+  background-color: #f5f5f5;
+  /* Soft cream or beige */
+
+  background-color: #e0e0e0;
+  /* Light grey */
+
+  background-color: #e6f1ff;
+  /* Light blue */
+
+  background-color: #f4f7fc;
+  /* Light greyish-blue */
+}
+
+body.dark-mode .requestsContainer p {
+  color: #575dcf !important;
+}
+
+body.dark-mode .left {
+  background-color: #575dcf !important;
+  border-radius: 8px !important;
+}
+
+body.dark-mode .leftBody {
+  background-color: rgb(172, 176, 245) !important;
+}
+
+/* body.dark-mode .bloc1{
+  background-color: #575dcf  !important;
+ 
+} */
+
+/* body.dark-mode .bloc2{
+  background-color: #575dcf  !important;
+ 
+} */
+
+/* body.dark-mode .bloc1{
+  background-color: #d7d9ff !important;
+  color: #7f84eb !important;
+  height: 100%;
+ 
+}
+
+
+body.dark-mode .bloc2{
+  background-color: #eff0ff !important;
+ 
+} */
+
+body.dark-mode .bloc1 {
+  background-color: #d7d9ff !important;
+  color: #7f84eb !important;
+  /* height: 100%; */
+}
+
+body.dark-mode .bloc2 {
+  background-color: #eff0ff !important;
+}
+
+body.dark-mode .search {
+  border: 1px solid rgba(106, 109, 250, 0.616) !important;
+  background: none !important;
+}
+
+body.dark-mode .filtersIcons i {
+  color: #d6d8fc !important;
+}
+
+/* Ensure dark mode works by targeting the .emptyDiv inside .right */
+/* body.dark-mode .right .rightHeader {
+  background-color: #3cff00 !important;
+} */
+
+body.dark-mode #rightEmpDiv {
+  background-color: #575dcf !important;
+}
+
+/* Ensure dark mode works by targeting the .emptyDiv inside .right */
+body.dark-mode .right .emptyDiv {
+  background-color: #e9e9ec !important;
+}
+
+body.dark-mode .headerBloc {
+  background-color: #575dcf !important;
+}
+
+body.dark-mode .middleBloc {
+  background-color: #575dcf !important;
+}
+
+body.dark-mode #dashboadrTitle {
+  color: #575dcf !important;
+}
+
+body.dark-mode #titleDashboard span {
+  color: #575dcf !important;
+}
+
+body.dark-mode #pharmacyDashboardBody {
+  background-color: #f4f7fc !important;
+  /* Light greyish-blue */
+}
+
+body.dark-mode #pharmacyDashboardBodyTitleMain p {
+  color: #575dcf !important;
+}
+
+body.dark-mode #pharmacyUserProileCard {
+  background-color: #575dcf !important;
+}
+
+body.dark-mode #pharmacyBodyBloc {
+  background-color: #575dcf !important;
+}
+
+body.dark-mode #pharmacyBodyBloc h2 {
+  color: white !important;
+}
+
+/* body.dark-mode #pharmacyBodyBloc .searchTable{
+  color: white !important;
+  background-color: #575dcf !important;
+
+} */
+
+body.dark-mode .dataTable {
+  color: white !important;
+  background-color: #a7abfa !important;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+body.dark-mode .dataTable th.mat-header-cell {
+  color: white !important;
+  background-color: #a7abfa !important;
+  border: 1px solid #575dcf52;
+}
+
+body.dark-mode .dataTable td.mat-cell {
+  border: 1px solid #575dcf52;
+}
+
+body.dark-mode .white-row {
+  background-color: #2d355c2c;
+}
+
+/* Gray row background */
+body.dark-mode .gray-row {
+  background-color: #a7abfa9d;
+}
+
+body.dark-mode .filterBloc .search {
+  background: none !important;
+}
+
+/* Hover Effects - Dark Mode */
+body.dark-mode .filtersIcons .sorts:nth-child(1):hover i {
+  color: orange !important;
+  transform: scale(1.3);
+  /* Optional: slightly grow the icon */
+}
+
+/* Hover Effects - Light Mode */
+body:not(.dark-mode) .filtersIcons .sorts:nth-child(1):hover i {
+  color: orange !important;
+  transform: scale(1.3);
+}
+
+/* Persist the clicked effect */
+.filtersIcons .sorts:nth-child(1).clicked i {
+  color: orange !important;
+}
+
+.filtersIcons .sorts:nth-child(2).clicked i {
+  color: red !important;
+}
+
+.filtersIcons .sorts:nth-child(3).clicked i {
+  color: rgb(0, 153, 255) !important;
+}
+
+/* Hover Effects - Dark Mode */
+body.dark-mode .filtersIcons .sorts:nth-child(2):hover i {
+  color: red !important;
+  transform: scale(1.3);
+  /* Optional: slightly grow the icon */
+}
+
+/* Hover Effects - Light Mode */
+body:not(.dark-mode) .filtersIcons .sorts:nth-child(2):hover i {
+  color: red !important;
+  transform: scale(1.3);
+}
+
+/* Persist the clicked effect */
+.filtersIcons .sorts:nth-child(2).clicked i {
+  color: red !important;
+}
+
+/* Hover Effects - Dark Mode */
+body.dark-mode .filtersIcons .sorts:nth-child(3):hover i {
+  color: rgb(0, 153, 255) !important;
+  /* blue color */
+  transform: scale(1.3);
+  /* Optional: slightly grow the icon */
+}
+
+/* Hover Effects - Light Mode */
+body:not(.dark-mode) .filtersIcons .sorts:nth-child(3):hover i {
+  color: rgb(0, 153, 255) !important;
+  transform: scale(1.3);
+}
+
+/* Persist the clicked effect */
+.filtersIcons .sorts:nth-child(3).clicked i {
+  color: rgb(0, 153, 255) !important;
+}
+
+body.dark-mode .supportDashboardNavbar {
+  background: linear-gradient(135deg, white 67%, #575dcf 1%);
+
+  background: linear-gradient(135deg, white 50%, #575dcf 80%);
+
+  background: linear-gradient(135deg, white 50%, #575dcf 70%, white);
+}
+
+body.dark-mode .supportDashboardBodyLeftUsersClient {
+  background: linear-gradient(to right, #575dcf, #575dcf 70%, rgb(112, 118, 236) 100%);
+}
+
+body.dark-mode .suppordSendingBody {
+  background-color: whitesmoke;
+}
+
+body.dark-mode .suppordSendingBody .sender {
+  background-color: #575dcf;
+}
+
+body.dark-mode .suppordSendingBody .receiver {
+  background-color: #e4e5f7;
+}
+
+body.dark-mode .suppordSendingFooterInputs {
+  background-color: whitesmoke;
+  color: #000000;
+}
+
+body.dark-mode .suppordSendingFooterInputs .suppordSendingFooterInputsLeft input {
+  color: #000000;
+}
+
+body.dark-mode .suppordSendingFooter {
+  background-color: whitesmoke;
+}
+
+body.dark-mode .supportDashboardTitle {
+  color: #575dcf !important;
+}
+
+body.dark-mode .supportDashboardBodyLeftMychats .title {
+  background: linear-gradient(to right, #575dcf, #575dcf 70%, rgb(112, 118, 236) 100%);
+  color: white;
+}
+
+body.dark-mode .supportDashboardBodyLeftUnassignedChats .title {
+  background: linear-gradient(to right, #575dcf, #575dcf 70%, rgb(112, 118, 236) 100%);
+  color: white;
+}
+
+body.dark-mode .navbarItems #back {
+  color: #575dcf !important;
+}
+
+body.dark-mode .suppordSendingContainer {
+  background-color: whitesmoke;
+}
+
+/* body.dark-mode .navbarItemsRight .btnClose{
+background-color: #7075d4;
+background-color: #575dcf;
+border: 2px dashed white;
+
+} */
+
+body.dark-mode .headerBloc {
+  background-color: #a7abfa3a !important;
+  border: 2px solid #575dcf3d;
+}
+
+body.dark-mode .middleBloc {
+  background-color: whitesmoke !important;
+  border: 2px solid #575dcf46;
+}
+
+body.dark-mode #footerSideBar {
+  border-top: 2px solid #a2a5e75d !important;
+}
+
+body.dark-mode .dashboardContainer {
+  background-color: #e1e8f0 !important;
+}
+
+body.dark-mode #pharmacyUserProileCard {
+  background-color: #eff0ff !important;
+  border-bottom: 3px solid #575dcf;
+  border-top: 2px solid #575dcf;
+}
+
+body.dark-mode #pharmacyUserProileCard .title {
+  color: #575dcf !important;
+}
+
+body.dark-mode .foe.mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #575dcf5b;
+}
+
+body.dark-mode #pharmaMat {
+  color: #575dcf !important;
+}
+
+body.dark-mode #btnPharma {
+  background-color: #7f84eb;
+  color: white;
+}
+
+body.dark-mode #pharmacyBodyBloc {
+  background-color: #eff0ff !important;
+  border-bottom: 3px solid #575dcf;
+  border-top: 2px solid #575dcf;
+}
+
+body.dark-mode #pharmacyBodyBloc .searchTable {
+  color: #575dcf !important;
+  background-color: #eff0ff !important;
+}
+
+body.dark-mode #titleBloc11 {
+  background-color: #eff0ff !important;
+}
+
+body.dark-mode #tableContainerP {
+  background-color: rgb(225, 225, 253) !important;
+}
+
+body.dark-mode #titleAllPh {
+  color: #575dcf !important;
+}
+
+body.dark-mode .declined {
+  background-color: #575dcf !important;
+}
+
+/* med upload admin */
+
+body.dark-mode #medUploadContiner {
+  background-color: rgb(225, 225, 253) !important;
+  background-color: #d4daf1 !important;
+
+  background-color: #b5b9ff !important;
+  border: 2px solid #575dcf3d;
+}
+
+body.dark-mode #medSelectContiner {
+  background-color: rgb(225, 225, 253) !important;
+  background-color: #d4daf1 !important;
+
+  border: 2px solid #575dcf3d;
+}
+
+body.dark-mode #medSelectContinerNvBar {
+  background-color: #d4daf1 !important;
+
+  background-color: #b5b9ff !important;
+
+  color: red !important;
+}
+
+body.dark-mode #bbl1 {
+  background-color: #a0a5ff !important;
+}
+
+body.dark-mode #cardMedContainer {
+  background-color: #b5b9ff !important;
+}
+
+body.dark-mode #bbl2 {
+  background-color: #6d74f8 !important;
+  background-color: #b5b9ff !important;
+}
+
+body.dark-mode #tit {
+  color: #575dcf !important;
+}
+
+body.dark-mode .medCartsContainer {
+  background-color: rgb(225, 225, 253) !important;
+  background-color: rgb(220, 220, 255) !important;
+}
+
+body.dark-mode #sssTitle {
+  color: #575dcf !important;
+}
+
+body.dark-mode ::ng-deep.mat-form-field-underline {
+  background-color: forestgreen !important;
+}
+
+/* styles.scss or styles.css */
+body.dark-mode .mat-form-field-underline {
+  background-color: forestgreen !important;
+}
+
+body.dark-mode #req {
+  border: 3px solid #eef2f8 !important;
+}
+
+body.dark-mode .requestsContainer {
+  background: linear-gradient(to right, #e1e8f0, #f4f7fc);
+}
+
+body.dark-mode #custSelect {
+  background-color: rgba(224, 224, 224, 0.377);
+  /* background-color: #fff; */
+  color: #3f51b5;
+}
+
+body.dark-mode .custom-select {
+  color: gray;
+}
+
+body.dark-mode .usersMangmentBloc1RightInput {
+  background-color: #f1f1f1;
+  border: 2px solid #ddd;
+
+  /* background-color: red; */
+
+  border-top-right-radius: 5px !important;
+  border-bottom-right-radius: 5px !important;
+}
+
+body.dark-mode .custom-select-wrapper::after {
+  color: gray;
+}
+
+body.dark-mode .usersMangmentBloc1Left {
+  color: #c1c4f7;
+}
+
+body.dark-mode .usersMangmentBloc1Left button.active {
+  border-bottom: 3px solid #575dcf;
+  color: #575dcf;
+  font-weight: bold;
+
+  color: #f7f7f7;
+  border-bottom: 3px solid #f7f7f7;
+}
+
+body.dark-mode button.active {
+  font-weight: bold;
+  border-bottom: 3px solid rgb(86, 111, 255);
+  color: rgb(86, 111, 255);
+
+  color: #f7f7f7;
+  border-bottom: 3px solid #f7f7f7;
+}
+
+body.dark-mode .usersMangmentBloc1RightBtn #btn {
+  background-color: #3f51b5;
+  color: #f1f1f1;
+}
+
+body.dark-mode .usersMangmentBloc1RightBtn {
+  border: 2px solid #3f51b5;
+}
+
+body.dark-mode .usersMangmentBloc1RightInputBloc2 input {
+  color: rgb(70, 69, 69) !important;
+}
+
+body.dark-mode #iconInputClose {
+  color: rgba(70, 69, 69, 0.644) !important;
+}
+
+body.dark-mode .usersMangmentBloc1RightInputBloc2 input::placeholder {
+  color: rgb(197, 197, 197) !important;
+}
+
+body.dark-mode #arrowIco {
+  color: #575dcf !important;
+
+  color: #f7f7f7 !important;
+}
+
+body.dark-mode #bt5 {
+  background-color: #b9bdff;
+
+  color: #494fcf;
+
+  border: 1px solid #b9bdff !important;
+}
+
+body.dark-mode .usersMangmentBloc1 {
+  background: linear-gradient(45deg, #575dcf 72%, #575dcf 1%) !important;
+  color: red !important;
+}
+
+body.dark-mode .usersMangmentBloc1Mobile {
+  background: linear-gradient(45deg, #575dcf 72%, #575dcf 1%) !important;
+}
+
+body.dark-mode .usersMangmentBlocBodyGroup {
+  background-color: #f9faff !important;
+  background: none !important;
+}
+
+body.dark-mode .usersMangmentBloc2Button button {
+  background-color: #0668f5 !important;
+}
+
+body.dark-mode .usersMangmentBloc2ButtonMobile button {
+  background-color: #0668f5 !important;
+}
+
+body.dark-mode .usersMangmentBloc2Title {
+  color: #575dcf;
+}
+
+body.dark-mode .user-card-header {
+  background-color: #f4f4f9;
+}
+
+body.dark-mode .user-name {
+  color: #333;
+}
+
+body.dark-mode .user-email {
+  color: #777;
+}
+
+body.dark-mode .user-card-footer {
+  background-color: #f4f4f9;
+  border-top: 1px solid #e0e0e0;
+}
+
+body.dark-mode .user-card-body {
+  background-color: #ffffff;
+}
+
+body.dark-mode .user-detail p {
+  color: #555 !important;
+}
+
+body.dark-mode .usersMangmentBloc3 {
+  background-color: #f1f1f13a;
+}

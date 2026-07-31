@@ -1,0 +1,86 @@
+.lay {
+  display: flex;
+  min-height: 100vh;
+  background: #f1f5f9;
+  position: relative;
+}
+
+// ─── Sidebar slot ─────────────────────────────────────────────────────
+.lay__sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  z-index: 20;
+}
+
+// ─── Main column (header + routed content) ─────────────────────────────
+.lay__main {
+  flex: 1;
+  min-width: 0; // prevents child cards/grids from pushing layout width
+  display: flex;
+  flex-direction: column;
+}
+
+.lay__content {
+  flex: 1;
+}
+
+// ─── Backdrop ─────────────────────────────────────────────────────────
+.lay__backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  z-index: 15;
+}
+
+// ─── Responsive ───────────────────────────────────────────────────────
+@media (max-width: 900px) {
+  // sidebar becomes a fixed off-canvas drawer on mobile
+  .lay__sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 252px;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease;
+
+    &--open {
+      transform: translateX(0);
+    }
+  }
+
+  .lay__content {
+    width: 100%;
+  }
+}
+
+// patient-layout.component.scss
+.lay {
+  display: flex;
+  height: 100vh; // was min-height — must be exact, not a minimum
+  overflow: hidden; // the outer shell itself never scrolls
+  background: #f1f5f9;
+  position: relative;
+}
+
+.lay__sidebar {
+  height: 100vh;
+  flex-shrink: 0;
+  z-index: 20;
+  // no position needed anymore — it's outside the scroll region
+}
+
+.lay__main {
+  flex: 1;
+  min-width: 0;
+  height: 100vh; // matches .lay
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // contains header + content, doesn't scroll itself
+}
+
+.lay__content {
+  flex: 1;
+  overflow-y: auto; // ← the ONLY thing that scrolls
+}

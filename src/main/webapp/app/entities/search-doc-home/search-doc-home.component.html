@@ -1,0 +1,87 @@
+<div class="findDoc">
+  <div class="titlePart">
+    <h2>Find Doctors Nearby</h2>
+  </div>
+
+  <div class="forum">
+    <!-- Doctor Name -->
+    <div class="dropdown">
+      <div class="dropdown-trigger">
+        <div class="selected-option">
+          <input type="text" class="form-control2" placeholder="doctor name" [(ngModel)]="doctorName" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Department -->
+    <div class="dropdown" [class.open]="openDropdown === 'department'" (click)="toggleDropdown('department')">
+      <div class="dropdown-trigger">
+        <div class="selected-option">
+          <img [src]="selected.department?.icon" *ngIf="selected.department" alt="" />
+          <span>{{ selected.department?.label || 'speciality' }}</span>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" class="arrow">
+          <path fill="currentColor" d="m7 10l5 5l5-5z" />
+        </svg>
+      </div>
+
+      <div class="dropdown-menu" *ngIf="openDropdown === 'department'">
+        <div class="dropdown-option" *ngFor="let opt of options.department" (click)="selectOption('department', opt, $event)">
+          <img [src]="opt.icon" alt="" />
+          <span>{{ opt.label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- State -->
+    <div class="dropdown" [class.open]="openDropdown === 'state'" (click)="toggleDropdown('state')">
+      <div class="dropdown-trigger">
+        <div class="selected-option">
+          <img [src]="selected.state?.icon" *ngIf="selected.state" alt="" />
+          <span>{{ selected.state?.label || 'state' }}</span>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" class="arrow">
+          <path fill="currentColor" d="m7 10l5 5l5-5z" />
+        </svg>
+      </div>
+
+      <div class="dropdown-menu" *ngIf="openDropdown === 'state'">
+        <div class="dropdown-option" *ngFor="let opt of options.state" (click)="selectOption('state', opt, $event)">
+          <img [src]="opt.icon" alt="" />
+          <span>{{ opt.label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- City -->
+    <div class="dropdown" [class.open]="openDropdown === 'city'" (click)="toggleDropdown('city')">
+      <div class="dropdown-trigger">
+        <div class="selected-option">
+          <img [src]="selected.city?.icon" *ngIf="selected.city" alt="" />
+          <span>{{ selected.city?.label || 'city' }}</span>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" class="arrow">
+          <path fill="currentColor" d="m7 10l5 5l5-5z" />
+        </svg>
+      </div>
+
+      <div class="dropdown-menu" *ngIf="openDropdown === 'city'">
+        <div class="dropdown-option" *ngFor="let opt of options.city" (click)="selectOption('city', opt, $event)">
+          <img [src]="opt.icon" alt="" />
+          <span>{{ opt.label }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Button -->
+    <button
+      style="width: 100%; padding: 8px; font-size: medium; letter-spacing: 3px; background-color: #ff5f40; border-radius: 2px"
+      class="matBut"
+      mat-raised-button
+      color="primary"
+      (click)="findNow()"
+    >
+      <i class="icon fa fa-search"></i> Find Now
+    </button>
+  </div>
+</div>

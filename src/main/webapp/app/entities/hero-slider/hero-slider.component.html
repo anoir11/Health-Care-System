@@ -1,0 +1,169 @@
+<!-- <div class="slider" >
+  <div class="slide" [style.backgroundImage]="'url(' + slides[currentIndex].imageUrl + ')'">
+    <div class="overlay"></div>
+
+    <div class="content">
+      <h1>{{ slides[currentIndex].title }}</h1>
+      <p>{{ slides[currentIndex].subtitle }}</p>
+      <button class="cta-btn">
+        {{ slides[currentIndex].buttonText }}
+        <span class="plus">+</span>
+      </button>
+    </div>
+
+    <button class="nav prev" (click)="prevSlide()">Prev</button>
+    <button class="nav next" (click)="nextSlide()">Next</button>
+
+    <div class="dots">
+      <span
+        *ngFor="let slide of slides; let i = index"
+        [class.active]="i === currentIndex"
+      ></span>
+    </div>
+  </div>
+</div> -->
+
+<div style="height: 95vh; position: relative">
+  <div class="findDoc">
+    <div class="titlePart">
+      <h2>Find Doctors in Your Area</h2>
+    </div>
+
+    <div class="forum">
+      <!-- Doctor Name -->
+      <div class="dropdown">
+        <div class="dropdown-trigger">
+          <div class="selected-option">
+            <input type="text" class="form-control2" placeholder="doctor name" [(ngModel)]="doctorName" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Department -->
+      <div class="dropdown" [class.open]="openDropdown === 'department'" (click)="toggleDropdown('department')">
+        <div class="dropdown-trigger">
+          <div class="selected-option">
+            <img [src]="selected.department?.icon" *ngIf="selected.department" alt="" />
+            <span>{{ selected.department?.label || 'speciality' }}</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" class="arrow">
+            <path fill="currentColor" d="m7 10l5 5l5-5z" />
+          </svg>
+        </div>
+
+        <div class="dropdown-menu" *ngIf="openDropdown === 'department'">
+          <div class="dropdown-option" *ngFor="let opt of options.department" (click)="selectOption('department', opt, $event)">
+            <img [src]="opt.icon" alt="" />
+            <span>{{ opt.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- State -->
+      <div class="dropdown" [class.open]="openDropdown === 'state'" (click)="toggleDropdown('state')">
+        <div class="dropdown-trigger">
+          <div class="selected-option">
+            <img [src]="selected.state?.icon" *ngIf="selected.state" alt="" />
+            <span>{{ selected.state?.label || 'state' }}</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" class="arrow">
+            <path fill="currentColor" d="m7 10l5 5l5-5z" />
+          </svg>
+        </div>
+
+        <div class="dropdown-menu" *ngIf="openDropdown === 'state'">
+          <div class="dropdown-option" *ngFor="let opt of options.state" (click)="selectOption('state', opt, $event)">
+            <img [src]="opt.icon" alt="" />
+            <span>{{ opt.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- City -->
+      <div class="dropdown" [class.open]="openDropdown === 'city'" (click)="toggleDropdown('city')">
+        <div class="dropdown-trigger">
+          <div class="selected-option">
+            <img [src]="selected.city?.icon" *ngIf="selected.city" alt="" />
+            <span>{{ selected.city?.label || 'city' }}</span>
+          </div>
+          <svg width="20" height="20" viewBox="0 0 24 24" class="arrow">
+            <path fill="currentColor" d="m7 10l5 5l5-5z" />
+          </svg>
+        </div>
+
+        <div class="dropdown-menu" *ngIf="openDropdown === 'city'">
+          <div class="dropdown-option" *ngFor="let opt of options.city" (click)="selectOption('city', opt, $event)">
+            <img [src]="opt.icon" alt="" />
+            <span>{{ opt.label }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Button -->
+      <button
+        style="
+          width: 100%;
+          padding: 8px;
+          font-size: medium;
+          letter-spacing: 3px;
+          background-color: #ff5f40;
+          border-radius: 2px;
+          height: 50px;
+        "
+        class="matBut"
+        mat-raised-button
+        color="primary"
+        (click)="findNow()"
+      >
+        <i class="icon fa fa-search"></i> Find Now
+      </button>
+    </div>
+  </div>
+
+  <div class="swiper-container">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide" *ngFor="let slide of slides">
+        <img [src]="slide.image" alt="{{ slide.titleStart }}" />
+        <div class="overlay"></div>
+        <div class="text-overlay">
+          <h2 [class.fade-in-up]="animate">
+            {{ slide.titleStart }}
+            <span class="highlight">{{ slide.highlight1 }}</span>
+            {{ slide.titleMiddle }}
+            <span class="highlight">{{ slide.highlight2 }}</span>
+          </h2>
+          <p [class.fade-in-up]="animate">{{ slide.description }}</p>
+
+          <!-- <button [class.fade-in]="animate" class="emergency-btn">READ MORE <i class="fa-solid fa-plus"></i></button> -->
+
+          <!-- <div class="medType">
+          <div class="medTypeSous1"> <img src="/icons/ico1.png" alt="{{ slide.title }}" /></div>
+           <div class="medTypeSous1">s1</div>
+            <div class="medTypeSous1">s1</div>
+             <div class="medTypeSous1">s1</div>
+              <div class="medTypeSous1">s1</div>
+        </div> -->
+
+          <div class="medType">
+            <div class="icon-box"><i class="fa-solid fa-heart-pulse"></i></div>
+            <div class="icon-box"><i class="fa-solid fa-tooth"></i></div>
+            <div class="icon-box"><i class="fa-solid fa-brain"></i></div>
+            <div class="icon-box"><i class="fa-solid fa-ear-listen"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation buttons -->
+    <!-- <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div> -->
+
+    <!-- Swiper's built-in pagination (if using) -->
+    <!-- <div class="swiper-pagination"></div> -->
+
+    <!-- ✅ Custom Dots -->
+    <div class="dots">
+      <span *ngFor="let slide of slides; let i = index" [class.active]="i === currentIndex"></span>
+    </div>
+  </div>
+</div>

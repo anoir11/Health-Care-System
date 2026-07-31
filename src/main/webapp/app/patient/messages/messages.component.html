@@ -1,0 +1,270 @@
+<!-- ─── Page Shell ─────────────────────────────────────────────────────────── -->
+<div class="mf-page">
+  <!-- ─── Header ─────────────────────────────────────────────────────────── -->
+  <header class="mf-header">
+    <div class="mf-header__left">
+      <div class="mf-header__icon">💬</div>
+      <div>
+        <h1 class="mf-header__title">Messages</h1>
+        <p class="mf-header__sub">Communicate securely with your care team</p>
+      </div>
+    </div>
+    <div class="mf-header__actions">
+      <div class="mf-search">
+        <span class="mf-search__icon">🔍</span>
+        <input
+          class="mf-search__input"
+          type="text"
+          placeholder="Search messages…"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+      @if (totalUnread() > 0) {
+        <span class="mf-header__badge">{{ totalUnread() }} unread</span>
+      }
+      <button class="mf-btn mf-btn--primary">
+        <span class="mf-btn__icon">✎</span>
+        New message
+      </button>
+    </div>
+  </header>
+
+  <!-- ─── Main 3-column layout ────────────────────────────────────────────── -->
+  <div class="mf-layout">
+    <!-- ══════════════════════ LEFT: Conversations ══════════════════════════ -->
+    <aside class="mf-sidebar">
+      <!-- Filter tabs -->
+      <div class="mf-sidebar__tabs">
+        @for (tab of filterTabs; track tab.k) {
+          <button class="mf-stab" [class.mf-stab--active]="activeFilter() === tab.k" (click)="activeFilter.set(tab.k)">{{ tab.l }}</button>
+        }
+      </div>
+
+      <!-- Conversation list -->
+      <div class="mf-convos">
+        @if (filteredConversations().length === 0) {
+          <div class="mf-empty">
+            <span>📭</span>
+            <p>No conversations found</p>
+          </div>
+        }
+        @for (conv of filteredConversations(); track conv.id) {
+          <div class="mf-convo" [class.mf-convo--active]="selectedId() === conv.id" (click)="selectConversation(conv.id)">
+            <div class="mf-av-wrap">
+              <div class="mf-avatar" [style.background]="conv.color">{{ conv.initials }}</div>
+              @if (conv.online) {
+                <span class="mf-online-dot"></span>
+              }
+            </div>
+            <div class="mf-convo__body">
+              <div class="mf-convo__top">
+                <span class="mf-convo__name">{{ conv.name }}</span>
+                <span class="mf-convo__time">{{ formatLastTime(conv.lastTime) }}</span>
+              </div>
+              <p class="mf-convo__preview">{{ conv.lastMessage }}</p>
+            </div>
+            @if (conv.unread > 0) {
+              <span class="mf-unread">{{ conv.unread }}</span>
+            }
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- ══════════════════════ CENTER: Chat ══════════════════════════════════ -->
+    <section class="mf-chat">
+      @if (selectedConversation(); as conv) {
+        <!-- Chat header -->
+        <div class="mf-chat__header">
+          <div class="mf-av-wrap">
+            <div class="mf-avatar" [style.background]="conv.color">{{ conv.initials }}</div>
+            @if (conv.online) {
+              <span class="mf-online-dot"></span>
+            }
+          </div>
+          <div class="mf-chat__info">
+            <p class="mf-chat__name">{{ conv.name }}</p>
+            <p class="mf-chat__sub">
+              {{ conv.role }} · {{ conv.clinic }}
+              @if (conv.online) {
+                <span class="mf-online-label"> · Online</span>
+              }
+            </p>
+          </div>
+          <div class="mf-chat__actions">
+            <button class="mf-icon-btn" title="Video call">📹</button>
+            <button class="mf-icon-btn" title="Phone">📞</button>
+            <button class="mf-icon-btn" title="More options">•••</button>
+          </div>
+        </div>
+
+        <!-- Teleconsult banner -->
+        @if (conv.nextAppointment) {
+          <div class="mf-teleconsult-banner">
+            <div class="mf-teleconsult-banner__icon">📹</div>
+            <div class="mf-teleconsult-banner__text">
+              <p>{{ conv.nextAppointment.label }} scheduled — {{ formatAppointmentDate(conv.nextAppointment.date) }}</p>
+              <span>{{ conv.nextAppointment.duration }} video session · Encrypted & secure</span>
+            </div>
+            <button class="mf-btn mf-btn--join">Join</button>
+          </div>
+        }
+
+        <!-- Messages body -->
+        <div class="mf-chat__body" #chatBody>
+          @for (group of groupedMessages(); track group.date) {
+            <div class="mf-date-sep">
+              <span>{{ group.date }}</span>
+            </div>
+
+            @for (msg of group.items; track msg.id) {
+              <div class="mf-msg-row" [class.mf-msg-row--me]="msg.sender === 'me'">
+                @if (msg.sender === 'them') {
+                  <div class="mf-avatar mf-avatar--sm" [style.background]="conv.color">{{ conv.initials }}</div>
+                }
+
+                <div class="mf-msg-col">
+                  <!-- Text bubble -->
+                  @if (msg.text) {
+                    <div class="mf-bubble" [class.mf-bubble--me]="msg.sender === 'me'">
+                      {{ msg.text }}
+                    </div>
+                  }
+
+                  <!-- Attachment card -->
+                  @if (msg.attachment) {
+                    <div class="mf-att-card" [class.mf-att-card--mine]="msg.sender === 'me' && msg.attachment.fromFolder">
+                      <div class="mf-att-card__icon" [style.background]="attachmentBg(msg.attachment.type)">
+                        {{ attachmentIcon(msg.attachment.type) }}
+                      </div>
+                      <div class="mf-att-card__info">
+                        <p>{{ msg.attachment.name }}</p>
+                        <span
+                          >{{ msg.attachment.size }}
+                          @if (msg.attachment.fromFolder) {
+                            · From my folder
+                          }
+                        </span>
+                      </div>
+                      <button class="mf-att-card__dl">⬇</button>
+                    </div>
+                  }
+
+                  <!-- Time + status -->
+                  <div class="mf-msg-meta" [class.mf-msg-meta--me]="msg.sender === 'me'">
+                    {{ formatTime(msg.time) }}
+                    @if (msg.status === 'read') {
+                      <span class="mf-status mf-status--read">✓✓</span>
+                    } @else if (msg.status === 'delivered') {
+                      <span class="mf-status">✓✓</span>
+                    } @else if (msg.status === 'sent') {
+                      <span class="mf-status">✓</span>
+                    }
+                  </div>
+                </div>
+
+                @if (msg.sender === 'me') {
+                  <div class="mf-avatar mf-avatar--sm" style="background: #6d28d9">Me</div>
+                }
+              </div>
+            }
+          }
+
+          <!-- Typing indicator -->
+          @if (isTyping()) {
+            <div class="mf-msg-row">
+              <div class="mf-avatar mf-avatar--sm" [style.background]="conv.color">{{ conv.initials }}</div>
+              <div class="mf-typing"><span></span><span></span><span></span></div>
+            </div>
+          }
+        </div>
+
+        <!-- Input area -->
+        <div class="mf-chat__input-area">
+          <div class="mf-input-toolbar">
+            <button class="mf-tool-btn">📎 Attach file</button>
+            <button class="mf-tool-btn">📁 From my folder</button>
+            <button class="mf-tool-btn">📷 Image</button>
+            <button class="mf-tool-btn">📹 Teleconsult</button>
+          </div>
+          <div class="mf-input-row">
+            <textarea
+              class="mf-msg-input"
+              placeholder="Write a secure message…"
+              rows="1"
+              [ngModel]="messageText()"
+              (ngModelChange)="messageText.set($event)"
+              (keydown)="onKeydown($event)"
+            ></textarea>
+            <button class="mf-send-btn" (click)="sendMessage()" [disabled]="!messageText().trim()">➤</button>
+          </div>
+        </div>
+      } @else {
+        <div class="mf-empty mf-empty--center">
+          <span>💬</span>
+          <p>Select a conversation to start messaging</p>
+        </div>
+      }
+    </section>
+
+    <!-- ══════════════════════ RIGHT: Info Panel ══════════════════════════════ -->
+    @if (selectedConversation(); as conv) {
+      <aside class="mf-info-panel">
+        <div class="mf-info-panel__header">Conversation info</div>
+
+        <!-- Shared documents -->
+        @if (conv.sharedDocs.length > 0) {
+          <div class="mf-info-section">
+            <p class="mf-info-section__title">Shared documents</p>
+            @for (doc of conv.sharedDocs; track doc.id) {
+              <div class="mf-shared-doc">
+                <div class="mf-shared-doc__icon" [style.background]="attachmentBg(doc.type)">
+                  {{ attachmentIcon(doc.type) }}
+                </div>
+                <div class="mf-shared-doc__info">
+                  <p>{{ doc.name }}</p>
+                  <span>{{ doc.size }}</span>
+                </div>
+                <button class="mf-shared-doc__dl">⬇</button>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- Upcoming appointment -->
+        @if (conv.nextAppointment) {
+          <div class="mf-info-section">
+            <p class="mf-info-section__title">Upcoming</p>
+            <div class="mf-upcoming-card">
+              <div class="mf-upcoming-card__dot"></div>
+              <div>
+                <p class="mf-upcoming-card__label">{{ conv.nextAppointment.label }}</p>
+                <p class="mf-upcoming-card__date">{{ formatAppointmentDate(conv.nextAppointment.date) }}</p>
+                <p class="mf-upcoming-card__dur">{{ conv.nextAppointment.duration }} · Video</p>
+              </div>
+              <button class="mf-btn mf-btn--join-sm">Join</button>
+            </div>
+          </div>
+        }
+
+        <!-- Doctor info -->
+        <div class="mf-info-section">
+          <p class="mf-info-section__title">Contact</p>
+          <div class="mf-doctor-card">
+            <div class="mf-avatar mf-avatar--lg" [style.background]="conv.color">{{ conv.initials }}</div>
+            <div>
+              <p class="mf-doctor-card__name">{{ conv.name }}</p>
+              <p class="mf-doctor-card__spec">{{ conv.role }}</p>
+              <p class="mf-doctor-card__clinic">{{ conv.clinic }}</p>
+            </div>
+          </div>
+          <div class="mf-doctor-actions">
+            <button class="mf-btn mf-btn--outline mf-btn--sm">View profile</button>
+            <button class="mf-btn mf-btn--outline mf-btn--sm">Appointments</button>
+          </div>
+        </div>
+      </aside>
+    }
+  </div>
+</div>

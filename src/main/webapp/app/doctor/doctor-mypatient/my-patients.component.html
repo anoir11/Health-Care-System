@@ -1,0 +1,307 @@
+<!-- ─── My Patients Page ──────────────────────────────────────────────── -->
+<div class="mp-page">
+  <!-- ─── Header ──────────────────────────────────────────────────── -->
+  <div class="mp-header">
+    <div class="mp-header__left">
+      <h1 class="mp-header__title">My Patients</h1>
+      <p class="mp-header__sub">{{ filteredPatients().length }} patients found</p>
+    </div>
+    <div class="mp-header__actions">
+      <div class="mp-search">
+        <span class="mp-search__icon">🔍</span>
+        <input
+          class="mp-search__input"
+          type="text"
+          placeholder="Search by name, condition…"
+          [ngModel]="searchQuery()"
+          (ngModelChange)="searchQuery.set($event)"
+        />
+      </div>
+      <button class="mp-filter-btn" [class.mp-filter-btn--active]="filterNew()" (click)="filterNew.set(!filterNew())">
+        🆕 New patients
+      </button>
+    </div>
+  </div>
+
+  <!-- ─── Main Layout ───────────────────────────────────────────────── -->
+  <div class="mp-layout" [class.mp-layout--panel-open]="selectedPatient()">
+    <!-- ─── Patient List ──────────────────────────────────────────── -->
+    <div class="mp-list-panel">
+      <!-- Stats strip -->
+      <div class="mp-stats">
+        <div class="mp-stat">
+          <span class="mp-stat__val">{{ patients().length }}</span>
+          <span class="mp-stat__lbl">Total patients</span>
+        </div>
+        <div class="mp-stat mp-stat--green">
+          <span class="mp-stat__val">{{ newPatientsCount() }}</span>
+          <span class="mp-stat__lbl">New this month</span>
+        </div>
+        <div class="mp-stat mp-stat--blue">
+          <span class="mp-stat__val">{{ upcomingApptCount() }}</span>
+          <span class="mp-stat__lbl">With upcoming appt</span>
+        </div>
+        <div class="mp-stat mp-stat--amber">
+          <span class="mp-stat__val">{{ fullAccessCount() }}</span>
+          <span class="mp-stat__lbl">Full folder access</span>
+        </div>
+      </div>
+
+      <!-- Patient cards -->
+      <div class="mp-list">
+        @if (filteredPatients().length === 0) {
+          <div class="mp-empty">
+            <span class="mp-empty__icon">🔍</span>
+            <p class="mp-empty__title">No patients found</p>
+            <p class="mp-empty__sub">Try a different search term</p>
+          </div>
+        }
+
+        @for (p of filteredPatients(); track p.id) {
+          <div class="mp-card" [class.mp-card--active]="selectedPatient()?.id === p.id" (click)="selectPatient(p)">
+            <div class="mp-card__avatar" [attr.data-color]="p.color">
+              {{ p.initials }}
+            </div>
+            <div class="mp-card__body">
+              <div class="mp-card__name-row">
+                <span class="mp-card__name">{{ p.name }}</span>
+                @if (p.isNew) {
+                  <span class="mp-new-badge">New</span>
+                }
+                <span class="mp-access-badge" [attr.data-level]="p.accessLevel">
+                  {{ p.accessLevel === 'full' ? '📁 Full access' : '📂 Selective' }}
+                </span>
+              </div>
+              <div class="mp-card__meta">
+                {{ p.age }} y/o · {{ p.gender }} · {{ p.bloodType }}
+                @if (p.conditions.length > 0) {
+                  · {{ p.conditions[0] }}{{ p.conditions.length > 1 ? ' +' + (p.conditions.length - 1) : '' }}
+                }
+              </div>
+              <div class="mp-card__footer">
+                <span class="mp-card__last-visit">Last visit: {{ daysAgo(p.lastVisit) }}</span>
+                @if (p.nextVisit) {
+                  <span class="mp-card__next-visit">Next: {{ formatShortDate(p.nextVisit) }}</span>
+                }
+              </div>
+            </div>
+            <div class="mp-card__right">
+              <span class="mp-card__visits">{{ p.totalVisits }} visits</span>
+              <div class="mp-card__actions">
+                <button class="mp-icon-btn" title="View folder">📁</button>
+                <button class="mp-icon-btn" title="Write prescription">💊</button>
+                <button class="mp-icon-btn" title="Send message">✉️</button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ─── Patient Detail Panel ──────────────────────────────────── -->
+    @if (selectedPatient(); as patient) {
+      <aside class="mp-detail-panel">
+        <!-- Panel header -->
+        <div class="mp-detail-header">
+          <div class="mp-detail-avatar" [attr.data-color]="patient.color">
+            {{ patient.initials }}
+          </div>
+          <div class="mp-detail-header__info">
+            <h2 class="mp-detail-header__name">{{ patient.name }}</h2>
+            <p class="mp-detail-header__meta">{{ patient.age }} y/o · {{ patient.gender }} · {{ patient.bloodType }}</p>
+            <div class="mp-detail-header__badges">
+              @if (patient.isNew) {
+                <span class="mp-new-badge">New patient</span>
+              }
+              <span class="mp-access-badge" [attr.data-level]="patient.accessLevel">
+                {{ patient.accessLevel === 'full' ? '📁 Full access' : '📂 Selective' }}
+              </span>
+            </div>
+          </div>
+          <button class="mp-close-btn" (click)="closePanel()">✕</button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="mp-detail-tabs">
+          <button class="mp-detail-tab" [class.active]="activeTab() === 'overview'" (click)="activeTab.set('overview')">Overview</button>
+          <button class="mp-detail-tab" [class.active]="activeTab() === 'folder'" (click)="activeTab.set('folder')">📁 Folder</button>
+          <button class="mp-detail-tab" [class.active]="activeTab() === 'appointments'" (click)="activeTab.set('appointments')">
+            📅 Visits
+          </button>
+          <button class="mp-detail-tab" [class.active]="activeTab() === 'prescriptions'" (click)="activeTab.set('prescriptions')">
+            💊 Rx
+          </button>
+        </div>
+
+        <!-- ─── Tab: Overview ── -->
+        @if (activeTab() === 'overview') {
+          <div class="mp-detail-body">
+            <!-- Quick stats -->
+            <div class="mp-patient-stats">
+              <div class="mp-patient-stat">
+                <span class="mp-patient-stat__val">{{ patient.totalVisits }}</span>
+                <span class="mp-patient-stat__lbl">Total visits</span>
+              </div>
+              <div class="mp-patient-stat">
+                <span class="mp-patient-stat__val">{{ patient.documents.length }}</span>
+                <span class="mp-patient-stat__lbl">Documents</span>
+              </div>
+              <div class="mp-patient-stat">
+                <span class="mp-patient-stat__val">{{ patient.prescriptions.length }}</span>
+                <span class="mp-patient-stat__lbl">Prescriptions</span>
+              </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="mp-section">
+              <div class="mp-section__title">Contact</div>
+              <div class="mp-info-grid">
+                <div class="mp-info-field">
+                  <span class="mp-info-lbl">Phone</span>
+                  <span class="mp-info-val">{{ patient.phone }}</span>
+                </div>
+                <div class="mp-info-field">
+                  <span class="mp-info-lbl">Email</span>
+                  <span class="mp-info-val mp-info-val--muted">{{ patient.email }}</span>
+                </div>
+                <div class="mp-info-field">
+                  <span class="mp-info-lbl">Last visit</span>
+                  <span class="mp-info-val">{{ formatDate(patient.lastVisit) }}</span>
+                </div>
+                @if (patient.nextVisit) {
+                  <div class="mp-info-field">
+                    <span class="mp-info-lbl">Next visit</span>
+                    <span class="mp-info-val mp-info-val--green">{{ formatDate(patient.nextVisit) }}</span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Allergies -->
+            @if (patient.allergies.length > 0) {
+              <div class="mp-section">
+                <div class="mp-section__title">⚠️ Allergies</div>
+                <div class="mp-tags">
+                  @for (a of patient.allergies; track a) {
+                    <span class="mp-tag mp-tag--red">{{ a }}</span>
+                  }
+                </div>
+              </div>
+            } @else {
+              <div class="mp-section">
+                <div class="mp-section__title">⚠️ Allergies</div>
+                <p class="mp-section__empty">No known allergies</p>
+              </div>
+            }
+
+            <!-- Conditions -->
+            @if (patient.conditions.length > 0) {
+              <div class="mp-section">
+                <div class="mp-section__title">🩺 Conditions</div>
+                <div class="mp-tags">
+                  @for (c of patient.conditions; track c) {
+                    <span class="mp-tag mp-tag--blue">{{ c }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- Current medications -->
+            @if (patient.currentMedications.length > 0) {
+              <div class="mp-section">
+                <div class="mp-section__title">💊 Current Medications</div>
+                @for (m of patient.currentMedications; track m) {
+                  <div class="mp-med-row">
+                    <span>💊</span>
+                    <span class="mp-med-name">{{ m }}</span>
+                    <span class="mp-tag mp-tag--green" style="margin-left: auto">Ongoing</span>
+                  </div>
+                }
+              </div>
+            }
+
+            <!-- Actions -->
+            <div class="mp-actions">
+              <button class="mp-btn mp-btn--green mp-btn--block">📁 Open Medical Folder</button>
+              <button class="mp-btn mp-btn--outline mp-btn--block">💊 Write Prescription</button>
+              <button class="mp-btn mp-btn--outline mp-btn--block">✉️ Send Message</button>
+            </div>
+          </div>
+        }
+
+        <!-- ─── Tab: Folder ── -->
+        @if (activeTab() === 'folder') {
+          <div class="mp-detail-body">
+            @if (patient.documents.length === 0) {
+              <div class="mp-tab-empty">
+                <span>📂</span>
+                <p>No documents shared yet</p>
+              </div>
+            }
+            @for (doc of patient.documents; track doc.id) {
+              <div class="mp-doc-row">
+                <div class="mp-doc-icon" [attr.data-cat]="doc.category">
+                  {{ categoryIcon(doc.category) }}
+                </div>
+                <div class="mp-doc-body">
+                  <p class="mp-doc-title">{{ doc.title }}</p>
+                  <p class="mp-doc-meta">{{ doc.addedBy }} · {{ formatShortDate(doc.date) }}</p>
+                </div>
+                <span class="mp-doc-badge" [attr.data-cat]="doc.category">{{ categoryLabel(doc.category) }}</span>
+              </div>
+            }
+            <button class="mp-btn mp-btn--outline mp-btn--block" style="margin-top: 8px">📁 Open full folder</button>
+          </div>
+        }
+
+        <!-- ─── Tab: Appointments ── -->
+        @if (activeTab() === 'appointments') {
+          <div class="mp-detail-body">
+            @for (appt of patient.appointments; track appt.id) {
+              <div class="mp-appt-row">
+                <div class="mp-appt-date">
+                  <span class="mp-appt-date__day">{{ appt.date.getDate() }}</span>
+                  <span class="mp-appt-date__month">{{ formatApptMonth(appt.date) }}</span>
+                </div>
+                <div class="mp-appt-body">
+                  <p class="mp-appt-reason">{{ appt.reason }}</p>
+                  <p class="mp-appt-date-full">{{ formatDate(appt.date) }}</p>
+                </div>
+                <span class="mp-appt-badge" [attr.data-status]="appt.status">
+                  {{ appt.status | titlecase }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+
+        <!-- ─── Tab: Prescriptions ── -->
+        @if (activeTab() === 'prescriptions') {
+          <div class="mp-detail-body">
+            @if (patient.prescriptions.length === 0) {
+              <div class="mp-tab-empty">
+                <span>💊</span>
+                <p>No prescriptions written yet</p>
+              </div>
+            }
+            @for (rx of patient.prescriptions; track rx.id) {
+              <div class="mp-rx-card">
+                <div class="mp-rx-card__head">
+                  <span class="mp-rx-card__date">💊 {{ formatDate(rx.date) }}</span>
+                  <button class="mp-icon-btn">👁</button>
+                </div>
+                <p class="mp-rx-card__diagnosis">{{ rx.diagnosis }}</p>
+                <div class="mp-tags" style="margin-top: 6px">
+                  @for (med of rx.medications; track med) {
+                    <span class="mp-tag mp-tag--teal">{{ med }}</span>
+                  }
+                </div>
+              </div>
+            }
+            <button class="mp-btn mp-btn--green mp-btn--block" style="margin-top: 4px">+ Write new prescription</button>
+          </div>
+        }
+      </aside>
+    }
+  </div>
+</div>
