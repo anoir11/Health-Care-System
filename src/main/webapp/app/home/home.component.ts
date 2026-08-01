@@ -11,10 +11,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { initDecoCanvas, initDecoCanvas2, initDecoCanvas3 } from './deco-canvas.util';
 import { CommonModule } from '@angular/common';
-import FooterComponent from 'app/layouts/footer/footer.component';
 import { SearchDocHomeComponent } from 'app/entities/search-doc-home/search-doc-home.component';
 import { ChatComponent } from 'app/entities/chat/chat.component';
 import { HeroSliderComponent } from 'app/entities/hero-slider/hero-slider.component';
+import { FooterComponent } from 'app/layouts/footer/footer.component';
 
 @Component({
   selector: 'jhi-home',

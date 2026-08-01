@@ -8,7 +8,6 @@ declare const Swiper: any; // ← only change at the top
 
 @Component({
   selector: 'app-hero-slider',
-  standalone: true,
   templateUrl: './hero-slider.component.html',
   imports: [FormsModule, CommonModule, MatButtonModule],
   styleUrls: ['./hero-slider.component.scss'],

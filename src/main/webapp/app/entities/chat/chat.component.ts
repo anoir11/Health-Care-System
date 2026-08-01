@@ -6,7 +6,6 @@ import { Message } from '@stomp/stompjs';
 
 @Component({
   selector: 'app-chat',
-  standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],

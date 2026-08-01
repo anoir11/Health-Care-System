@@ -10,7 +10,7 @@ import { SafeHtmlPipe } from './safe-html.pipe';
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss'],
 })
-export default class FooterComponent {
+export class FooterComponent {
   email = '';
   currentYear = new Date().getFullYear();
 
