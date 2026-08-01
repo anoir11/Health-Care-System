@@ -10,9 +10,9 @@
           <button class="pf-avatar__edit" title="Change photo">✏</button>
         </div>
         <div class="pf-hero__info">
-          <h1 class="pf-hero__name">{{ fullName() }}</h1>
+          <h1 class="pf-hero__name">{{ fullName }}</h1>
           <p class="pf-hero__sub">
-            <span>{{ age() }} years old</span>
+            <span>{{ age }} years old</span>
             <span class="pf-hero__dot"></span>
             <span>{{ profile().gender }}</span>
             <span class="pf-hero__dot"></span>
@@ -41,8 +41,8 @@
         <span class="pf-stat__lbl">Weight</span>
       </div>
       <div class="pf-stat">
-        <span class="pf-stat__val">{{ bmi() }}</span>
-        <span class="pf-stat__lbl">BMI · {{ bmiLabel() }}</span>
+        <span class="pf-stat__val">{{ bmi }}</span>
+        <span class="pf-stat__lbl">BMI · {{ bmiLabel }}</span>
       </div>
       <div class="pf-stat pf-stat--blue">
         <span class="pf-stat__val">{{ profile().activeDoctors }}</span>
@@ -100,7 +100,7 @@
               </div>
               <div class="pf-field">
                 <span class="pf-field__lbl">Age</span>
-                <span class="pf-field__val">{{ age() }} years old</span>
+                <span class="pf-field__val">{{ age }} years old</span>
               </div>
               <div class="pf-field">
                 <span class="pf-field__lbl">Phone</span>
@@ -132,7 +132,7 @@
                   type="text"
                   name="firstName"
                   [ngModel]="personalDraft().firstName"
-                  (ngModelChange)="updatePersonalField('firstName', $event)"
+                  (ngModelChange)="updatePersonalDraft({ firstName: $event })"
                 />
               </div>
               <div class="pf-edit-field">
@@ -143,7 +143,7 @@
                   type="text"
                   name="lastName"
                   [ngModel]="personalDraft().lastName"
-                  (ngModelChange)="updatePersonalField('lastName', $event)"
+                  (ngModelChange)="updatePersonalDraft({ lastName: $event })"
                 />
               </div>
 
@@ -154,7 +154,7 @@
                   class="pf-input"
                   name="gender"
                   [ngModel]="personalDraft().gender"
-                  (ngModelChange)="updatePersonalField('gender', $event)"
+                  (ngModelChange)="updatePersonalDraft({ gender: $event })"
                 >
                   <option value="Male">Male</option>
                   <option value="Female">Female</option>
@@ -169,7 +169,7 @@
                   type="date"
                   name="dateOfBirth"
                   [ngModel]="personalDraft().dateOfBirth"
-                  (ngModelChange)="updatePersonalField('dateOfBirth', $event)"
+                  (ngModelChange)="updatePersonalDraft({ dateOfBirth: $event })"
                 />
               </div>
 
@@ -181,7 +181,7 @@
                   type="text"
                   name="nationality"
                   [ngModel]="personalDraft().nationality"
-                  (ngModelChange)="updatePersonalField('nationality', $event)"
+                  (ngModelChange)="updatePersonalDraft({ nationality: $event })"
                 />
               </div>
               <div class="pf-edit-field">
@@ -192,7 +192,7 @@
                   type="tel"
                   name="phone"
                   [ngModel]="personalDraft().phone"
-                  (ngModelChange)="updatePersonalField('phone', $event)"
+                  (ngModelChange)="updatePersonalDraft({ phone: $event })"
                 />
               </div>
             </div>
@@ -212,7 +212,7 @@
                   type="text"
                   name="address"
                   [ngModel]="personalDraft().address"
-                  (ngModelChange)="updatePersonalField('address', $event)"
+                  (ngModelChange)="updatePersonalDraft({ address: $event })"
                 />
               </div>
               <div class="pf-edit-field">
@@ -223,7 +223,7 @@
                   type="text"
                   name="city"
                   [ngModel]="personalDraft().city"
-                  (ngModelChange)="updatePersonalField('city', $event)"
+                  (ngModelChange)="updatePersonalDraft({ city: $event })"
                 />
               </div>
             </div>
@@ -254,7 +254,15 @@
               <div class="pf-em-avatar" [attr.data-color]="ec.color">{{ ec.initials }}</div>
               <div class="pf-em-info">
                 <p class="pf-em-name">{{ ec.name }}</p>
-                <p class="pf-em-rel">{{ ec.relationship }} · {{ ec.role === 'primary' ? 'Primary contact' : 'Secondary contact' }}</p>
+                <p class="pf-em-rel">
+                  {{ ec.relationship }} ·
+                  {{
+                    ec.role === 'primary'
+                      ? 'Primary contact'
+                      : 'Secondary
+              contact'
+                  }}
+                </p>
               </div>
               <span class="pf-em-phone">{{ ec.phone }}</span>
               <button class="pf-em-edit" title="Edit contact" (click)="openEditContact(ec)">✏</button>
@@ -367,7 +375,7 @@
                 <span class="pf-field__lbl">Weight</span><span class="pf-field__val">{{ profile().weight }} kg</span>
               </div>
               <div class="pf-field">
-                <span class="pf-field__lbl">BMI</span><span class="pf-field__val">{{ bmi() }} — {{ bmiLabel() }}</span>
+                <span class="pf-field__lbl">BMI</span><span class="pf-field__val">{{ bmi }} — {{ bmiLabel }}</span>
               </div>
               <div class="pf-field">
                 <span class="pf-field__lbl">Smoking</span><span class="pf-field__val">{{ profile().smoking ? '🚬 Yes' : '✅ No' }}</span>
@@ -390,7 +398,7 @@
                   class="pf-input"
                   name="bloodType"
                   [ngModel]="vitalsDraft().bloodType"
-                  (ngModelChange)="updateVitalsField('bloodType', $event)"
+                  (ngModelChange)="updateVitalsDraft({ bloodType: $event })"
                 >
                   <option value="" disabled>Select</option>
                   @for (bt of bloodTypeOptions(); track bt) {
@@ -407,7 +415,7 @@
                   name="height"
                   min="0"
                   [ngModel]="vitalsDraft().height"
-                  (ngModelChange)="updateVitalsField('height', +$event)"
+                  (ngModelChange)="updateVitalsHeight($event)"
                 />
               </div>
               <div class="pf-edit-field">
@@ -419,7 +427,7 @@
                   name="weight"
                   min="0"
                   [ngModel]="vitalsDraft().weight"
-                  (ngModelChange)="updateVitalsField('weight', +$event)"
+                  (ngModelChange)="updateVitalsWeight($event)"
                 />
               </div>
             </div>
@@ -429,7 +437,7 @@
                   type="checkbox"
                   name="smoking"
                   [ngModel]="vitalsDraft().smoking"
-                  (ngModelChange)="updateVitalsField('smoking', $event)"
+                  (ngModelChange)="updateVitalsDraft({ smoking: $event })"
                 />
                 Smokes
               </label>
@@ -438,7 +446,7 @@
                   type="checkbox"
                   name="alcohol"
                   [ngModel]="vitalsDraft().alcohol"
-                  (ngModelChange)="updateVitalsField('alcohol', $event)"
+                  (ngModelChange)="updateVitalsDraft({ alcohol: $event })"
                 />
                 Drinks alcohol
               </label>
@@ -693,7 +701,7 @@
                   type="text"
                   name="provider"
                   [ngModel]="insuranceDraft().provider"
-                  (ngModelChange)="updateInsuranceField('provider', $event)"
+                  (ngModelChange)="updateInsuranceDraft({ provider: $event })"
                 />
               </div>
               <div class="pf-edit-field">
@@ -704,7 +712,7 @@
                   type="text"
                   name="policyNumber"
                   [ngModel]="insuranceDraft().policyNumber"
-                  (ngModelChange)="updateInsuranceField('policyNumber', $event)"
+                  (ngModelChange)="updateInsuranceDraft({ policyNumber: $event })"
                 />
               </div>
               <div class="pf-edit-field">
@@ -715,7 +723,7 @@
                   type="date"
                   name="expiryDate"
                   [ngModel]="insuranceDraft().expiryDate"
-                  (ngModelChange)="updateInsuranceField('expiryDate', $event)"
+                  (ngModelChange)="updateInsuranceDraft({ expiryDate: $event })"
                 />
               </div>
               <div class="pf-edit-field">
@@ -726,7 +734,7 @@
                   type="text"
                   name="coverage"
                   [ngModel]="insuranceDraft().coverage"
-                  (ngModelChange)="updateInsuranceField('coverage', $event)"
+                  (ngModelChange)="updateInsuranceDraft({ coverage: $event })"
                 />
               </div>
             </div>
@@ -736,7 +744,7 @@
                 type="checkbox"
                 name="active"
                 [ngModel]="insuranceDraft().active"
-                (ngModelChange)="updateInsuranceField('active', $event)"
+                (ngModelChange)="updateInsuranceDraft({ active: $event })"
               />
               Coverage is currently active
             </label>
@@ -801,3 +809,14 @@
     </div>
   }
 </div>
+
+<!-- ─── Emergency contact modal (add / edit / delete) ───────────────── -->
+<app-emergency-contact-modal
+  [open]="contactModalOpen()"
+  [contact]="contactBeingEdited()"
+  [saving]="contactModalSaving()"
+  [error]="contactModalError()"
+  (save)="saveContact($event)"
+  (delete)="deleteContact($event)"
+  (close)="closeContactModal()"
+/>
