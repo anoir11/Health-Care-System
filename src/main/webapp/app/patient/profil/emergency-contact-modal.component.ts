@@ -9,7 +9,6 @@ export interface EmergencyContactFormValue {
   phone: string;
   role: 'primary' | 'secondary';
 }
-
 /**
  * Standalone modal for adding or editing a single emergency contact.
  *

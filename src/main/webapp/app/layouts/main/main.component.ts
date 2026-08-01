@@ -6,7 +6,6 @@ import dayjs from 'dayjs/esm';
 import { AccountService } from 'app/core/auth/account.service';
 import { AppPageTitleStrategy } from 'app/app-page-title-strategy';
 import FindLanguageFromKeyPipe from 'app/shared/language/find-language-from-key.pipe';
-import FooterComponent from '../footer/footer.component';
 import PageRibbonComponent from '../profiles/page-ribbon.component';
 
 @Component({

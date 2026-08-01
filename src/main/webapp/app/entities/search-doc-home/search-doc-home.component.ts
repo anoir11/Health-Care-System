@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-search-doc-home',
-  standalone: true,
   imports: [FormsModule, CommonModule, MatButtonModule],
   templateUrl: './search-doc-home.component.html',
   styleUrls: ['./search-doc-home.component.scss'],

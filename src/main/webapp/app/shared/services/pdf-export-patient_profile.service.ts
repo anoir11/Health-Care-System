@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { EmergencyContact, PatientProfile } from 'app/patient/profil/profile.component';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
+import type { TDocumentDefinitions, Content } from 'pdfmake/interfaces';
 
 (pdfMake as any).vfs = (pdfFonts as any)['vfs'];
 

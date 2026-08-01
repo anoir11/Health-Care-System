@@ -1,12 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, inject, signal, viewChild } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators, FormBuilder } from '@angular/forms';
-import { Router, RouterModule, RouterLink } from '@angular/router';
-
-import SharedModule from 'app/shared/shared.module';
-import { LoginService } from 'app/login/login.service';
-import { AccountService } from 'app/core/auth/account.service';
-
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import SharedModule from 'app/shared/shared.module';
 import { AuthService } from 'app/shared/services/auth.service';
 
 export type LoginRole = 'patient' | 'doctor';

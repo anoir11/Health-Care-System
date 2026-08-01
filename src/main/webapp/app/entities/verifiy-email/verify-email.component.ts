@@ -126,7 +126,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
           this.successMessage = 'Email verified! Redirecting to login...';
           setTimeout(() => this.router.navigate(['/login']), 1500);
         },
-        error: (err: any) => {
+        error: err => {
           console.error('Verify error:', err);
           this.errorMessage = err.error?.error || 'Invalid or expired code. Please try again.';
           this.resetDigits();
@@ -159,7 +159,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
           this.resetDigits();
           this.startCooldown(60);
         },
-        error: (err: any) => {
+        error: err => {
           console.error('Resend error:', err);
           this.errorMessage = err.error?.error || 'Could not resend code. Try again shortly.';
         },

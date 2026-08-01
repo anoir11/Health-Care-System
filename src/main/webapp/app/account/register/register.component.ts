@@ -1,27 +1,10 @@
-import { AfterViewInit, Component, OnInit, ElementRef, inject, signal, viewChild } from '@angular/core';
-import { HttpErrorResponse } from '@angular/common/http';
-import { RouterModule } from '@angular/router';
-import {
-  FormControl,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
-  AbstractControl,
-  ValidationErrors,
-} from '@angular/forms';
-import { TranslateService } from '@ngx-translate/core';
-
-import { EMAIL_ALREADY_USED_TYPE, LOGIN_ALREADY_USED_TYPE } from 'app/config/error.constants';
-import SharedModule from 'app/shared/shared.module';
-import PasswordStrengthBarComponent from '../password/password-strength-bar/password-strength-bar.component';
-import { RegisterService } from './register.service';
-
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors, ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { AuthService } from 'app/shared/services/auth.service';
+import SharedModule from 'app/shared/shared.module';
 import { DoctorDocumentType, UploadedDoc } from 'app/shared/shared_models/document.model';
+import { AuthService } from 'app/shared/services/auth.service';
 export type UserRole = 'patient' | 'doctor';
 
 interface Gauge {
@@ -258,7 +241,7 @@ export default class RegisterComponent implements OnInit {
           this.isSubmitting = false;
           this.router.navigate(['/verify-email']);
         },
-        error: (err: any) => {
+        error: err => {
           this.isSubmitting = false;
           this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
         },
@@ -297,7 +280,7 @@ export default class RegisterComponent implements OnInit {
             },
           });
         },
-        error: (err: any) => {
+        error: err => {
           this.isSubmitting = false;
           this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
         },
@@ -341,7 +324,7 @@ export default class RegisterComponent implements OnInit {
           this.isSubmitting = false;
           this.router.navigate(['/login']);
         },
-        error: (err: any) => {
+        error: err => {
           this.isSubmitting = false;
           this.errorMessage = err.error?.error || 'Registration failed. Please try again.';
         },
