@@ -1,3 +1,4 @@
+@use 'sass:color';
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
 // ── Variables ────────────────────────────────────────────────────
@@ -163,7 +164,7 @@ $bp-mobile: 600px;
   }
 
   &:hover {
-    background: darken(#ef4444, 6%);
+    background: color.adjust(#ef4444, $lightness: -6%);
   }
 
   @media (max-width: $bp-tablet) {
@@ -647,7 +648,7 @@ $bp-mobile: 600px;
   &:hover {
     box-shadow: $shadow-hover;
     transform: translateY(-2px);
-    border-color: darken(#ece8e1, 5%);
+    border-color: color.adjust(#ece8e1, $lightness: -5%);
   }
 
   @media (max-width: $bp-tablet) {
@@ -936,7 +937,7 @@ $bp-mobile: 600px;
     transform 0.15s;
 
   &:hover {
-    background: darken(#ef4444, 6%);
+    background: color.adjust(#ef4444, $lightness: -6%);
     transform: translateY(-1px);
   }
   &:active {
@@ -968,7 +969,7 @@ $bp-mobile: 600px;
   &:hover {
     background: $bg-warm;
     color: $text-primary;
-    border-color: darken(#ece8e1, 8%);
+    border-color: color.adjust(#ece8e1, $lightness: -8%);
   }
 
   @media (max-width: $bp-mobile) {
@@ -1007,7 +1008,7 @@ $bp-mobile: 600px;
     cursor: pointer;
 
     &:hover {
-      background: darken(#ef4444, 6%);
+      background: color.adjust(#ef4444, $lightness: -6%);
     }
   }
 
@@ -1057,7 +1058,7 @@ $bp-mobile: 600px;
   &:hover:not(:disabled) {
     background: $bg-warm;
     color: $text-primary;
-    border-color: darken(#ece8e1, 8%);
+    border-color: color.adjust(#ece8e1, $lightness: -8%);
   }
 
   &--active {

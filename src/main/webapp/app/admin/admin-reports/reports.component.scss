@@ -1,4 +1,6 @@
 // ─── Tokens ───────────────────────────────────────────────────────────────────
+@use 'sass:color';
+
 $navy: #0b1120;
 $navy-2: #111827;
 $navy-3: #1a2235;
@@ -97,7 +99,7 @@ $r-lg: 12px;
   margin-bottom: 2px;
 
   &.hs-red {
-    color: lighten($red, 10%);
+    color: color.adjust($red, $lightness: 10%);
   }
   &.hs-amber {
     color: $amber;
@@ -227,15 +229,15 @@ $r-lg: 12px;
 
   .seg-btn.active &.cnt-open {
     background: rgba($red, 0.2);
-    color: lighten($red, 20%);
+    color: color.adjust($red, $lightness: 20%);
   }
   .seg-btn.active &.cnt-inprogress {
     background: rgba($amber, 0.2);
-    color: lighten($amber, 15%);
+    color: color.adjust($amber, $lightness: 15%);
   }
   .seg-btn.active &.cnt-resolved {
     background: rgba($green, 0.2);
-    color: lighten($green, 15%);
+    color: color.adjust($green, $lightness: 15%);
   }
 }
 
@@ -428,7 +430,7 @@ $r-lg: 12px;
 
   &.sev-badge-high {
     background: rgba($red, 0.15);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     .sev-dot {
       background: $red;
       box-shadow: 0 0 4px rgba($red, 0.6);
@@ -459,7 +461,7 @@ $r-lg: 12px;
 
   &.chip-open {
     background: rgba($red, 0.12);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
   &.chip-inprogress {
     background: rgba($amber, 0.12);
@@ -670,7 +672,7 @@ $r-lg: 12px;
   }
   &:hover {
     background: rgba($red, 0.1);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     border-color: rgba($red, 0.3);
   }
 }
@@ -1000,12 +1002,12 @@ $r-lg: 12px;
   &.suspend.on {
     background: rgba($red, 0.15);
     border-color: rgba($red, 0.4);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
   &.ban.on {
     background: rgba($red, 0.25);
     border-color: rgba($red, 0.6);
-    color: lighten($red, 20%);
+    color: color.adjust($red, $lightness: 20%);
     font-weight: 700;
   }
   &.none.on {
@@ -1069,7 +1071,7 @@ $r-lg: 12px;
       gap: 6px;
     }
     &:hover:not(:disabled) {
-      background: darken($green, 6%);
+      background: color.adjust($green, $lightness: -6%);
     }
     &:disabled {
       opacity: 0.6;

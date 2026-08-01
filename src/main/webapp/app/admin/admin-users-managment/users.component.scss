@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // ─── Tokens ───────────────────────────────────────────────────────────────────
 $navy: #0b1120;
 $navy-2: #111827;
@@ -233,7 +235,7 @@ $r-lg: 12px;
   border-radius: 8px;
   .active & {
     background: rgba($blue, 0.2);
-    color: lighten($blue, 15%);
+    color: color.adjust($blue, $lightness: 15%);
   }
 }
 
@@ -318,7 +320,7 @@ $r-lg: 12px;
 
   &.red {
     border-color: rgba($red, 0.35);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     background: rgba($red, 0.08);
     &:hover {
       background: rgba($red, 0.15);
@@ -546,11 +548,11 @@ $r-lg: 12px;
 
   &.r-patient {
     background: rgba($blue, 0.15);
-    color: lighten($blue, 20%);
+    color: color.adjust($blue, $lightness: 20%);
   }
   &.r-doctor {
     background: rgba($purple, 0.15);
-    color: lighten($purple, 20%);
+    color: color.adjust($purple, $lightness: 20%);
   }
 }
 
@@ -635,7 +637,7 @@ $r-lg: 12px;
     color: $text-3;
     &:hover {
       border-color: rgba($red, 0.4);
-      color: lighten($red, 15%);
+      color: color.adjust($red, $lightness: 15%);
       background: rgba($red, 0.08);
     }
   }
@@ -735,7 +737,7 @@ $r-lg: 12px;
   &.on {
     background: rgba($red, 0.12);
     border-color: rgba($red, 0.3);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     font-weight: 600;
   }
 }
@@ -802,7 +804,7 @@ $r-lg: 12px;
   }
   &:hover {
     background: rgba($red, 0.1);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     border-color: rgba($red, 0.3);
   }
 }
@@ -961,7 +963,7 @@ $r-lg: 12px;
 }
 .se-reason {
   font-size: 11px;
-  color: lighten($red, 15%);
+  color: color.adjust($red, $lightness: 15%);
 }
 
 // Footer
@@ -1012,7 +1014,7 @@ $r-lg: 12px;
   &.delete {
     background: rgba($red, 0.08);
     border-color: rgba($red, 0.3);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     &:hover {
       background: rgba($red, 0.15);
     }
@@ -1062,7 +1064,7 @@ $r-lg: 12px;
   svg {
     width: 20px;
     height: 20px;
-    stroke: lighten($red, 10%);
+    stroke: color.adjust($red, $lightness: 10%);
   }
 }
 
@@ -1123,7 +1125,7 @@ $r-lg: 12px;
   justify-content: center;
   transition: background 0.15s;
   &:hover:not(:disabled) {
-    background: darken($red, 6%);
+    background: color.adjust($red, $lightness: -6%);
   }
   &:disabled {
     opacity: 0.6;
