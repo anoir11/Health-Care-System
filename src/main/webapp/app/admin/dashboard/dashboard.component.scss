@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // // ─── Design Tokens ────────────────────────────────────────────────────────────
 // $navy:      #0b1120;
 // $navy-2:    #111827;
@@ -1676,7 +1678,7 @@ input {
   cursor: pointer;
   border: 1px solid rgba($color, 0.2);
   background: rgba($color, 0.08);
-  color: lighten($color, 15%);
+  color: color.adjust($color, $lightness: 15%);
   transition: all 0.15s;
 
   svg {

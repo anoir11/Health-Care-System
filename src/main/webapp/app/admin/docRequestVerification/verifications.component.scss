@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 // ─── Tokens (same as dashboard) ──────────────────────────────────────────────
 $navy: #0b1120;
 $navy-2: #111827;
@@ -104,7 +106,7 @@ $r-lg: 12px;
     color: $green;
   }
   &.ms-red {
-    color: lighten($red, 10%);
+    color: color.adjust($red, $lightness: 10%);
   }
 }
 
@@ -191,7 +193,7 @@ $r-lg: 12px;
   &.active {
     background: rgba($red, 0.12);
     border-color: rgba($red, 0.3);
-    color: lighten($red, 20%);
+    color: color.adjust($red, $lightness: 20%);
   }
 }
 
@@ -205,7 +207,7 @@ $r-lg: 12px;
 
   .active & {
     background: rgba($red, 0.25);
-    color: lighten($red, 20%);
+    color: color.adjust($red, $lightness: 20%);
   }
 }
 
@@ -352,7 +354,7 @@ $r-lg: 12px;
   }
   &.badge-rejected {
     background: rgba($red, 0.15);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
 }
 
@@ -407,7 +409,7 @@ $r-lg: 12px;
   color: $text-3;
 
   .doc-card.selected & {
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
 }
 
@@ -490,7 +492,7 @@ $r-lg: 12px;
   }
   &:hover {
     background: rgba($red, 0.12);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
     border-color: rgba($red, 0.3);
   }
 }
@@ -596,7 +598,7 @@ $r-lg: 12px;
   }
   &.badge-rejected {
     background: rgba($red, 0.15);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
 }
 
@@ -765,7 +767,7 @@ $r-lg: 12px;
 
   &.doc-pdf {
     background: rgba($red, 0.12);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
   &.doc-jpg,
   &.doc-png {
@@ -872,7 +874,7 @@ $r-lg: 12px;
   border-radius: $r-md;
   font-size: 12.5px;
   font-weight: 600;
-  color: lighten($red, 15%);
+  color: color.adjust($red, $lightness: 15%);
   cursor: pointer;
   font-family: inherit;
   transition: all 0.15s;
@@ -910,7 +912,7 @@ $r-lg: 12px;
     height: 13px;
   }
   &:hover:not(:disabled) {
-    background: darken($green, 5%);
+    background: color.adjust($green, $lightness: -5%);
   }
   &:disabled {
     opacity: 0.6;
@@ -965,13 +967,13 @@ $r-lg: 12px;
 
   &:hover {
     border-color: rgba($red, 0.4);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
 
   &.selected {
     background: rgba($red, 0.15);
     border-color: rgba($red, 0.5);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
 }
 
@@ -1030,7 +1032,7 @@ $r-lg: 12px;
   font-family: inherit;
   transition: background 0.15s;
   &:hover:not(:disabled) {
-    background: darken($red, 6%);
+    background: color.adjust($red, $lightness: -6%);
   }
   &:disabled {
     opacity: 0.45;
@@ -1059,7 +1061,7 @@ $r-lg: 12px;
   }
   &.decided-rejected {
     background: rgba($red, 0.12);
-    color: lighten($red, 15%);
+    color: color.adjust($red, $lightness: 15%);
   }
 }
 

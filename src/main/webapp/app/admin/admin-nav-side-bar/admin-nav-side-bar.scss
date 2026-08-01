@@ -818,6 +818,7 @@
 // }
 
 // ─── Google Fonts ─────────────────────────────────────────────────────────────
+@use 'sass:color';
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 // ─── Design Tokens ────────────────────────────────────────────────────────────
@@ -1676,7 +1677,7 @@ input {
   cursor: pointer;
   border: 1px solid rgba($color, 0.2);
   background: rgba($color, 0.08);
-  color: lighten($color, 15%);
+  color: color.adjust($color, $lightness: 15%);
   transition: all 0.15s;
 
   svg {
