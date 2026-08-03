@@ -3,16 +3,14 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Observable } from 'rxjs';
 
 import { StateStorageService } from 'app/core/auth/state-storage.service';
-import { ApplicationConfigService } from '../config/application-config.service';
+import { environment } from 'environments/environment.development';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private readonly stateStorageService = inject(StateStorageService);
-  private readonly applicationConfigService = inject(ApplicationConfigService);
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const serverApiUrl = this.applicationConfigService.getEndpointFor('');
-    if (!request.url || (request.url.startsWith('http') && !(serverApiUrl && request.url.startsWith(serverApiUrl)))) {
+    if (!request.url.startsWith(environment.apiUrl)) {
       return next.handle(request);
     }
 

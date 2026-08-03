@@ -4,6 +4,7 @@ import { Observable, tap } from 'rxjs';
 import { UserResponse } from '../shared_models/user.model';
 import { LoginPayload, LoginResponse, PatientRegisterPayload } from '../shared_models/auth.model';
 import { environment } from 'environments/environment.development';
+import { StateStorageService } from 'app/core/auth/state-storage.service';
 
 export interface VerifyEmailPayload {
   email: string;
@@ -14,7 +15,10 @@ export interface VerifyEmailPayload {
 export class AuthService {
   private baseUrl = `${environment.apiUrl}/auth`;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private stateStorageService: StateStorageService,
+  ) {}
 
   registerPatient(payload: PatientRegisterPayload): Observable<UserResponse> {
     return this.http.post<UserResponse>(`${this.baseUrl}/register/patient`, payload);
@@ -24,7 +28,6 @@ export class AuthService {
     return this.http.post<UserResponse>(`${this.baseUrl}/register/doctor`, formData);
   }
 
-  // in AuthService class:
   verifyEmail(payload: VerifyEmailPayload): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.baseUrl}/verify-email`, payload);
   }
@@ -38,7 +41,8 @@ export class AuthService {
   }
 
   private storeSession(response: LoginResponse): void {
-    localStorage.setItem('token', response.token);
+    this.stateStorageService.storeAuthenticationToken(response.token, true);
+
     localStorage.setItem(
       'user',
       JSON.stringify({
@@ -52,7 +56,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem('token');
+    return this.stateStorageService.getAuthenticationToken();
   }
 
   getCurrentUser(): LoginResponse | null {
@@ -65,7 +69,7 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    this.stateStorageService.clearAuthenticationToken();
     localStorage.removeItem('user');
   }
 }
