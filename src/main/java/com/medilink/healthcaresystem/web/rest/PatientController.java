@@ -1,7 +1,6 @@
 package com.medilink.healthcaresystem.web.rest;
 
 import com.medilink.healthcaresystem.domain.Patient;
-import com.medilink.healthcaresystem.domain.User;
 import com.medilink.healthcaresystem.repository.PatientRepository;
 import com.medilink.healthcaresystem.service.EmergencyContactService;
 import com.medilink.healthcaresystem.service.InsuranceService;
@@ -17,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,7 +27,7 @@ public class PatientController {
     private final PatientProfileService patientProfileService;
     private final EmergencyContactService emergencyContactService;
     private final InsuranceService insuranceService;
-    private final PatientRepository patientRepository; // Add this
+    private final PatientRepository patientRepository;
 
     @GetMapping("/me")
     public ResponseEntity<PatientProfileResponse> getMyProfile(Authentication authentication) {
@@ -91,11 +91,13 @@ public class PatientController {
     }
 
     private Patient extractPatient(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        Jwt jwt = (Jwt) authentication.getPrincipal();
 
-        // Find the patient by the user's ID
+        Long userId = jwt.getClaim("userId");
+        String email = jwt.getSubject();
+
         return patientRepository
-            .findById(user.getId())
-            .orElseThrow(() -> new IllegalStateException("Patient profile not found for user: " + user.getEmail()));
+            .findById(userId)
+            .orElseThrow(() -> new IllegalStateException("Patient profile not found for user: " + email));
     }
 }
