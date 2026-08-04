@@ -52,8 +52,7 @@ h1 {
   margin-right: 20px;
 
   /* Adding gradient with opacity and an image */
-  background-image:
-    /* Gradient with opacity */ url('/images/b44.png');
+  background-image: url('../../content/images/b44.png');
   /* Add your image URL here */
 
   background-size: cover;
@@ -345,7 +344,7 @@ h1 {
 }
 
 .forPatientBloc {
-  background: linear-gradient(rgba(255, 255, 255, 0.842), rgba(250, 250, 250, 0.856)), url('/images/bc4.png');
+  background: linear-gradient(rgba(255, 255, 255, 0.842), rgba(250, 250, 250, 0.856)), url('../../content/images/bc4.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -601,7 +600,7 @@ h1 {
   flex-wrap: wrap;
   gap: 80px;
 
-  background: linear-gradient(rgba(255, 255, 255, 0), rgba(250, 250, 250, 0.034)), url('/images/bbb3.png');
+  background: linear-gradient(rgba(255, 255, 255, 0), rgba(250, 250, 250, 0.034)), url('../../content/images/bbb3.png');
   background-position: center;
 }
 
@@ -1034,7 +1033,7 @@ mat-form-field {
 .forContactBloc {
   background:
     linear-gradient(to bottom, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0.9) 100%),
-    url('/images/back3.png');
+    url('../../content/images/back3.png');
 
   background-size: cover;
   background-position: center;

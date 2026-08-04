@@ -23,7 +23,7 @@ export class HeroSliderComponent implements AfterViewInit {
 
   slides = [
     {
-      image: '/images/slide13.png',
+      image: '../../../content/images/slide13.png',
       titleStart: 'Find a',
       highlight1: 'Doctor',
       titleMiddle: 'And Book An',
@@ -31,7 +31,7 @@ export class HeroSliderComponent implements AfterViewInit {
       description: `Your health is our priority. Find trusted doctors, book appointments instantly, and choose in-person, home, or online consultations — all from one easy platform.`,
     },
     {
-      image: '/images/slide23.png',
+      image: '../../../content/images/slide23.png',
       titleStart: 'Track Your',
       highlight1: 'Health',
       titleMiddle: 'And Share',
@@ -40,7 +40,7 @@ export class HeroSliderComponent implements AfterViewInit {
 Easily manage, share, and track your medical journey in one trusted, secure platform.`,
     },
     {
-      image: '/images/slide4.png',
+      image: '../../../content/images/slide4.png',
       titleStart: 'Consult',
       highlight1: 'Doctor',
       titleMiddle: 'Via Secure',
