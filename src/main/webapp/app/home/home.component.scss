@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Hibbo&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
 
 h1 {
   /* Min: 20px, Scalable: 4vw (4% of screen width), Max: 32px */
@@ -15,6 +15,7 @@ h1 {
 .homeContainerPart1 {
   background-color: brown;
   height: 95vh;
+  overflow: hidden;
 }
 
 .homeContainerPart2 {
@@ -607,18 +608,15 @@ h1 {
 .homeContainerPart5Card {
   background-color: #ffffff;
   width: 350px;
-  height: 220px;
-  /* max-height: fit-content; */
+  min-height: 220px;
+  height: auto;
+  box-sizing: border-box;
   border-radius: 0 45px 0;
   display: flex;
   font-family: 'Lato', sans-serif;
   padding: 20px 15px;
   margin-top: 20px;
-
-  /* Shadow */
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-
-  /* Animation */
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
@@ -651,6 +649,9 @@ h1 {
 .card1Part2 h2 {
   font-size: 24px;
   font-family: 'Raleway', sans-serif;
+  font-weight: 700; // force bold explicitly, don't rely on default
+  line-height: 1.3; // tighter, matches the "correct" screenshot
+  margin: 0 0 4px;
 }
 
 .cardIcon {
@@ -1344,7 +1345,13 @@ mat-form-field {
   }
 
   .homeContainerPart5 {
+    flex-direction: column;
     gap: 25px;
+  }
+
+  .homeContainerPart5Card {
+    width: 100%;
+    max-width: 100%;
   }
 
   .homeContainerPart2 {
@@ -2310,10 +2317,9 @@ mat-form-field {
 .homeContainerPart5Card {
   display: flex;
   flex-direction: row;
-  align-items: flex-start; /* was center — let text grow downward */
-  /* box-sizing: border-box;
-  overflow: hidden;            */
-  min-width: 0; /* critical: allow flex child to shrink */
+  align-items: flex-start;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
 .card1Part1 {
