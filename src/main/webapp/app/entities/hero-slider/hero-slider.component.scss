@@ -141,6 +141,7 @@ body {
   display: inline-block;
   border-radius: 2px;
   transition: background 0.3s ease;
+  cursor: pointer;
 }
 
 .dots span.active {
@@ -262,22 +263,17 @@ input {
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   width: calc(100vw - 81vw);
   min-height: 50vh;
-  /* max-height: fit-content; */
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   z-index: 9;
-  bottom: 0;
+  top: 50%; /* ✅ center vertically... */
   right: 0;
+  transform: translateY(-50%); /* ✅ ...instead of anchoring to bottom */
   margin-right: calc(100vw - 87vw);
-  /* margin-bottom: 10vh; */
-  border-top-left-radius: 3px; /* optional, looks nicer */
-  border-top-right-radius: 3px; /* optional, looks nicer */
-  border-left: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
-  border-right: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
-  border-top: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
-
+  border-radius: 6px; /* ✅ now floating, so round all corners */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* ✅ frosted-glass border on all sides */
   padding: 25px;
 }
 
@@ -287,10 +283,11 @@ input {
 }
 
 .titlePart h2 {
-  font-size: 1.4rem;
+  font-size: 1.2rem; /* ✅ slightly smaller so it fits */
   color: #ffffff;
-  letter-spacing: 2px;
+  letter-spacing: 1px; /* ✅ tighter spacing */
   font-family: 'Poppins', 'Raleway', sans-serif;
+  white-space: nowrap; /* ✅ force a single line */
 }
 
 .forum {
@@ -465,4 +462,25 @@ input {
   color: #006bff !important;
   color: #2680ff !important;
   font-weight: bold !important;
+}
+
+.matBut {
+  position: relative !important; /* ✅ ripple now anchors to the button itself, not .findDoc */
+  overflow: hidden !important; /* ✅ clips anything that still tries to escape */
+  box-shadow: none !important;
+
+  &:active,
+  &:focus,
+  &:hover {
+    box-shadow: none !important;
+  }
+
+  /* ✅ force Material's internal ripple layer to respect the button's shape/bounds */
+  ::ng-deep .mat-ripple,
+  ::ng-deep .mat-mdc-button-ripple,
+  ::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep .mat-ripple-element {
+    border-radius: inherit;
+    overflow: hidden;
+  }
 }
