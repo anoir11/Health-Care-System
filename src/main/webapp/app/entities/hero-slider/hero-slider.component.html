@@ -4,18 +4,26 @@
       <h2>Find Doctors in Your Area</h2>
     </div>
 
+    <!-- Update the dropdown sections -->
     <div class="forum">
       <!-- Doctor Name -->
       <div class="dropdown">
-        <div class="dropdown-trigger">
-          <div class="selected-option">
-            <input type="text" class="form-control2" placeholder="doctor name" [(ngModel)]="doctorName" />
+        <div class="dropdown-trigger" style="padding: 0; border: none; background: transparent">
+          <div class="selected-option" style="width: 100%">
+            <input
+              type="text"
+              class="form-control2"
+              placeholder="doctor name"
+              [(ngModel)]="doctorName"
+              style="width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 4px; background: #fff"
+              (click)="$event.stopPropagation()"
+            />
           </div>
         </div>
       </div>
 
       <!-- Department -->
-      <div class="dropdown" [class.open]="openDropdown === 'department'">
+      <div class="dropdown" [class.open]="openDropdown === 'department'" (click)="$event.stopPropagation()">
         <div class="dropdown-trigger" (click)="toggleDropdown('department', $event)">
           <div class="selected-option">
             <img [src]="selected.department?.icon" *ngIf="selected.department" alt="" />
@@ -34,7 +42,7 @@
       </div>
 
       <!-- State -->
-      <div class="dropdown" [class.open]="openDropdown === 'state'">
+      <div class="dropdown" [class.open]="openDropdown === 'state'" (click)="$event.stopPropagation()">
         <div class="dropdown-trigger" (click)="toggleDropdown('state', $event)">
           <div class="selected-option">
             <img [src]="selected.state?.icon" *ngIf="selected.state" alt="" />
@@ -53,7 +61,7 @@
       </div>
 
       <!-- City -->
-      <div class="dropdown" [class.open]="openDropdown === 'city'">
+      <div class="dropdown" [class.open]="openDropdown === 'city'" (click)="$event.stopPropagation()">
         <div class="dropdown-trigger" (click)="toggleDropdown('city', $event)">
           <div class="selected-option">
             <img [src]="selected.city?.icon" *ngIf="selected.city" alt="" />

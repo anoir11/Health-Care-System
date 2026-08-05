@@ -76,6 +76,14 @@ Easily manage, share, and track your medical journey in one trusted, secure plat
     });
 
     setTimeout(() => (this.animate = true), 100);
+
+    setTimeout(() => {
+      const triggers = this.elementRef.nativeElement.querySelectorAll('.dropdown-trigger');
+      console.log('📊 Found dropdown triggers:', triggers.length);
+      triggers.forEach((trigger, index) => {
+        console.log(`Trigger ${index}:`, trigger);
+      });
+    }, 1000);
   }
 
   ngOnDestroy(): void {
@@ -128,8 +136,19 @@ Easily manage, share, and track your medical journey in one trusted, secure plat
 
   toggleDropdown(type: string, event: Event) {
     event.stopPropagation();
+    event.preventDefault();
+    console.log('🔄 Toggling dropdown:', type);
+    console.log('📌 Current open state:', this.openDropdown);
+
     // Close other dropdowns and toggle this one
-    this.openDropdown = this.openDropdown === type ? null : type;
+    if (this.openDropdown === type) {
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = type;
+    }
+
+    console.log('✅ New open state:', this.openDropdown);
+    this.cdr.detectChanges(); // Force change detection
   }
 
   selectOption(type: string, opt: any, event: Event) {
