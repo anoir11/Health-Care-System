@@ -17,7 +17,7 @@ import NavbarItem from './navbar-item.model';
 import { CommonModule } from '@angular/common'; // ← add
 
 @Component({
-  selector: 'jhi-navbar',
+  selector: 'app-navbar',
   standalone: true, // ← add
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',

@@ -1,29 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, NgZone, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { NgZone } from '@angular/core';
-import { ChangeDetectorRef } from '@angular/core';
-declare const Swiper: any; // ← only change at the top
+
+declare const Swiper: any;
 
 @Component({
   selector: 'app-hero-slider',
+  standalone: true,
   templateUrl: './hero-slider.component.html',
   imports: [FormsModule, CommonModule, MatButtonModule],
   styleUrls: ['./hero-slider.component.scss'],
 })
-export class HeroSliderComponent implements AfterViewInit {
+export class HeroSliderComponent implements AfterViewInit, OnDestroy {
   constructor(
     private ngZone: NgZone,
     private cdr: ChangeDetectorRef,
+    private elementRef: ElementRef<HTMLElement>,
   ) {}
 
-  currentIndex = 0; // ✅ This tracks the active slide index
-  animate = false; // 🔥 to trigger animation
+  currentIndex = 0; // ✅ tracks the active slide index
+  animate = false; // 🔥 triggers the text fade-up animation
+
+  private swiperInstance: any;
+  private animateTimeoutId: ReturnType<typeof setTimeout> | undefined;
 
   slides = [
     {
-      image: '/images/slide13.png',
+      image: '../../../content/images/slide13.png',
       titleStart: 'Find a',
       highlight1: 'Doctor',
       titleMiddle: 'And Book An',
@@ -31,7 +35,7 @@ export class HeroSliderComponent implements AfterViewInit {
       description: `Your health is our priority. Find trusted doctors, book appointments instantly, and choose in-person, home, or online consultations — all from one easy platform.`,
     },
     {
-      image: '/images/slide23.png',
+      image: '../../../content/images/slide23.png',
       titleStart: 'Track Your',
       highlight1: 'Health',
       titleMiddle: 'And Share',
@@ -40,27 +44,28 @@ export class HeroSliderComponent implements AfterViewInit {
 Easily manage, share, and track your medical journey in one trusted, secure platform.`,
     },
     {
-      image: '/images/slide4.png',
+      image: '../../../content/images/slide4.png',
       titleStart: 'Consult',
       highlight1: 'Doctor',
       titleMiddle: 'Via Secure',
       highlight2: 'Video Call',
-      description: `Connect instantly with certified doctors through high-quality video calls,get real-time medical advice, and prescriptions right from home.`,
+      description: `Connect instantly with certified doctors through high-quality video calls, get real-time medical advice, and prescriptions right from home.`,
     },
   ];
 
   ngAfterViewInit(): void {
-    new Swiper('.swiper-container', {
+    this.swiperInstance = new Swiper('.swiper-container', {
       loop: true,
-      autoplay: { delay: 8000 },
+      effect: 'fade', // ✅ crossfade instead of horizontal slide
+      fadeEffect: { crossFade: true },
+      autoplay: { delay: 8000, disableOnInteraction: false },
       on: {
         slideChange: (swiper: any) => {
           this.ngZone.run(() => {
-            this.currentIndex = swiper.realIndex; // ✅ correct
-            console.log('currentIndex:', this.currentIndex);
-
+            this.currentIndex = swiper.realIndex;
             this.animate = false;
-            setTimeout(() => {
+            clearTimeout(this.animateTimeoutId);
+            this.animateTimeoutId = setTimeout(() => {
               this.animate = true;
               this.cdr.detectChanges();
             }, 50);
@@ -71,6 +76,28 @@ Easily manage, share, and track your medical journey in one trusted, secure plat
     });
 
     setTimeout(() => (this.animate = true), 100);
+
+    setTimeout(() => {
+      const triggers = this.elementRef.nativeElement.querySelectorAll('.dropdown-trigger');
+      console.log('📊 Found dropdown triggers:', triggers.length);
+      triggers.forEach((trigger, index) => {
+        console.log(`Trigger ${index}:`, trigger);
+      });
+    }, 1000);
+  }
+
+  ngOnDestroy(): void {
+    clearTimeout(this.animateTimeoutId);
+    this.swiperInstance?.destroy(true, true); // ✅ prevent leaked/duplicate instances
+  }
+
+  /** Lets the dots actually navigate the slider */
+  goToSlide(index: number): void {
+    this.swiperInstance?.slideToLoop(index);
+  }
+
+  trackBySlide(index: number): number {
+    return index;
   }
 
   doctorName = '';
@@ -107,14 +134,35 @@ Easily manage, share, and track your medical journey in one trusted, secure plat
     ],
   };
 
-  toggleDropdown(type: string) {
-    this.openDropdown = this.openDropdown === type ? null : type;
+  toggleDropdown(type: string, event: Event) {
+    event.stopPropagation();
+    event.preventDefault();
+    console.log('🔄 Toggling dropdown:', type);
+    console.log('📌 Current open state:', this.openDropdown);
+
+    // Close other dropdowns and toggle this one
+    if (this.openDropdown === type) {
+      this.openDropdown = null;
+    } else {
+      this.openDropdown = type;
+    }
+
+    console.log('✅ New open state:', this.openDropdown);
+    this.cdr.detectChanges(); // Force change detection
   }
 
   selectOption(type: string, opt: any, event: Event) {
     event.stopPropagation();
     this.selected[type] = opt;
     this.openDropdown = null;
+  }
+
+  /** ✅ Closes any open dropdown when the user clicks outside of it */
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (this.openDropdown && !this.elementRef.nativeElement.contains(event.target as Node)) {
+      this.openDropdown = null;
+    }
   }
 
   findNow() {

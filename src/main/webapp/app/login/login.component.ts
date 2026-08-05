@@ -69,7 +69,7 @@ export default class LoginComponent implements OnInit {
           return;
         }
 
-        const redirect = response.role === 'PATIENT' ? '/m3' : '/doctor/dashboard';
+        const redirect = response.role === 'PATIENT' ? '/patient/profile' : '/doctor/dashboard';
         this.router.navigate([redirect]);
       },
       error: err => {

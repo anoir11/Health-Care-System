@@ -7,7 +7,6 @@ import SharedModule from 'app/shared/shared.module';
 import { AccountService } from 'app/core/auth/account.service';
 import { Account } from 'app/core/auth/account.model';
 
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { initDecoCanvas, initDecoCanvas2, initDecoCanvas3 } from './deco-canvas.util';
 import { CommonModule } from '@angular/common';

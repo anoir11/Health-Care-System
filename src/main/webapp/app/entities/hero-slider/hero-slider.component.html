@@ -1,47 +1,30 @@
-<!-- <div class="slider" >
-  <div class="slide" [style.backgroundImage]="'url(' + slides[currentIndex].imageUrl + ')'">
-    <div class="overlay"></div>
-
-    <div class="content">
-      <h1>{{ slides[currentIndex].title }}</h1>
-      <p>{{ slides[currentIndex].subtitle }}</p>
-      <button class="cta-btn">
-        {{ slides[currentIndex].buttonText }}
-        <span class="plus">+</span>
-      </button>
-    </div>
-
-    <button class="nav prev" (click)="prevSlide()">Prev</button>
-    <button class="nav next" (click)="nextSlide()">Next</button>
-
-    <div class="dots">
-      <span
-        *ngFor="let slide of slides; let i = index"
-        [class.active]="i === currentIndex"
-      ></span>
-    </div>
-  </div>
-</div> -->
-
 <div style="height: 95vh; position: relative">
   <div class="findDoc">
     <div class="titlePart">
       <h2>Find Doctors in Your Area</h2>
     </div>
 
+    <!-- Update the dropdown sections -->
     <div class="forum">
       <!-- Doctor Name -->
       <div class="dropdown">
-        <div class="dropdown-trigger">
-          <div class="selected-option">
-            <input type="text" class="form-control2" placeholder="doctor name" [(ngModel)]="doctorName" />
+        <div class="dropdown-trigger" style="padding: 0; border: none; background: transparent">
+          <div class="selected-option" style="width: 100%">
+            <input
+              type="text"
+              class="form-control2"
+              placeholder="doctor name"
+              [(ngModel)]="doctorName"
+              style="width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 4px; background: #fff"
+              (click)="$event.stopPropagation()"
+            />
           </div>
         </div>
       </div>
 
       <!-- Department -->
-      <div class="dropdown" [class.open]="openDropdown === 'department'" (click)="toggleDropdown('department')">
-        <div class="dropdown-trigger">
+      <div class="dropdown" [class.open]="openDropdown === 'department'" (click)="$event.stopPropagation()">
+        <div class="dropdown-trigger" (click)="toggleDropdown('department', $event)">
           <div class="selected-option">
             <img [src]="selected.department?.icon" *ngIf="selected.department" alt="" />
             <span>{{ selected.department?.label || 'speciality' }}</span>
@@ -50,7 +33,6 @@
             <path fill="currentColor" d="m7 10l5 5l5-5z" />
           </svg>
         </div>
-
         <div class="dropdown-menu" *ngIf="openDropdown === 'department'">
           <div class="dropdown-option" *ngFor="let opt of options.department" (click)="selectOption('department', opt, $event)">
             <img [src]="opt.icon" alt="" />
@@ -60,8 +42,8 @@
       </div>
 
       <!-- State -->
-      <div class="dropdown" [class.open]="openDropdown === 'state'" (click)="toggleDropdown('state')">
-        <div class="dropdown-trigger">
+      <div class="dropdown" [class.open]="openDropdown === 'state'" (click)="$event.stopPropagation()">
+        <div class="dropdown-trigger" (click)="toggleDropdown('state', $event)">
           <div class="selected-option">
             <img [src]="selected.state?.icon" *ngIf="selected.state" alt="" />
             <span>{{ selected.state?.label || 'state' }}</span>
@@ -70,7 +52,6 @@
             <path fill="currentColor" d="m7 10l5 5l5-5z" />
           </svg>
         </div>
-
         <div class="dropdown-menu" *ngIf="openDropdown === 'state'">
           <div class="dropdown-option" *ngFor="let opt of options.state" (click)="selectOption('state', opt, $event)">
             <img [src]="opt.icon" alt="" />
@@ -80,8 +61,8 @@
       </div>
 
       <!-- City -->
-      <div class="dropdown" [class.open]="openDropdown === 'city'" (click)="toggleDropdown('city')">
-        <div class="dropdown-trigger">
+      <div class="dropdown" [class.open]="openDropdown === 'city'" (click)="$event.stopPropagation()">
+        <div class="dropdown-trigger" (click)="toggleDropdown('city', $event)">
           <div class="selected-option">
             <img [src]="selected.city?.icon" *ngIf="selected.city" alt="" />
             <span>{{ selected.city?.label || 'city' }}</span>
@@ -90,7 +71,6 @@
             <path fill="currentColor" d="m7 10l5 5l5-5z" />
           </svg>
         </div>
-
         <div class="dropdown-menu" *ngIf="openDropdown === 'city'">
           <div class="dropdown-option" *ngFor="let opt of options.city" (click)="selectOption('city', opt, $event)">
             <img [src]="opt.icon" alt="" />
@@ -122,8 +102,8 @@
 
   <div class="swiper-container">
     <div class="swiper-wrapper">
-      <div class="swiper-slide" *ngFor="let slide of slides">
-        <img [src]="slide.image" alt="{{ slide.titleStart }}" />
+      <div class="swiper-slide" *ngFor="let slide of slides; trackBy: trackBySlide">
+        <img [src]="slide.image" alt="{{ slide.titleStart }} {{ slide.highlight1 }}" />
         <div class="overlay"></div>
         <div class="text-overlay">
           <h2 [class.fade-in-up]="animate">
@@ -133,16 +113,6 @@
             <span class="highlight">{{ slide.highlight2 }}</span>
           </h2>
           <p [class.fade-in-up]="animate">{{ slide.description }}</p>
-
-          <!-- <button [class.fade-in]="animate" class="emergency-btn">READ MORE <i class="fa-solid fa-plus"></i></button> -->
-
-          <!-- <div class="medType">
-          <div class="medTypeSous1"> <img src="/icons/ico1.png" alt="{{ slide.title }}" /></div>
-           <div class="medTypeSous1">s1</div>
-            <div class="medTypeSous1">s1</div>
-             <div class="medTypeSous1">s1</div>
-              <div class="medTypeSous1">s1</div>
-        </div> -->
 
           <div class="medType">
             <div class="icon-box"><i class="fa-solid fa-heart-pulse"></i></div>
@@ -154,16 +124,13 @@
       </div>
     </div>
 
-    <!-- Navigation buttons -->
-    <!-- <div class="swiper-button-next"></div>
-  <div class="swiper-button-prev"></div> -->
-
-    <!-- Swiper's built-in pagination (if using) -->
-    <!-- <div class="swiper-pagination"></div> -->
-
-    <!-- ✅ Custom Dots -->
+    <!-- Custom Dots -->
     <div class="dots">
-      <span *ngFor="let slide of slides; let i = index" [class.active]="i === currentIndex"></span>
+      <span
+        *ngFor="let slide of slides; let i = index; trackBy: trackBySlide"
+        [class.active]="i === currentIndex"
+        (click)="goToSlide(i)"
+      ></span>
     </div>
   </div>
 </div>

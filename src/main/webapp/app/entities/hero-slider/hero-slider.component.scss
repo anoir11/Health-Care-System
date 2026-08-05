@@ -141,6 +141,7 @@ body {
   display: inline-block;
   border-radius: 2px;
   transition: background 0.3s ease;
+  cursor: pointer;
 }
 
 .dots span.active {
@@ -262,22 +263,17 @@ input {
   -webkit-backdrop-filter: blur(10px); /* Safari support */
   width: calc(100vw - 81vw);
   min-height: 50vh;
-  /* max-height: fit-content; */
   position: absolute;
   display: flex;
   flex-direction: column;
   align-items: stretch;
   z-index: 9;
-  bottom: 0;
+  top: 50%; /* ✅ center vertically... */
   right: 0;
+  transform: translateY(-50%); /* ✅ ...instead of anchoring to bottom */
   margin-right: calc(100vw - 87vw);
-  /* margin-bottom: 10vh; */
-  border-top-left-radius: 3px; /* optional, looks nicer */
-  border-top-right-radius: 3px; /* optional, looks nicer */
-  border-left: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
-  border-right: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
-  border-top: 1px solid rgba(255, 255, 255, 0.2); /* optional frosted-glass border */
-
+  border-radius: 6px; /* ✅ now floating, so round all corners */
+  border: 1px solid rgba(255, 255, 255, 0.2); /* ✅ frosted-glass border on all sides */
   padding: 25px;
 }
 
@@ -287,10 +283,11 @@ input {
 }
 
 .titlePart h2 {
-  font-size: 1.4rem;
+  font-size: 1.2rem; /* ✅ slightly smaller so it fits */
   color: #ffffff;
-  letter-spacing: 2px;
+  letter-spacing: 1px; /* ✅ tighter spacing */
   font-family: 'Poppins', 'Raleway', sans-serif;
+  white-space: nowrap; /* ✅ force a single line */
 }
 
 .forum {
@@ -465,4 +462,177 @@ input {
   color: #006bff !important;
   color: #2680ff !important;
   font-weight: bold !important;
+}
+
+.matBut {
+  position: relative !important; /* ✅ ripple now anchors to the button itself, not .findDoc */
+  overflow: hidden !important; /* ✅ clips anything that still tries to escape */
+  box-shadow: none !important;
+
+  &:active,
+  &:focus,
+  &:hover {
+    box-shadow: none !important;
+  }
+
+  /* ✅ force Material's internal ripple layer to respect the button's shape/bounds */
+  ::ng-deep .mat-ripple,
+  ::ng-deep .mat-mdc-button-ripple,
+  ::ng-deep .mat-mdc-button-persistent-ripple,
+  ::ng-deep .mat-ripple-element {
+    border-radius: inherit;
+    overflow: hidden;
+  }
+}
+
+.findDoc {
+  background: rgba(87, 87, 87, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  width: calc(100vw - 81vw);
+  min-height: 50vh;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  z-index: 9999 !important;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  margin-right: calc(100vw - 87vw);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 25px;
+  overflow: visible !important;
+  pointer-events: auto !important;
+}
+
+.forum {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch !important;
+  justify-content: space-between;
+  gap: 10px;
+  position: relative;
+  z-index: 9999 !important;
+}
+
+.dropdown {
+  position: relative;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: small;
+  color: #777777;
+  z-index: 1; /* Base z-index for closed dropdowns */
+}
+
+.dropdown.open {
+  z-index: 10000 !important; /* When open, bring to front */
+}
+
+.dropdown-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  transition: border 0.2s ease;
+  position: relative;
+  min-height: 50px;
+}
+
+.dropdown-trigger:hover {
+  border-color: #3f51b5;
+}
+
+.dropdown.open .dropdown-trigger {
+  border-color: #3f51b5;
+}
+
+.dropdown .selected-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.dropdown .selected-option img {
+  width: 20px;
+  height: 20px;
+}
+
+.arrow {
+  transition: transform 0.3s;
+  color: #777777;
+  pointer-events: none;
+}
+
+.dropdown.open .arrow {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 99999 !important; /* Ensure it's above everything */
+  max-height: 200px;
+  overflow-y: auto;
+  pointer-events: auto !important;
+  display: block !important;
+  /* Ensure dropdown appears above other content */
+  position: absolute;
+}
+
+/* For the dropdown that's currently open, ensure it overlaps others */
+.dropdown.open .dropdown-menu {
+  z-index: 99999 !important;
+}
+
+/* Make sure each dropdown's menu appears above the next dropdown */
+.dropdown:nth-child(2).open {
+  z-index: 10002 !important;
+}
+
+.dropdown:nth-child(3).open {
+  z-index: 10003 !important;
+}
+
+.dropdown:nth-child(4).open {
+  z-index: 10004 !important;
+}
+
+.dropdown-option {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  background: #ffffff !important;
+  pointer-events: auto !important;
+  min-height: 44px;
+}
+
+.dropdown-option:hover {
+  background: #f0f4ff !important;
+}
+
+.dropdown-option img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Debug: Remove red border after testing */
+.dropdown.open .dropdown-menu {
+  border: 1px solid #ddd;
 }
